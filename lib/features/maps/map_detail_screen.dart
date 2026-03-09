@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/models/map_callout.dart';
@@ -79,16 +78,6 @@ class _MapImage extends StatelessWidget {
   }
 
   Widget _buildImage() {
-    final file = File(imagePath);
-    if (file.existsSync()) {
-      return InteractiveViewer(
-        minScale: 0.8,
-        maxScale: 4.0,
-        child: Image.file(file, fit: BoxFit.contain),
-      );
-    }
-
-    // Próbuj z asset
     return InteractiveViewer(
       minScale: 0.8,
       maxScale: 4.0,
