@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -7,13 +8,19 @@ import 'core/models/perk.dart';
 import 'core/theme/app_theme.dart';
 import 'app/router.dart';
 
-void main() async {
+void main() {
+  runZonedGuarded(_appMain, (error, stack) {
+    debugPrint('Fatal error: $error\n$stack');
+  });
+}
+
+Future<void> _appMain() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Hive.initFlutter();
-  Hive.registerAdapter(PerkAdapter());
-  Hive.registerAdapter(BuildAdapter());
-  Hive.registerAdapter(GroupPlanAdapter());
+  if (!Hive.isAdapterRegistered(0)) Hive.registerAdapter(PerkAdapter());
+  if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(BuildAdapter());
+  if (!Hive.isAdapterRegistered(2)) Hive.registerAdapter(GroupPlanAdapter());
 
   runApp(const ProviderScope(child: DBDCompanionApp()));
 }
