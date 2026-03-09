@@ -41,3 +41,24 @@ flutter:
   assets:
     - assets/data/
     - assets/images/
+    - assets/maps/
+    - assets/maps/macmillan/
+    - assets/maps/autohaven/
+    - assets/maps/coldwind/
+    - assets/maps/crotus_prenn/
+    - assets/maps/haddonfield/
+    - assets/maps/backwater_swamp/
+    - assets/maps/lery/
+    - assets/maps/springwood/
+    - assets/maps/red_forest/
+    - assets/maps/gideon/
+    - assets/maps/hawkins/
+    - assets/maps/yamaoka/
+    - assets/maps/ormond/
+    - assets/maps/raccoon_city/
+    - assets/maps/eyrie_of_crows/
+    - assets/maps/dvarka/
+    - assets/maps/withered_isle/
+    - assets/maps/toba_landing/
+    - assets/maps/greenville/
+    - assets/maps/forsaken_boneyard/
