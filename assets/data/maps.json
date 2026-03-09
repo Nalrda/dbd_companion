@@ -4,9 +4,30 @@
     "realm": "MacMillan Estate",
     "maps": [
       {
-        "id": "coalTower",
+        "id": "coal_tower",
         "name": "Coal Tower",
-        "image": "assets/maps/macmillan/coal_tower.png",
+        "image": "assets/data/maps/MacMillan Estate/Coal Tower.webp",
+        "mainBuilding": "Coal Tower",
+        "clockPositions": {
+          "12": "Coal Tower (Main)",
+          "1": "1 Edge",
+          "2": "2 Edge",
+          "3": "3 / Deep 3",
+          "4": "4 Edge",
+          "5": "5 Edge",
+          "6": "Shack",
+          "7": "7 Edge",
+          "8": "8 Edge",
+          "9": "9 / Deep 9",
+          "10": "10 Edge",
+          "11": "11 Edge"
+        },
+        "namedCallouts": ["Coal Tower", "Shack", "Mid", "Top Mid", "Bottom Mid"]
+      },
+      {
+        "id": "coal_tower_2",
+        "name": "Coal Tower II",
+        "image": "assets/data/maps/MacMillan Estate/Coal Tower II.webp",
         "mainBuilding": "Coal Tower",
         "clockPositions": {
           "12": "Coal Tower (Main)",
@@ -27,7 +48,28 @@
       {
         "id": "groaning_storehouse",
         "name": "Groaning Storehouse",
-        "image": "assets/maps/macmillan/groaning_storehouse.png",
+        "image": "assets/data/maps/MacMillan Estate/Groaning Storehouse.webp",
+        "mainBuilding": "Storehouse",
+        "clockPositions": {
+          "12": "Storehouse (Main)",
+          "1": "1 Edge",
+          "2": "2 Edge",
+          "3": "3 / Deep 3",
+          "4": "4 Edge",
+          "5": "5 Edge",
+          "6": "Shack",
+          "7": "7 Edge",
+          "8": "8 Edge",
+          "9": "9 / Deep 9",
+          "10": "10 Edge",
+          "11": "11 Edge"
+        },
+        "namedCallouts": ["Storehouse", "Shack", "Mid", "Top Mid", "Bottom Mid"]
+      },
+      {
+        "id": "groaning_storehouse_2",
+        "name": "Groaning Storehouse II",
+        "image": "assets/data/maps/MacMillan Estate/Groaning Storehouse II.webp",
         "mainBuilding": "Storehouse",
         "clockPositions": {
           "12": "Storehouse (Main)",
@@ -48,7 +90,28 @@
       {
         "id": "ironworks_of_misery",
         "name": "Ironworks of Misery",
-        "image": "assets/maps/macmillan/ironworks_of_misery.png",
+        "image": "assets/data/maps/MacMillan Estate/Ironworks Of Misery.webp",
+        "mainBuilding": "Ironworks",
+        "clockPositions": {
+          "12": "Ironworks (Main)",
+          "1": "1 Edge",
+          "2": "2 Edge",
+          "3": "3 / Deep 3",
+          "4": "4 Edge",
+          "5": "5 Edge",
+          "6": "Shack",
+          "7": "7 Edge",
+          "8": "8 Edge",
+          "9": "9 / Deep 9",
+          "10": "10 Edge",
+          "11": "11 Edge"
+        },
+        "namedCallouts": ["Ironworks", "Shack", "Mid", "Top Mid", "Bottom Mid"]
+      },
+      {
+        "id": "ironworks_of_misery_2",
+        "name": "Ironworks of Misery II",
+        "image": "assets/data/maps/MacMillan Estate/Ironworks Of Misery II.webp",
         "mainBuilding": "Ironworks",
         "clockPositions": {
           "12": "Ironworks (Main)",
@@ -69,7 +132,28 @@
       {
         "id": "shelter_woods",
         "name": "Shelter Woods",
-        "image": "assets/maps/macmillan/shelter_woods.png",
+        "image": "assets/data/maps/MacMillan Estate/Shelter Woods.webp",
+        "mainBuilding": "Shelter",
+        "clockPositions": {
+          "12": "Shelter (Main)",
+          "1": "1 Edge",
+          "2": "2 Edge",
+          "3": "3 / Deep 3",
+          "4": "4 Edge",
+          "5": "5 Edge",
+          "6": "Shack",
+          "7": "7 Edge",
+          "8": "8 Edge",
+          "9": "9 / Deep 9",
+          "10": "10 Edge",
+          "11": "11 Edge"
+        },
+        "namedCallouts": ["Shelter", "Shack", "Mid", "Cow Tree", "Bus"]
+      },
+      {
+        "id": "shelter_woods_2",
+        "name": "Shelter Woods II",
+        "image": "assets/data/maps/MacMillan Estate/Shelter Woods II.webp",
         "mainBuilding": "Shelter",
         "clockPositions": {
           "12": "Shelter (Main)",
@@ -90,7 +174,28 @@
       {
         "id": "suffocation_pit",
         "name": "Suffocation Pit",
-        "image": "assets/maps/macmillan/suffocation_pit.png",
+        "image": "assets/data/maps/MacMillan Estate/Suffocation Pit.webp",
+        "mainBuilding": "Pit",
+        "clockPositions": {
+          "12": "Pit (Main)",
+          "1": "1 Edge",
+          "2": "2 Edge",
+          "3": "3 / Deep 3",
+          "4": "4 Edge",
+          "5": "5 Edge",
+          "6": "Shack",
+          "7": "7 Edge",
+          "8": "8 Edge",
+          "9": "9 / Deep 9",
+          "10": "10 Edge",
+          "11": "11 Edge"
+        },
+        "namedCallouts": ["Pit", "Shack", "Mid", "Top Mid", "Bottom Mid"]
+      },
+      {
+        "id": "suffocation_pit_2",
+        "name": "Suffocation Pit II",
+        "image": "assets/data/maps/MacMillan Estate/Suffocation Pit II.webp",
         "mainBuilding": "Pit",
         "clockPositions": {
           "12": "Pit (Main)",
@@ -117,7 +222,7 @@
       {
         "id": "azarovs_resting_place",
         "name": "Azarov's Resting Place",
-        "image": "assets/maps/autohaven/azarovs_resting_place.png",
+        "image": "assets/data/maps/Autohaven Wreckers/Azarovs Resting Place.webp",
         "mainBuilding": "Big Garage",
         "clockPositions": {
           "12": "Big Garage (Main)",
@@ -138,7 +243,7 @@
       {
         "id": "blood_lodge",
         "name": "Blood Lodge",
-        "image": "assets/maps/autohaven/blood_lodge.png",
+        "image": "assets/data/maps/Autohaven Wreckers/Blood Lodge.webp",
         "mainBuilding": "Lodge",
         "clockPositions": {
           "12": "Lodge (Main)",
@@ -159,7 +264,7 @@
       {
         "id": "gas_heaven",
         "name": "Gas Heaven",
-        "image": "assets/maps/autohaven/gas_heaven.png",
+        "image": "assets/data/maps/Autohaven Wreckers/Gas Heaven.webp",
         "mainBuilding": "Gas Station",
         "clockPositions": {
           "12": "Gas Station (Main)",
@@ -180,7 +285,7 @@
       {
         "id": "rotting_fields",
         "name": "Rotting Fields",
-        "image": "assets/maps/autohaven/rotting_fields.png",
+        "image": "assets/data/maps/Autohaven Wreckers/Wreckers.webp",
         "mainBuilding": "Scrapyard",
         "clockPositions": {
           "12": "Scrapyard (Main)",
@@ -201,7 +306,7 @@
       {
         "id": "wretched_shop",
         "name": "Wretched Shop",
-        "image": "assets/maps/autohaven/wretched_shop.png",
+        "image": "assets/data/maps/Autohaven Wreckers/Wretched Shop.webp",
         "mainBuilding": "Shop",
         "clockPositions": {
           "12": "Shop (Main)",
@@ -228,7 +333,7 @@
       {
         "id": "fractured_cowshed",
         "name": "Fractured Cowshed",
-        "image": "assets/maps/coldwind/fractured_cowshed.png",
+        "image": "assets/data/maps/Coldwind Farm/Fractured Cowshed.webp",
         "mainBuilding": "Cowshed",
         "clockPositions": {
           "12": "Cowshed (Main)",
@@ -249,7 +354,7 @@
       {
         "id": "rancid_abattoir",
         "name": "Rancid Abattoir",
-        "image": "assets/maps/coldwind/rancid_abattoir.png",
+        "image": "assets/data/maps/Coldwind Farm/Rancid Abbatoir.webp",
         "mainBuilding": "Abattoir",
         "clockPositions": {
           "12": "Abattoir (Main)",
@@ -268,9 +373,30 @@
         "namedCallouts": ["Abattoir", "Shack", "Mid", "Silo", "Top Mid"]
       },
       {
+        "id": "rotten_fields",
+        "name": "Rotten Fields",
+        "image": "assets/data/maps/Coldwind Farm/Rotten Fields.webp",
+        "mainBuilding": "Barn",
+        "clockPositions": {
+          "12": "Barn (Main)",
+          "1": "1 Edge",
+          "2": "2 Edge",
+          "3": "3 / Deep 3",
+          "4": "4 Edge",
+          "5": "5 Edge",
+          "6": "Shack",
+          "7": "7 Edge",
+          "8": "8 Edge",
+          "9": "9 / Deep 9",
+          "10": "10 Edge",
+          "11": "11 Edge"
+        },
+        "namedCallouts": ["Barn", "Shack", "Mid", "Corn", "Top Mid"]
+      },
+      {
         "id": "thompson_house",
-        "name": "Thompson House",
-        "image": "assets/maps/coldwind/thompson_house.png",
+        "name": "The Thompson House",
+        "image": "assets/data/maps/Coldwind Farm/The Thompson House.webp",
         "mainBuilding": "Thompson House",
         "clockPositions": {
           "12": "Thompson House (Main)",
@@ -291,7 +417,7 @@
       {
         "id": "torment_creek",
         "name": "Torment Creek",
-        "image": "assets/maps/coldwind/torment_creek.png",
+        "image": "assets/data/maps/Coldwind Farm/Torment Creek.webp",
         "mainBuilding": "Barn",
         "clockPositions": {
           "12": "Barn (Main)",
@@ -308,27 +434,6 @@
           "11": "11 Edge"
         },
         "namedCallouts": ["Barn", "Shack", "Mid", "Creek", "Top Mid"]
-      },
-      {
-        "id": "trites_orchard",
-        "name": "Trite's Orchard",
-        "image": "assets/maps/coldwind/trites_orchard.png",
-        "mainBuilding": "Orchard House",
-        "clockPositions": {
-          "12": "Orchard House (Main)",
-          "1": "1 Edge",
-          "2": "2 Edge",
-          "3": "3 / Deep 3",
-          "4": "4 Edge",
-          "5": "5 Edge",
-          "6": "Shack",
-          "7": "7 Edge",
-          "8": "8 Edge",
-          "9": "9 / Deep 9",
-          "10": "10 Edge",
-          "11": "11 Edge"
-        },
-        "namedCallouts": ["Orchard House", "Shack", "Mid", "Corn", "Top Mid"]
       }
     ]
   },
@@ -339,7 +444,7 @@
       {
         "id": "disturbed_ward",
         "name": "Disturbed Ward",
-        "image": "assets/maps/crotus_prenn/disturbed_ward.png",
+        "image": "assets/data/maps/Crotus Prenn Asylum/Disturbed Ward.webp",
         "mainBuilding": "Main Asylum",
         "clockPositions": {
           "12": "Main Asylum",
@@ -358,9 +463,9 @@
         "namedCallouts": ["Main Asylum", "Shack", "Mid", "Boiler Room", "Top Mid"]
       },
       {
-        "id": "fathers_handme_down",
-        "name": "Father's Handme-Down",
-        "image": "assets/maps/crotus_prenn/fathers_handme_down.png",
+        "id": "father_campbells_chapel",
+        "name": "Father Campbell's Chapel",
+        "image": "assets/data/maps/Crotus Prenn Asylum/Father Campbells Chapel.webp",
         "mainBuilding": "Chapel",
         "clockPositions": {
           "12": "Chapel (Main)",
@@ -387,7 +492,7 @@
       {
         "id": "lampkin_lane",
         "name": "Lampkin Lane",
-        "image": "assets/maps/haddonfield/lampkin_lane.png",
+        "image": "assets/data/maps/Haddonfield/Haddonfield.webp",
         "mainBuilding": "Myers House",
         "clockPositions": {
           "12": "Myers House (Main)",
@@ -412,30 +517,9 @@
     "realm": "Backwater Swamp",
     "maps": [
       {
-        "id": "pale_rose",
-        "name": "The Pale Rose",
-        "image": "assets/maps/backwater_swamp/pale_rose.png",
-        "mainBuilding": "Pale Rose (Boat)",
-        "clockPositions": {
-          "12": "Pale Rose (Main Boat)",
-          "1": "1 Edge",
-          "2": "2 Edge",
-          "3": "3 / Deep 3",
-          "4": "4 Edge",
-          "5": "5 Edge",
-          "6": "Shack",
-          "7": "7 Edge",
-          "8": "8 Edge",
-          "9": "9 / Deep 9",
-          "10": "10 Edge",
-          "11": "11 Edge"
-        },
-        "namedCallouts": ["Pale Rose", "Shack", "Mid", "Dock", "Top Mid"]
-      },
-      {
         "id": "grim_pantry",
         "name": "Grim Pantry",
-        "image": "assets/maps/backwater_swamp/grim_pantry.png",
+        "image": "assets/data/maps/Backwater Swamp/Grim Pantry.webp",
         "mainBuilding": "Pantry",
         "clockPositions": {
           "12": "Pantry (Main)",
@@ -452,17 +536,38 @@
           "11": "11 Edge"
         },
         "namedCallouts": ["Pantry", "Shack", "Mid", "Top Mid", "Bottom Mid"]
+      },
+      {
+        "id": "pale_rose",
+        "name": "The Pale Rose",
+        "image": "assets/data/maps/Backwater Swamp/Pale Rose.webp",
+        "mainBuilding": "Pale Rose (Boat)",
+        "clockPositions": {
+          "12": "Pale Rose (Main Boat)",
+          "1": "1 Edge",
+          "2": "2 Edge",
+          "3": "3 / Deep 3",
+          "4": "4 Edge",
+          "5": "5 Edge",
+          "6": "Shack",
+          "7": "7 Edge",
+          "8": "8 Edge",
+          "9": "9 / Deep 9",
+          "10": "10 Edge",
+          "11": "11 Edge"
+        },
+        "namedCallouts": ["Pale Rose", "Shack", "Mid", "Dock", "Top Mid"]
       }
     ]
   },
   {
-    "id": "léry",
-    "realm": "Treatment Theatre",
+    "id": "lery",
+    "realm": "Léry's Memorial Institute",
     "maps": [
       {
         "id": "treatment_theatre",
         "name": "Treatment Theatre",
-        "image": "assets/maps/lery/treatment_theatre.png",
+        "image": "assets/data/maps/Léry's Memorial Institute/Lerys.webp",
         "mainBuilding": "Operating Theatre",
         "clockPositions": {
           "12": "Operating Theatre (Main)",
@@ -483,13 +588,13 @@
     ]
   },
   {
-    "id": "springwood",
+    "id": "badham",
     "realm": "Springwood",
     "maps": [
       {
-        "id": "badham_preschool_1",
+        "id": "badham_1",
         "name": "Badham Preschool I",
-        "image": "assets/maps/springwood/badham_1.png",
+        "image": "assets/data/maps/Badham/Preschool1.webp",
         "mainBuilding": "Preschool",
         "clockPositions": {
           "12": "Preschool (Main)",
@@ -508,9 +613,9 @@
         "namedCallouts": ["Preschool", "Shack", "Mid", "Pool House", "Dead End"]
       },
       {
-        "id": "badham_preschool_2",
+        "id": "badham_2",
         "name": "Badham Preschool II",
-        "image": "assets/maps/springwood/badham_2.png",
+        "image": "assets/data/maps/Badham/Preschool2.webp",
         "mainBuilding": "Preschool",
         "clockPositions": {
           "12": "Preschool (Main)",
@@ -529,9 +634,9 @@
         "namedCallouts": ["Preschool", "Shack", "Mid", "Pool House", "Dead End"]
       },
       {
-        "id": "badham_preschool_3",
+        "id": "badham_3",
         "name": "Badham Preschool III",
-        "image": "assets/maps/springwood/badham_3.png",
+        "image": "assets/data/maps/Badham/Preschool3.webp",
         "mainBuilding": "Preschool",
         "clockPositions": {
           "12": "Preschool (Main)",
@@ -550,9 +655,9 @@
         "namedCallouts": ["Preschool", "Shack", "Mid", "Pool House", "Dead End"]
       },
       {
-        "id": "badham_preschool_4",
+        "id": "badham_4",
         "name": "Badham Preschool IV",
-        "image": "assets/maps/springwood/badham_4.png",
+        "image": "assets/data/maps/Badham/Preschool4.webp",
         "mainBuilding": "Preschool",
         "clockPositions": {
           "12": "Preschool (Main)",
@@ -571,9 +676,9 @@
         "namedCallouts": ["Preschool", "Shack", "Mid", "Pool House", "Dead End"]
       },
       {
-        "id": "badham_preschool_5",
+        "id": "badham_5",
         "name": "Badham Preschool V",
-        "image": "assets/maps/springwood/badham_5.png",
+        "image": "assets/data/maps/Badham/Preschool5.webp",
         "mainBuilding": "Preschool",
         "clockPositions": {
           "12": "Preschool (Main)",
@@ -600,7 +705,7 @@
       {
         "id": "mothers_dwelling",
         "name": "Mother's Dwelling",
-        "image": "assets/maps/red_forest/mothers_dwelling.png",
+        "image": "assets/data/maps/Red Forest/Mothers Dwelling.webp",
         "mainBuilding": "Dwelling",
         "clockPositions": {
           "12": "Dwelling (Main)",
@@ -621,7 +726,7 @@
       {
         "id": "temple_of_purgation",
         "name": "Temple of Purgation",
-        "image": "assets/maps/red_forest/temple_of_purgation.png",
+        "image": "assets/data/maps/Red Forest/Temple of Purgation.webp",
         "mainBuilding": "Temple",
         "clockPositions": {
           "12": "Temple (Main)",
@@ -642,16 +747,16 @@
     ]
   },
   {
-    "id": "gideon_meat_plant",
+    "id": "gideon",
     "realm": "Gideon Meat Plant",
     "maps": [
       {
         "id": "the_game",
         "name": "The Game",
-        "image": "assets/maps/gideon/the_game.png",
+        "image": "assets/data/maps/Gideon Meat Plant/The Game.webp",
         "mainBuilding": "Main Building",
         "clockPositions": {
-          "12": "Main Building (Top)",
+          "12": "Main Building (Top Floor)",
           "1": "1 Edge",
           "2": "2 Edge",
           "3": "3 / Deep 3",
@@ -675,7 +780,7 @@
       {
         "id": "underground_complex",
         "name": "Underground Complex",
-        "image": "assets/maps/hawkins/underground_complex.png",
+        "image": "assets/data/maps/Hawkins National Laboratory/Hawkins.webp",
         "mainBuilding": "Main Lab",
         "clockPositions": {
           "12": "Main Lab",
@@ -702,7 +807,28 @@
       {
         "id": "family_residence",
         "name": "Family Residence",
-        "image": "assets/maps/yamaoka/family_residence.png",
+        "image": "assets/data/maps/Yamaoka Estate/Family Residence.webp",
+        "mainBuilding": "Main House",
+        "clockPositions": {
+          "12": "Main House",
+          "1": "1 Edge",
+          "2": "2 Edge",
+          "3": "3 / Deep 3",
+          "4": "4 Edge",
+          "5": "5 Edge",
+          "6": "Shack",
+          "7": "7 Edge",
+          "8": "8 Edge",
+          "9": "9 / Deep 9",
+          "10": "10 Edge",
+          "11": "11 Edge"
+        },
+        "namedCallouts": ["Main House", "Shack", "Mid", "Garden", "Top Mid"]
+      },
+      {
+        "id": "family_residence_2",
+        "name": "Family Residence II",
+        "image": "assets/data/maps/Yamaoka Estate/Family Residence II.webp",
         "mainBuilding": "Main House",
         "clockPositions": {
           "12": "Main House",
@@ -723,7 +849,28 @@
       {
         "id": "sanctum_of_wrath",
         "name": "Sanctum of Wrath",
-        "image": "assets/maps/yamaoka/sanctum_of_wrath.png",
+        "image": "assets/data/maps/Yamaoka Estate/Sanctum of Wrath.webp",
+        "mainBuilding": "Shrine",
+        "clockPositions": {
+          "12": "Shrine (Main)",
+          "1": "1 Edge",
+          "2": "2 Edge",
+          "3": "3 / Deep 3",
+          "4": "4 Edge",
+          "5": "5 Edge",
+          "6": "Shack",
+          "7": "7 Edge",
+          "8": "8 Edge",
+          "9": "9 / Deep 9",
+          "10": "10 Edge",
+          "11": "11 Edge"
+        },
+        "namedCallouts": ["Shrine", "Shack", "Mid", "Bridge", "Top Mid"]
+      },
+      {
+        "id": "sanctum_of_wrath_2",
+        "name": "Sanctum of Wrath II",
+        "image": "assets/data/maps/Yamaoka Estate/Sanctum of Wrath II.webp",
         "mainBuilding": "Shrine",
         "clockPositions": {
           "12": "Shrine (Main)",
@@ -750,7 +897,7 @@
       {
         "id": "mount_ormond_resort",
         "name": "Mount Ormond Resort",
-        "image": "assets/maps/ormond/mount_ormond_resort.png",
+        "image": "assets/data/maps/Ormond/Ormond.webp",
         "mainBuilding": "Lodge",
         "clockPositions": {
           "12": "Lodge (Main)",
@@ -767,6 +914,69 @@
           "11": "11 Edge"
         },
         "namedCallouts": ["Lodge", "Shack", "Mid", "Snowbank", "Top Mid"]
+      },
+      {
+        "id": "mount_ormond_resort_2",
+        "name": "Mount Ormond Resort II",
+        "image": "assets/data/maps/Ormond/Ormond II.webp",
+        "mainBuilding": "Lodge",
+        "clockPositions": {
+          "12": "Lodge (Main)",
+          "1": "1 Edge",
+          "2": "2 Edge",
+          "3": "3 / Deep 3",
+          "4": "4 Edge",
+          "5": "5 Edge",
+          "6": "Shack",
+          "7": "7 Edge",
+          "8": "8 Edge",
+          "9": "9 / Deep 9",
+          "10": "10 Edge",
+          "11": "11 Edge"
+        },
+        "namedCallouts": ["Lodge", "Shack", "Mid", "Snowbank", "Top Mid"]
+      },
+      {
+        "id": "mount_ormond_resort_3",
+        "name": "Mount Ormond Resort III",
+        "image": "assets/data/maps/Ormond/Ormond III.webp",
+        "mainBuilding": "Lodge",
+        "clockPositions": {
+          "12": "Lodge (Main)",
+          "1": "1 Edge",
+          "2": "2 Edge",
+          "3": "3 / Deep 3",
+          "4": "4 Edge",
+          "5": "5 Edge",
+          "6": "Shack",
+          "7": "7 Edge",
+          "8": "8 Edge",
+          "9": "9 / Deep 9",
+          "10": "10 Edge",
+          "11": "11 Edge"
+        },
+        "namedCallouts": ["Lodge", "Shack", "Mid", "Snowbank", "Top Mid"]
+      },
+      {
+        "id": "ormond_lake_mine",
+        "name": "Ormond Lake Mine",
+        "image": "assets/data/maps/Ormond/Ormond Lake Mine.webp",
+        "mainBuilding": "Mine",
+        "clockPositions": {
+          "12": "Mine (Main)",
+          "1": "1 Edge",
+          "2": "2 Edge",
+          "3": "3 / Deep 3",
+          "4": "4 Edge",
+          "5": "5 Edge",
+          "6": "Shack",
+          "7": "7 Edge",
+          "8": "8 Edge",
+          "9": "9 / Deep 9",
+          "10": "10 Edge",
+          "11": "11 Edge"
+        },
+        "namedCallouts": ["Mine", "Shack", "Mid", "Top Mid", "Bottom Mid"]
       }
     ]
   },
@@ -775,9 +985,9 @@
     "realm": "Raccoon City",
     "maps": [
       {
-        "id": "raccoon_city_police_station",
-        "name": "Raccoon City Police Station",
-        "image": "assets/maps/raccoon_city/police_station.png",
+        "id": "rpd_east_wing",
+        "name": "RPD East Wing",
+        "image": "assets/data/maps/Raccoon City/Rpd East Wing.webp",
         "mainBuilding": "Police Station",
         "clockPositions": {
           "12": "Police Station (Main)",
@@ -793,18 +1003,39 @@
           "10": "10 Edge",
           "11": "11 Edge"
         },
-        "namedCallouts": ["Police Station", "East Wing", "West Wing", "Shack", "Mid"]
+        "namedCallouts": ["Police Station", "East Wing", "Shack", "Mid", "Lobby"]
+      },
+      {
+        "id": "rpd_west_wing",
+        "name": "RPD West Wing",
+        "image": "assets/data/maps/Raccoon City/Rpd West Wing.webp",
+        "mainBuilding": "Police Station",
+        "clockPositions": {
+          "12": "Police Station (Main)",
+          "1": "1 Edge",
+          "2": "2 Edge",
+          "3": "3 / Deep 3",
+          "4": "4 Edge",
+          "5": "5 Edge",
+          "6": "Shack",
+          "7": "7 Edge",
+          "8": "8 Edge",
+          "9": "9 / Deep 9",
+          "10": "10 Edge",
+          "11": "11 Edge"
+        },
+        "namedCallouts": ["Police Station", "West Wing", "Shack", "Mid", "Lobby"]
       }
     ]
   },
   {
-    "id": "eyrie_of_crows",
-    "realm": "Eyrie of Crows",
+    "id": "decimated_borgo",
+    "realm": "Decimated Borgo",
     "maps": [
       {
         "id": "forgotten_ruins",
         "name": "Forgotten Ruins",
-        "image": "assets/maps/eyrie_of_crows/forgotten_ruins.png",
+        "image": "assets/data/maps/Decimated Borgo/Forgotten Ruins.webp",
         "mainBuilding": "Castle",
         "clockPositions": {
           "12": "Castle (Main)",
@@ -821,17 +1052,38 @@
           "11": "11 Edge"
         },
         "namedCallouts": ["Castle", "Shack", "Mid", "Ruins", "Top Mid"]
+      },
+      {
+        "id": "shattered_square",
+        "name": "Shattered Square",
+        "image": "assets/data/maps/Decimated Borgo/Shattered Square.webp",
+        "mainBuilding": "Church",
+        "clockPositions": {
+          "12": "Church (Main)",
+          "1": "1 Edge",
+          "2": "2 Edge",
+          "3": "3 / Deep 3",
+          "4": "4 Edge",
+          "5": "5 Edge",
+          "6": "Shack",
+          "7": "7 Edge",
+          "8": "8 Edge",
+          "9": "9 / Deep 9",
+          "10": "10 Edge",
+          "11": "11 Edge"
+        },
+        "namedCallouts": ["Church", "Shack", "Mid", "Square", "Top Mid"]
       }
     ]
   },
   {
-    "id": "dvarka_megacomplex",
-    "realm": "Dvarka Megacomplex",
+    "id": "dvarka",
+    "realm": "Dvarka Deepwood",
     "maps": [
       {
         "id": "nostromo_wreckage",
         "name": "Nostromo Wreckage",
-        "image": "assets/maps/dvarka/nostromo_wreckage.png",
+        "image": "assets/data/maps/Dvarka Deepwood/Nostromo Wreckage.webp",
         "mainBuilding": "Alien Ship",
         "clockPositions": {
           "12": "Alien Ship (Main)",
@@ -848,44 +1100,11 @@
           "11": "11 Edge"
         },
         "namedCallouts": ["Alien Ship", "Shack", "Mid", "Cargo Bay", "Top Mid"]
-      }
-    ]
-  },
-  {
-    "id": "withered_isle",
-    "realm": "Withered Isle",
-    "maps": [
+      },
       {
-        "id": "garden_of_joy",
-        "name": "Garden of Joy",
-        "image": "assets/maps/withered_isle/garden_of_joy.png",
-        "mainBuilding": "House",
-        "clockPositions": {
-          "12": "House (Main)",
-          "1": "1 Edge",
-          "2": "2 Edge",
-          "3": "3 / Deep 3",
-          "4": "4 Edge",
-          "5": "5 Edge",
-          "6": "Shack",
-          "7": "7 Edge",
-          "8": "8 Edge",
-          "9": "9 / Deep 9",
-          "10": "10 Edge",
-          "11": "11 Edge"
-        },
-        "namedCallouts": ["House", "Shack", "Mid", "Garden", "Top Mid"]
-      }
-    ]
-  },
-  {
-    "id": "toba_landing",
-    "realm": "Toba Landing",
-    "maps": [
-      {
-        "id": "shelter_of_the_decimated",
-        "name": "Shelter of the Decimated",
-        "image": "assets/maps/toba_landing/shelter_of_the_decimated.png",
+        "id": "toba_landing",
+        "name": "Toba Landing",
+        "image": "assets/data/maps/Dvarka Deepwood/Toba Landing.webp",
         "mainBuilding": "Shelter",
         "clockPositions": {
           "12": "Shelter (Main)",
@@ -906,40 +1125,13 @@
     ]
   },
   {
-    "id": "greenville_square",
-    "realm": "Greenville Square",
-    "maps": [
-      {
-        "id": "rift_in_the_veil",
-        "name": "Rift in the Veil",
-        "image": "assets/maps/greenville/rift_in_the_veil.png",
-        "mainBuilding": "Store",
-        "clockPositions": {
-          "12": "Store (Main)",
-          "1": "1 Edge",
-          "2": "2 Edge",
-          "3": "3 / Deep 3",
-          "4": "4 Edge",
-          "5": "5 Edge",
-          "6": "Shack",
-          "7": "7 Edge",
-          "8": "8 Edge",
-          "9": "9 / Deep 9",
-          "10": "10 Edge",
-          "11": "11 Edge"
-        },
-        "namedCallouts": ["Store", "Shack", "Mid", "Square", "Top Mid"]
-      }
-    ]
-  },
-  {
-    "id": "forgotten_ruins",
+    "id": "forsaken_boneyard",
     "realm": "Forsaken Boneyard",
     "maps": [
       {
-        "id": "forgotten_ruins_map",
-        "name": "Forgotten Ruins",
-        "image": "assets/maps/forsaken_boneyard/forgotten_ruins.png",
+        "id": "dead_sands",
+        "name": "Dead Sands",
+        "image": "assets/data/maps/Forsaken Boneyard/Dead Sands.webp",
         "mainBuilding": "Ruins",
         "clockPositions": {
           "12": "Ruins (Main)",
@@ -956,6 +1148,171 @@
           "11": "11 Edge"
         },
         "namedCallouts": ["Ruins", "Shack", "Mid", "Bones", "Top Mid"]
+      },
+      {
+        "id": "eyrie_of_crows",
+        "name": "Eyrie of Crows",
+        "image": "assets/data/maps/Forsaken Boneyard/Eyrie of Crows.webp",
+        "mainBuilding": "Tower",
+        "clockPositions": {
+          "12": "Tower (Main)",
+          "1": "1 Edge",
+          "2": "2 Edge",
+          "3": "3 / Deep 3",
+          "4": "4 Edge",
+          "5": "5 Edge",
+          "6": "Shack",
+          "7": "7 Edge",
+          "8": "8 Edge",
+          "9": "9 / Deep 9",
+          "10": "10 Edge",
+          "11": "11 Edge"
+        },
+        "namedCallouts": ["Tower", "Shack", "Mid", "Cliffs", "Top Mid"]
+      }
+    ]
+  },
+  {
+    "id": "grave_of_glennvale",
+    "realm": "Grave of Glennvale",
+    "maps": [
+      {
+        "id": "dead_dawg_saloon",
+        "name": "Dead Dawg Saloon",
+        "image": "assets/data/maps/Grave of Glennvale/Dead Dawg Saloon.webp",
+        "mainBuilding": "Saloon",
+        "clockPositions": {
+          "12": "Saloon (Main)",
+          "1": "1 Edge",
+          "2": "2 Edge",
+          "3": "3 / Deep 3",
+          "4": "4 Edge",
+          "5": "5 Edge",
+          "6": "Shack",
+          "7": "7 Edge",
+          "8": "8 Edge",
+          "9": "9 / Deep 9",
+          "10": "10 Edge",
+          "11": "11 Edge"
+        },
+        "namedCallouts": ["Saloon", "Shack", "Mid", "Water Tower", "Top Mid"]
+      }
+    ]
+  },
+  {
+    "id": "silent_hill",
+    "realm": "Silent Hill",
+    "maps": [
+      {
+        "id": "midwich_elementary",
+        "name": "Midwich Elementary School",
+        "image": "assets/data/maps/Silent Hill/Midwich.gif",
+        "mainBuilding": "School",
+        "clockPositions": {
+          "12": "School (Main)",
+          "1": "1 Edge",
+          "2": "2 Edge",
+          "3": "3 / Deep 3",
+          "4": "4 Edge",
+          "5": "5 Edge",
+          "6": "Shack",
+          "7": "7 Edge",
+          "8": "8 Edge",
+          "9": "9 / Deep 9",
+          "10": "10 Edge",
+          "11": "11 Edge"
+        },
+        "namedCallouts": ["School", "Shack", "Mid", "Gym", "Top Mid"]
+      }
+    ]
+  },
+  {
+    "id": "withered_isle",
+    "realm": "Withered Isle",
+    "maps": [
+      {
+        "id": "garden_of_joy",
+        "name": "Garden of Joy",
+        "image": "assets/data/maps/Withered Isle/Garden of Joy.webp",
+        "mainBuilding": "House",
+        "clockPositions": {
+          "12": "House (Main)",
+          "1": "1 Edge",
+          "2": "2 Edge",
+          "3": "3 / Deep 3",
+          "4": "4 Edge",
+          "5": "5 Edge",
+          "6": "Shack",
+          "7": "7 Edge",
+          "8": "8 Edge",
+          "9": "9 / Deep 9",
+          "10": "10 Edge",
+          "11": "11 Edge"
+        },
+        "namedCallouts": ["House", "Shack", "Mid", "Garden", "Top Mid"]
+      },
+      {
+        "id": "fallen_refuge",
+        "name": "Fallen Refuge",
+        "image": "assets/data/maps/Withered Isle/Fallen Refuge.webp",
+        "mainBuilding": "Refuge",
+        "clockPositions": {
+          "12": "Refuge (Main)",
+          "1": "1 Edge",
+          "2": "2 Edge",
+          "3": "3 / Deep 3",
+          "4": "4 Edge",
+          "5": "5 Edge",
+          "6": "Shack",
+          "7": "7 Edge",
+          "8": "8 Edge",
+          "9": "9 / Deep 9",
+          "10": "10 Edge",
+          "11": "11 Edge"
+        },
+        "namedCallouts": ["Refuge", "Shack", "Mid", "Top Mid", "Bottom Mid"]
+      },
+      {
+        "id": "greenville_square",
+        "name": "Greenville Square",
+        "image": "assets/data/maps/Withered Isle/Greenville Square.webp",
+        "mainBuilding": "Store",
+        "clockPositions": {
+          "12": "Store (Main)",
+          "1": "1 Edge",
+          "2": "2 Edge",
+          "3": "3 / Deep 3",
+          "4": "4 Edge",
+          "5": "5 Edge",
+          "6": "Shack",
+          "7": "7 Edge",
+          "8": "8 Edge",
+          "9": "9 / Deep 9",
+          "10": "10 Edge",
+          "11": "11 Edge"
+        },
+        "namedCallouts": ["Store", "Shack", "Mid", "Square", "Top Mid"]
+      },
+      {
+        "id": "freddy_fazbears_pizza",
+        "name": "Freddy Fazbear's Pizza",
+        "image": "assets/data/maps/Withered Isle/Freddy Fazbears Pizza.webp",
+        "mainBuilding": "Pizzeria",
+        "clockPositions": {
+          "12": "Pizzeria (Main)",
+          "1": "1 Edge",
+          "2": "2 Edge",
+          "3": "3 / Deep 3",
+          "4": "4 Edge",
+          "5": "5 Edge",
+          "6": "Shack",
+          "7": "7 Edge",
+          "8": "8 Edge",
+          "9": "9 / Deep 9",
+          "10": "10 Edge",
+          "11": "11 Edge"
+        },
+        "namedCallouts": ["Pizzeria", "Shack", "Mid", "Stage", "Top Mid"]
       }
     ]
   }

@@ -41,24 +41,23 @@ flutter:
   assets:
     - assets/data/
     - assets/images/
-    - assets/maps/
-    - assets/maps/macmillan/
-    - assets/maps/autohaven/
-    - assets/maps/coldwind/
-    - assets/maps/crotus_prenn/
-    - assets/maps/haddonfield/
-    - assets/maps/backwater_swamp/
-    - assets/maps/lery/
-    - assets/maps/springwood/
-    - assets/maps/red_forest/
-    - assets/maps/gideon/
-    - assets/maps/hawkins/
-    - assets/maps/yamaoka/
-    - assets/maps/ormond/
-    - assets/maps/raccoon_city/
-    - assets/maps/eyrie_of_crows/
-    - assets/maps/dvarka/
-    - assets/maps/withered_isle/
-    - assets/maps/toba_landing/
-    - assets/maps/greenville/
-    - assets/maps/forsaken_boneyard/
+    - assets/data/maps/MacMillan Estate/
+    - assets/data/maps/Autohaven Wreckers/
+    - assets/data/maps/Coldwind Farm/
+    - assets/data/maps/Crotus Prenn Asylum/
+    - assets/data/maps/Haddonfield/
+    - assets/data/maps/Backwater Swamp/
+    - "assets/data/maps/Léry's Memorial Institute/"
+    - assets/data/maps/Badham/
+    - assets/data/maps/Red Forest/
+    - assets/data/maps/Gideon Meat Plant/
+    - assets/data/maps/Hawkins National Laboratory/
+    - assets/data/maps/Yamaoka Estate/
+    - assets/data/maps/Ormond/
+    - assets/data/maps/Raccoon City/
+    - assets/data/maps/Decimated Borgo/
+    - assets/data/maps/Dvarka Deepwood/
+    - assets/data/maps/Forsaken Boneyard/
+    - assets/data/maps/Grave of Glennvale/
+    - assets/data/maps/Silent Hill/
+    - assets/data/maps/Withered Isle/
