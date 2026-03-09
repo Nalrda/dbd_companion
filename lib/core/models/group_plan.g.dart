@@ -22,13 +22,17 @@ class GroupPlanAdapter extends TypeAdapter<GroupPlan> {
       notes: fields[6] as String?,
       createdAt: fields[7] as DateTime,
       updatedAt: fields[8] as DateTime,
+      survivor1ItemId: fields[9] as String?,
+      survivor2ItemId: fields[10] as String?,
+      survivor3ItemId: fields[11] as String?,
+      survivor4ItemId: fields[12] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, GroupPlan obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(13)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -46,7 +50,15 @@ class GroupPlanAdapter extends TypeAdapter<GroupPlan> {
       ..writeByte(7)
       ..write(obj.createdAt)
       ..writeByte(8)
-      ..write(obj.updatedAt);
+      ..write(obj.updatedAt)
+      ..writeByte(9)
+      ..write(obj.survivor1ItemId)
+      ..writeByte(10)
+      ..write(obj.survivor2ItemId)
+      ..writeByte(11)
+      ..write(obj.survivor3ItemId)
+      ..writeByte(12)
+      ..write(obj.survivor4ItemId);
   }
 
   @override

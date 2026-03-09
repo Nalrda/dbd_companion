@@ -24,12 +24,15 @@ class BuildEditorScreen extends ConsumerStatefulWidget {
 class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
   late TextEditingController _nameController;
   late TextEditingController _notesController;
+  late TextEditingController _addon1Controller;
+  late TextEditingController _addon2Controller;
   late bool _isSurvivor;
-  late List<String?> _perkSlots; // 4 slots, nullable
+  late List<String?> _perkSlots;
   final List<String> _tags = [];
   String _searchQuery = '';
   int? _editingSlot;
   Build? _existingBuild;
+  String? _selectedItemId;
 
   @override
   void initState() {
@@ -38,26 +41,27 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
     _perkSlots = List.filled(4, null);
     _nameController = TextEditingController();
     _notesController = TextEditingController();
+    _addon1Controller = TextEditingController();
+    _addon2Controller = TextEditingController();
     _loadExistingBuild();
   }
 
   Future<void> _loadExistingBuild() async {
     if (widget.buildId == null) return;
     final builds = await ref.read(buildsProvider.future);
-    final build = builds.firstWhere((b) => b.id == widget.buildId,
-        orElse: () => Build(
-              id: '',
-              name: '',
-              isSurvivor: widget.isSurvivor,
-              perkIds: [],
-            ));
+    final build = builds.firstWhere(
+      (b) => b.id == widget.buildId,
+      orElse: () => Build(id: '', name: '', isSurvivor: widget.isSurvivor, perkIds: []),
+    );
     if (build.id.isEmpty) return;
-
     setState(() {
       _existingBuild = build;
       _nameController.text = build.name;
       _notesController.text = build.notes ?? '';
       _isSurvivor = build.isSurvivor;
+      _selectedItemId = build.itemId;
+      _addon1Controller.text = build.addon1 ?? '';
+      _addon2Controller.text = build.addon2 ?? '';
       for (int i = 0; i < build.perkIds.length && i < 4; i++) {
         _perkSlots[i] = build.perkIds[i];
       }
@@ -68,6 +72,8 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
   void dispose() {
     _nameController.dispose();
     _notesController.dispose();
+    _addon1Controller.dispose();
+    _addon2Controller.dispose();
     super.dispose();
   }
 
@@ -79,8 +85,9 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
       );
       return;
     }
-
     final perkIds = _perkSlots.whereType<String>().toList();
+    final addon1 = _addon1Controller.text.trim().isEmpty ? null : _addon1Controller.text.trim();
+    final addon2 = _addon2Controller.text.trim().isEmpty ? null : _addon2Controller.text.trim();
 
     if (_existingBuild != null) {
       final updated = _existingBuild!.copyWith(
@@ -88,20 +95,20 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
         perkIds: perkIds,
         notes: _notesController.text.trim(),
         tags: _tags,
+        itemId: _selectedItemId,
+        addon1: addon1,
+        addon2: addon2,
       );
       await ref.read(buildsProvider.notifier).save(updated);
     } else {
       await ref.read(buildsProvider.notifier).create(
-            name: name,
-            isSurvivor: _isSurvivor,
-            perkIds: perkIds,
-            notes: _notesController.text.trim().isEmpty
-                ? null
-                : _notesController.text.trim(),
-            tags: _tags,
-          );
+        name: name,
+        isSurvivor: _isSurvivor,
+        perkIds: perkIds,
+        notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
+        tags: _tags,
+      );
     }
-
     if (mounted) context.pop();
   }
 
@@ -122,10 +129,8 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
               style: TextButton.styleFrom(
                 backgroundColor: AppTheme.primary,
                 foregroundColor: Colors.white,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               ),
               child: const Text('Save', style: TextStyle(fontWeight: FontWeight.w600)),
             ),
@@ -150,15 +155,12 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Left panel: build config
         SizedBox(
           width: MediaQuery.of(context).size.width <= 600
               ? MediaQuery.of(context).size.width
               : 360,
           child: _buildLeftPanel(),
         ),
-
-        // Right panel: perk picker (only if editing a slot on wider screens)
         if (MediaQuery.of(context).size.width > 600 && _editingSlot != null)
           Expanded(child: _buildPerkPicker(filtered, allPerks)),
       ],
@@ -171,17 +173,13 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Name field
           TextField(
             controller: _nameController,
             style: const TextStyle(
-                color: AppTheme.textPrimary,
-                fontSize: 16,
-                fontWeight: FontWeight.w600),
+                color: AppTheme.textPrimary, fontSize: 16, fontWeight: FontWeight.w600),
             decoration: const InputDecoration(
               hintText: 'Build name...',
-              prefixIcon: Icon(Icons.drive_file_rename_outline,
-                  color: AppTheme.textDim, size: 18),
+              prefixIcon: Icon(Icons.drive_file_rename_outline, color: AppTheme.textDim, size: 18),
             ),
           ),
 
@@ -189,21 +187,52 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
           const SectionHeader(title: 'PERKS'),
           const SizedBox(height: 10),
 
-          // Perk slots
           ...List.generate(4, (i) {
             final perkId = _perkSlots[i];
             return Padding(
               padding: const EdgeInsets.only(bottom: 8),
               child: PerkSlot(
                 index: i,
-                perk: perkId != null ? _findPerk(perkId) : null,
+                perk: perkId != null ? null : null,
                 onTap: () => _openPerkPicker(i),
-                onRemove: perkId != null
-                    ? () => setState(() => _perkSlots[i] = null)
-                    : null,
+                onRemove: perkId != null ? () => setState(() => _perkSlots[i] = null) : null,
               ),
             );
           }),
+
+          const SizedBox(height: 20),
+
+          if (_isSurvivor) ...[
+            const SectionHeader(title: 'ITEM'),
+            const SizedBox(height: 10),
+            ItemSlot(
+              selectedItemId: _selectedItemId,
+              onTap: _openItemPicker,
+              onRemove: _selectedItemId != null
+                  ? () => setState(() => _selectedItemId = null)
+                  : null,
+            ),
+          ] else ...[
+            const SectionHeader(title: 'ADD-ONS'),
+            const SizedBox(height: 10),
+            TextField(
+              controller: _addon1Controller,
+              style: const TextStyle(color: AppTheme.textPrimary, fontSize: 14),
+              decoration: const InputDecoration(
+                hintText: 'Add-on 1...',
+                prefixIcon: Icon(Icons.extension_outlined, color: AppTheme.textDim, size: 18),
+              ),
+            ),
+            const SizedBox(height: 8),
+            TextField(
+              controller: _addon2Controller,
+              style: const TextStyle(color: AppTheme.textPrimary, fontSize: 14),
+              decoration: const InputDecoration(
+                hintText: 'Add-on 2...',
+                prefixIcon: Icon(Icons.extension_outlined, color: AppTheme.textDim, size: 18),
+              ),
+            ),
+          ],
 
           const SizedBox(height: 20),
           const SectionHeader(title: 'NOTES'),
@@ -223,16 +252,27 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
     );
   }
 
-  Perk? _findPerk(String id) {
-    // This will be resolved from providers — simple lookup
-    return null; // resolved in PerkSlot via repository
+  void _openItemPicker() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppTheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => ItemPickerSheet(
+        selectedId: _selectedItemId,
+        onSelect: (item) {
+          setState(() => _selectedItemId = item.id == 'no_item' ? null : item.id);
+          Navigator.pop(ctx);
+        },
+      ),
+    );
   }
 
   void _openPerkPicker(int slot) {
     setState(() => _editingSlot = slot);
-
     if (MediaQuery.of(context).size.width <= 600) {
-      // Mobile: bottom sheet
       showModalBottomSheet(
         context: context,
         isScrollControlled: true,
@@ -266,8 +306,7 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
               style: const TextStyle(color: AppTheme.textPrimary),
               decoration: const InputDecoration(
                 hintText: 'Search perks...',
-                prefixIcon:
-                    Icon(Icons.search, color: AppTheme.textDim, size: 18),
+                prefixIcon: Icon(Icons.search, color: AppTheme.textDim, size: 18),
               ),
             ),
           ),
@@ -305,7 +344,7 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
   }
 }
 
-// ─── Mobile bottom sheet perk picker ─────────────────────────────────────────
+// ─── Mobile perk picker sheet ────────────────────────────────────────────────
 
 class _PerkPickerSheet extends ConsumerStatefulWidget {
   final bool isSurvivor;
@@ -335,74 +374,63 @@ class _PerkPickerSheetState extends ConsumerState<_PerkPickerSheet> {
       expand: false,
       initialChildSize: 0.85,
       maxChildSize: 0.95,
-      builder: (ctx, controller) {
-        return Column(
-          children: [
-            const SizedBox(height: 8),
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: AppTheme.border,
-                borderRadius: BorderRadius.circular(2),
+      builder: (ctx, controller) => Column(
+        children: [
+          const SizedBox(height: 8),
+          Container(
+            width: 40, height: 4,
+            decoration: BoxDecoration(
+                color: AppTheme.border, borderRadius: BorderRadius.circular(2)),
+          ),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: TextField(
+              onChanged: (v) => setState(() => _search = v),
+              autofocus: true,
+              style: const TextStyle(color: AppTheme.textPrimary),
+              decoration: const InputDecoration(
+                hintText: 'Search perks...',
+                prefixIcon: Icon(Icons.search, color: AppTheme.textDim, size: 18),
               ),
             ),
-            const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: TextField(
-                onChanged: (v) => setState(() => _search = v),
-                autofocus: true,
-                style: const TextStyle(color: AppTheme.textPrimary),
-                decoration: const InputDecoration(
-                  hintText: 'Search perks...',
-                  prefixIcon:
-                      Icon(Icons.search, color: AppTheme.textDim, size: 18),
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-            Expanded(
-              child: perksAsync.when(
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (e, _) => Center(child: Text('$e')),
-                data: (perks) {
-                  final filtered = perks.where((p) {
-                    if (_search.isEmpty) return true;
-                    return p.name
-                            .toLowerCase()
-                            .contains(_search.toLowerCase()) ||
-                        p.character
-                            .toLowerCase()
-                            .contains(_search.toLowerCase());
-                  }).toList();
-
-                  return ListView.builder(
-                    controller: controller,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: filtered.length,
-                    itemBuilder: (ctx, i) {
-                      final perk = filtered[i];
-                      final isUsed = widget.selectedIds.contains(perk.id);
-                      return Opacity(
-                        opacity: isUsed ? 0.4 : 1,
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
-                          child: PerkCard(
-                            perk: perk,
-                            compact: true,
-                            onTap: isUsed ? null : () => widget.onSelect(perk),
-                          ),
+          ),
+          const SizedBox(height: 12),
+          Expanded(
+            child: perksAsync.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (e, _) => Center(child: Text('$e')),
+              data: (perks) {
+                final filtered = perks.where((p) {
+                  if (_search.isEmpty) return true;
+                  return p.name.toLowerCase().contains(_search.toLowerCase()) ||
+                      p.character.toLowerCase().contains(_search.toLowerCase());
+                }).toList();
+                return ListView.builder(
+                  controller: controller,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: filtered.length,
+                  itemBuilder: (ctx, i) {
+                    final perk = filtered[i];
+                    final isUsed = widget.selectedIds.contains(perk.id);
+                    return Opacity(
+                      opacity: isUsed ? 0.4 : 1,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: PerkCard(
+                          perk: perk,
+                          compact: true,
+                          onTap: isUsed ? null : () => widget.onSelect(perk),
                         ),
-                      );
-                    },
-                  );
-                },
-              ),
+                      ),
+                    );
+                  },
+                );
+              },
             ),
-          ],
-        );
-      },
+          ),
+        ],
+      ),
     );
   }
 }

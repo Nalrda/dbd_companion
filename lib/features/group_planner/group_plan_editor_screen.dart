@@ -22,6 +22,8 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
   List<Perk> _allPerks = [];
   // resolved perks per slot: _resolvedPerks[survivorIndex][slotIndex]
   final List<List<Perk?>> _resolvedPerks = List.generate(4, (_) => List.filled(4, null));
+  // item id per survivor
+  final List<String?> _survivorItemIds = List.filled(4, null);
   bool _loading = true;
 
   static const List<Color> _survivorColors = [
@@ -62,7 +64,10 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
       setState(() {
         _plan = plan;
         _allPerks = perks;
-        for (int i = 0; i < 4; i++) { _resolvedPerks[i] = resolved[i]; }
+        for (int i = 0; i < 4; i++) {
+          _resolvedPerks[i] = resolved[i];
+          _survivorItemIds[i] = plan.getItemIdForSurvivor(i);
+        }
         _loading = false;
       });
     }
@@ -75,6 +80,7 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
         i,
         _resolvedPerks[i].whereType<Perk>().map((p) => p.id).toList(),
       );
+      _plan!.setItemIdForSurvivor(i, _survivorItemIds[i]);
     }
     await GroupPlanRepository.instance.save(_plan!);
     ref.invalidate(groupPlansProvider);
@@ -83,6 +89,25 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
         const SnackBar(content: Text('Group plan saved!')),
       );
     }
+  }
+
+  void _pickItem(int survivorIndex) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppTheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => ItemPickerSheet(
+        selectedId: _survivorItemIds[survivorIndex],
+        onSelect: (item) {
+          setState(() => _survivorItemIds[survivorIndex] =
+              item.id == 'no_item' ? null : item.id);
+          Navigator.pop(ctx);
+        },
+      ),
+    );
   }
 
   void _pickPerk(int survivorIndex, int slotIndex) {
@@ -158,10 +183,15 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
                 color: _survivorColors[si],
                 label: _survivorLabels[si],
                 perkSlots: _resolvedPerks[si],
+                itemId: _survivorItemIds[si],
                 onSlotTap: (slotIndex) => _pickPerk(si, slotIndex),
                 onSlotRemove: (slotIndex) => setState(
                   () => _resolvedPerks[si][slotIndex] = null,
                 ),
+                onItemTap: () => _pickItem(si),
+                onItemRemove: _survivorItemIds[si] != null
+                    ? () => setState(() => _survivorItemIds[si] = null)
+                    : null,
               ),
             ),
           )),
@@ -198,16 +228,22 @@ class _SurvivorColumn extends StatelessWidget {
   final Color color;
   final String label;
   final List<Perk?> perkSlots;
+  final String? itemId;
   final ValueChanged<int> onSlotTap;
   final ValueChanged<int> onSlotRemove;
+  final VoidCallback onItemTap;
+  final VoidCallback? onItemRemove;
 
   const _SurvivorColumn({
     required this.survivorIndex,
     required this.color,
     required this.label,
     required this.perkSlots,
+    required this.itemId,
     required this.onSlotTap,
     required this.onSlotRemove,
+    required this.onItemTap,
+    this.onItemRemove,
   });
 
   @override
@@ -291,6 +327,33 @@ class _SurvivorColumn extends StatelessWidget {
                   ),
                 );
               }),
+            ),
+          ),
+
+          // Item slot
+          Padding(
+            padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 6),
+                  child: Text(
+                    'ITEM',
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w600,
+                      color: color.withValues(alpha: 0.7),
+                      letterSpacing: 0.8,
+                    ),
+                  ),
+                ),
+                ItemSlot(
+                  selectedItemId: itemId,
+                  onTap: onItemTap,
+                  onRemove: onItemRemove,
+                ),
+              ],
             ),
           ),
         ],

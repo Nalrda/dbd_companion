@@ -1,10 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/build.dart';
 import '../models/group_plan.dart';
+import '../models/item.dart';
 import '../models/map_callout.dart';
 import '../models/perk.dart';
 import '../repositories/build_repository.dart';
 import '../repositories/group_plan_repository.dart';
+import '../repositories/item_repository.dart';
 import '../repositories/map_repository.dart';
 import '../repositories/perk_repository.dart';
 
@@ -122,6 +124,12 @@ class RandomizerNotifier extends Notifier<RandomizerState> {
     state = state.copyWith(isSurvivor: isSurvivor, selectedPerks: []);
   }
 }
+
+// ─── Item providers ───────────────────────────────────────────────────────────
+
+final survivorItemsProvider = FutureProvider<List<Item>>((ref) async {
+  return ItemRepository.instance.getSurvivorItems();
+});
 
 // ─── Map Callout providers ────────────────────────────────────────────────────
 

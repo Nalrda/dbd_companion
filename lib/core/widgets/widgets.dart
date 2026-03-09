@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../models/item.dart';
 import '../models/perk.dart';
+import '../providers/providers.dart';
 import '../theme/app_theme.dart';
 
 // ─── Perk Icon ────────────────────────────────────────────────────────────────
@@ -423,6 +426,341 @@ class EmptyState extends StatelessWidget {
             if (action != null) ...[const SizedBox(height: 24), action!],
           ],
         ),
+      ),
+    );
+  }
+}
+
+// ─── Item helpers (shared between Build & GroupPlan editors) ──────────────────
+
+Color itemCategoryColor(String cat) {
+  switch (cat) {
+    case 'medkit':     return const Color(0xFF4CAF50);
+    case 'flashlight': return const Color(0xFFFFEB3B);
+    case 'toolbox':    return const Color(0xFF2196F3);
+    case 'key':        return const Color(0xFF9C27B0);
+    case 'map':        return const Color(0xFFFF9800);
+    default:           return AppTheme.textDim;
+  }
+}
+
+IconData itemCategoryIcon(String cat) {
+  switch (cat) {
+    case 'medkit':     return Icons.medical_services_outlined;
+    case 'flashlight': return Icons.flashlight_on_outlined;
+    case 'toolbox':    return Icons.build_outlined;
+    case 'key':        return Icons.key_outlined;
+    case 'map':        return Icons.map_outlined;
+    default:           return Icons.inventory_2_outlined;
+  }
+}
+
+String itemCategoryLabel(String cat) {
+  switch (cat) {
+    case 'medkit':     return 'Medkit';
+    case 'flashlight': return 'Flashlight';
+    case 'toolbox':    return 'Toolbox';
+    case 'key':        return 'Key';
+    case 'map':        return 'Map';
+    default:           return 'Item';
+  }
+}
+
+// ─── Item Icon ────────────────────────────────────────────────────────────────
+
+class ItemIcon extends StatelessWidget {
+  final Item item;
+  final double size;
+  const ItemIcon({super.key, required this.item, this.size = 48});
+
+  @override
+  Widget build(BuildContext context) {
+    final color = itemCategoryColor(item.category);
+    return Container(
+      width: size, height: size,
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(size * 0.2),
+        border: Border.all(color: color.withValues(alpha: 0.5), width: 1.5),
+      ),
+      child: Center(
+        child: Icon(itemCategoryIcon(item.category), color: color, size: size * 0.5),
+      ),
+    );
+  }
+}
+
+// ─── Item Slot ────────────────────────────────────────────────────────────────
+
+class ItemSlot extends ConsumerWidget {
+  final String? selectedItemId;
+  final VoidCallback onTap;
+  final VoidCallback? onRemove;
+
+  const ItemSlot({
+    super.key,
+    required this.selectedItemId,
+    required this.onTap,
+    this.onRemove,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final itemsAsync = ref.watch(survivorItemsProvider);
+    return itemsAsync.when(
+      loading: () => _buildSlot(null),
+      error: (_, __) => _buildSlot(null),
+      data: (items) {
+        final item = selectedItemId != null
+            ? items.firstWhere((i) => i.id == selectedItemId,
+                orElse: () => items.first)
+            : null;
+        return _buildSlot(item);
+      },
+    );
+  }
+
+  Widget _buildSlot(Item? item) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        height: 64,
+        decoration: BoxDecoration(
+          color: item != null ? AppTheme.surfaceElevated : AppTheme.surface,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: item != null
+                ? itemCategoryColor(item.category).withValues(alpha: 0.5)
+                : AppTheme.border,
+          ),
+        ),
+        child: item == null
+            ? Center(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Icon(Icons.backpack_outlined, color: AppTheme.textDim, size: 16),
+                    SizedBox(width: 6),
+                    Text('Choose Item',
+                        style: TextStyle(fontSize: 12, color: AppTheme.textDim)),
+                  ],
+                ),
+              )
+            : Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                child: Row(
+                  children: [
+                    ItemIcon(item: item, size: 40),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(item.name,
+                              style: const TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppTheme.textPrimary),
+                              overflow: TextOverflow.ellipsis),
+                          Text(itemCategoryLabel(item.category),
+                              style: const TextStyle(
+                                  fontSize: 11, color: AppTheme.textSecondary)),
+                        ],
+                      ),
+                    ),
+                    if (onRemove != null)
+                      GestureDetector(
+                        onTap: onRemove,
+                        child: const Padding(
+                          padding: EdgeInsets.all(4),
+                          child: Icon(Icons.close, size: 14, color: AppTheme.textDim),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+      ),
+    );
+  }
+}
+
+// ─── Item Picker Sheet ────────────────────────────────────────────────────────
+
+class ItemPickerSheet extends ConsumerStatefulWidget {
+  final String? selectedId;
+  final ValueChanged<Item> onSelect;
+
+  const ItemPickerSheet({
+    super.key,
+    required this.selectedId,
+    required this.onSelect,
+  });
+
+  @override
+  ConsumerState<ItemPickerSheet> createState() => _ItemPickerSheetState();
+}
+
+class _ItemPickerSheetState extends ConsumerState<ItemPickerSheet> {
+  String _search = '';
+  String _filter = 'all';
+
+  static const _categories = [
+    ('all', 'All'),
+    ('medkit', 'Medkit'),
+    ('flashlight', 'Flashlight'),
+    ('toolbox', 'Toolbox'),
+    ('key', 'Key'),
+    ('map', 'Map'),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final itemsAsync = ref.watch(survivorItemsProvider);
+
+    return DraggableScrollableSheet(
+      expand: false,
+      initialChildSize: 0.85,
+      maxChildSize: 0.95,
+      builder: (ctx, controller) => Column(
+        children: [
+          const SizedBox(height: 8),
+          Container(
+            width: 40, height: 4,
+            decoration: BoxDecoration(
+                color: AppTheme.border, borderRadius: BorderRadius.circular(2)),
+          ),
+          const SizedBox(height: 12),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text('Choose Item',
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: AppTheme.textPrimary)),
+            ),
+          ),
+          const SizedBox(height: 10),
+          SizedBox(
+            height: 36,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              children: _categories.map((cat) {
+                final isActive = _filter == cat.$1;
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: GestureDetector(
+                    onTap: () => setState(() => _filter = cat.$1),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 150),
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: isActive ? AppTheme.primary : AppTheme.surfaceElevated,
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                            color: isActive ? AppTheme.primary : AppTheme.border),
+                      ),
+                      child: Text(cat.$2,
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: isActive ? Colors.white : AppTheme.textSecondary)),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: TextField(
+              onChanged: (v) => setState(() => _search = v),
+              style: const TextStyle(color: AppTheme.textPrimary),
+              decoration: const InputDecoration(
+                hintText: 'Search items...',
+                prefixIcon: Icon(Icons.search, color: AppTheme.textDim, size: 18),
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Expanded(
+            child: itemsAsync.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (e, _) => Center(child: Text('$e')),
+              data: (items) {
+                final filtered = items.where((i) {
+                  final matchSearch = _search.isEmpty ||
+                      i.name.toLowerCase().contains(_search.toLowerCase());
+                  final matchCat = _filter == 'all' || i.category == _filter;
+                  return matchSearch && matchCat;
+                }).toList();
+
+                return ListView.builder(
+                  controller: controller,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: filtered.length,
+                  itemBuilder: (ctx, i) {
+                    final item = filtered[i];
+                    final isSelected = item.id == widget.selectedId;
+                    final rarityColor = AppTheme.rarityColor(item.rarity);
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: GestureDetector(
+                        onTap: () => widget.onSelect(item),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 150),
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? AppTheme.primaryDim.withValues(alpha: 0.3)
+                                : AppTheme.surfaceElevated,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: isSelected ? AppTheme.primary : AppTheme.border,
+                              width: isSelected ? 1.5 : 1,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              ItemIcon(item: item, size: 40),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(item.name,
+                                        style: const TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppTheme.textPrimary)),
+                                    Text(
+                                      item.rarity.replaceAll('_', ' ').toUpperCase(),
+                                      style: TextStyle(fontSize: 10, color: rarityColor),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                width: 6, height: 6,
+                                decoration: BoxDecoration(
+                                    color: rarityColor, shape: BoxShape.circle),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

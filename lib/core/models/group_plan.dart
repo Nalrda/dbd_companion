@@ -31,6 +31,18 @@ class GroupPlan extends HiveObject {
   @HiveField(8)
   DateTime updatedAt;
 
+  @HiveField(9)
+  String? survivor1ItemId;
+
+  @HiveField(10)
+  String? survivor2ItemId;
+
+  @HiveField(11)
+  String? survivor3ItemId;
+
+  @HiveField(12)
+  String? survivor4ItemId;
+
   GroupPlan({
     required this.id,
     required this.name,
@@ -41,6 +53,10 @@ class GroupPlan extends HiveObject {
     this.notes,
     DateTime? createdAt,
     DateTime? updatedAt,
+    this.survivor1ItemId,
+    this.survivor2ItemId,
+    this.survivor3ItemId,
+    this.survivor4ItemId,
   })  : survivor1PerkIds = survivor1PerkIds ?? [],
         survivor2PerkIds = survivor2PerkIds ?? [],
         survivor3PerkIds = survivor3PerkIds ?? [],
@@ -68,6 +84,26 @@ class GroupPlan extends HiveObject {
     updatedAt = DateTime.now();
   }
 
+  String? getItemIdForSurvivor(int index) {
+    switch (index) {
+      case 0: return survivor1ItemId;
+      case 1: return survivor2ItemId;
+      case 2: return survivor3ItemId;
+      case 3: return survivor4ItemId;
+      default: return null;
+    }
+  }
+
+  void setItemIdForSurvivor(int index, String? id) {
+    switch (index) {
+      case 0: survivor1ItemId = id; break;
+      case 1: survivor2ItemId = id; break;
+      case 2: survivor3ItemId = id; break;
+      case 3: survivor4ItemId = id; break;
+    }
+    updatedAt = DateTime.now();
+  }
+
   int get totalPerksCount =>
       survivor1PerkIds.length +
       survivor2PerkIds.length +
@@ -84,6 +120,10 @@ class GroupPlan extends HiveObject {
     'notes': notes,
     'createdAt': createdAt.toIso8601String(),
     'updatedAt': updatedAt.toIso8601String(),
+    'survivor1ItemId': survivor1ItemId,
+    'survivor2ItemId': survivor2ItemId,
+    'survivor3ItemId': survivor3ItemId,
+    'survivor4ItemId': survivor4ItemId,
   };
 
   factory GroupPlan.fromJson(Map<String, dynamic> json) => GroupPlan(
@@ -96,5 +136,9 @@ class GroupPlan extends HiveObject {
     notes: json['notes'],
     createdAt: DateTime.parse(json['createdAt']),
     updatedAt: DateTime.parse(json['updatedAt']),
+    survivor1ItemId: json['survivor1ItemId'] as String?,
+    survivor2ItemId: json['survivor2ItemId'] as String?,
+    survivor3ItemId: json['survivor3ItemId'] as String?,
+    survivor4ItemId: json['survivor4ItemId'] as String?,
   );
 }
