@@ -17,15 +17,13 @@ class PerkIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final rarityColor = AppTheme.rarityColor(perk.rarity);
-
     return Container(
       width: size,
       height: size,
       decoration: BoxDecoration(
         color: AppTheme.surfaceElevated,
         borderRadius: BorderRadius.circular(size * 0.2),
-        border: Border.all(color: rarityColor.withValues(alpha: 0.6), width: 1.5),
+        border: Border.all(color: AppTheme.border, width: 1.5),
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(size * 0.18),
@@ -35,25 +33,25 @@ class PerkIcon extends StatelessWidget {
                 width: size,
                 height: size,
                 fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => _fallbackIcon(rarityColor),
+                errorBuilder: (_, __, ___) => _fallbackIcon(),
                 loadingBuilder: (_, child, progress) {
                   if (progress == null) return child;
-                  return _fallbackIcon(rarityColor);
+                  return _fallbackIcon();
                 },
               )
-            : _fallbackIcon(rarityColor),
+            : _fallbackIcon(),
       ),
     );
   }
 
-  Widget _fallbackIcon(Color rarityColor) {
+  Widget _fallbackIcon() {
     return Container(
-      color: rarityColor.withValues(alpha: 0.1),
+      color: AppTheme.border.withValues(alpha: 0.2),
       child: Center(
         child: Text(
           perk.name[0],
           style: TextStyle(
-            color: rarityColor,
+            color: AppTheme.textDim,
             fontSize: size * 0.4,
             fontWeight: FontWeight.w800,
           ),
@@ -81,8 +79,6 @@ class PerkCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final rarityColor = AppTheme.rarityColor(perk.rarity);
-
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
@@ -97,12 +93,12 @@ class PerkCard extends StatelessWidget {
             width: isSelected ? 1.5 : 1,
           ),
         ),
-        child: compact ? _buildCompact(rarityColor) : _buildFull(rarityColor),
+        child: compact ? _buildCompact() : _buildFull(),
       ),
     );
   }
 
-  Widget _buildCompact(Color rarityColor) {
+  Widget _buildCompact() {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: Row(
@@ -130,17 +126,12 @@ class PerkCard extends StatelessWidget {
               ],
             ),
           ),
-          Container(
-            width: 6,
-            height: 6,
-            decoration: BoxDecoration(color: rarityColor, shape: BoxShape.circle),
-          ),
         ],
       ),
     );
   }
 
-  Widget _buildFull(Color rarityColor) {
+  Widget _buildFull() {
     return Padding(
       padding: const EdgeInsets.all(14),
       child: Row(
@@ -152,36 +143,13 @@ class PerkCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        perk.name,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
-                          color: AppTheme.textPrimary,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-                      decoration: BoxDecoration(
-                        color: rarityColor.withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(6),
-                        border: Border.all(color: rarityColor.withValues(alpha: 0.4)),
-                      ),
-                      child: Text(
-                        perk.rarity.replaceAll('_', ' ').toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 9,
-                          color: rarityColor,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                    ),
-                  ],
+                Text(
+                  perk.name,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: AppTheme.textPrimary,
+                  ),
                 ),
                 const SizedBox(height: 2),
                 Text(
