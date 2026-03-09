@@ -3,11 +3,13 @@ import '../models/build.dart';
 import '../models/group_plan.dart';
 import '../models/item.dart';
 import '../models/map_callout.dart';
+import '../models/offering.dart';
 import '../models/perk.dart';
 import '../repositories/build_repository.dart';
 import '../repositories/group_plan_repository.dart';
 import '../repositories/item_repository.dart';
 import '../repositories/map_repository.dart';
+import '../repositories/offering_repository.dart';
 import '../repositories/perk_repository.dart';
 
 // ─── Perk providers ───────────────────────────────────────────────────────────
@@ -129,6 +131,16 @@ class RandomizerNotifier extends Notifier<RandomizerState> {
 
 final survivorItemsProvider = FutureProvider<List<Item>>((ref) async {
   return ItemRepository.instance.getSurvivorItems();
+});
+
+// ─── Offering providers ───────────────────────────────────────────────────────
+
+final survivorOfferingsProvider = FutureProvider<List<Offering>>((ref) async {
+  return OfferingRepository.instance.getForRole(isSurvivor: true);
+});
+
+final killerOfferingsProvider = FutureProvider<List<Offering>>((ref) async {
+  return OfferingRepository.instance.getForRole(isSurvivor: false);
 });
 
 // ─── Map Callout providers ────────────────────────────────────────────────────

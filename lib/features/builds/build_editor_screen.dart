@@ -33,6 +33,7 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
   int? _editingSlot;
   Build? _existingBuild;
   String? _selectedItemId;
+  String? _selectedOfferingId;
 
   @override
   void initState() {
@@ -60,6 +61,7 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
       _notesController.text = build.notes ?? '';
       _isSurvivor = build.isSurvivor;
       _selectedItemId = build.itemId;
+      _selectedOfferingId = build.offeringId;
       _addon1Controller.text = build.addon1 ?? '';
       _addon2Controller.text = build.addon2 ?? '';
       for (int i = 0; i < build.perkIds.length && i < 4; i++) {
@@ -98,6 +100,7 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
         itemId: _selectedItemId,
         addon1: addon1,
         addon2: addon2,
+        offeringId: _selectedOfferingId,
       );
       await ref.read(buildsProvider.notifier).save(updated);
     } else {
@@ -235,6 +238,18 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
           ],
 
           const SizedBox(height: 20),
+          const SectionHeader(title: 'OFFERING'),
+          const SizedBox(height: 10),
+          OfferingSlot(
+            selectedOfferingId: _selectedOfferingId,
+            isSurvivor: _isSurvivor,
+            onTap: _openOfferingPicker,
+            onRemove: _selectedOfferingId != null
+                ? () => setState(() => _selectedOfferingId = null)
+                : null,
+          ),
+
+          const SizedBox(height: 20),
           const SectionHeader(title: 'NOTES'),
           const SizedBox(height: 10),
 
@@ -264,6 +279,26 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
         selectedId: _selectedItemId,
         onSelect: (item) {
           setState(() => _selectedItemId = item.id == 'no_item' ? null : item.id);
+          Navigator.pop(ctx);
+        },
+      ),
+    );
+  }
+
+  void _openOfferingPicker() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppTheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => OfferingPickerSheet(
+        selectedId: _selectedOfferingId,
+        isSurvivor: _isSurvivor,
+        onSelect: (offering) {
+          setState(() =>
+              _selectedOfferingId = offering.id == 'no_offering' ? null : offering.id);
           Navigator.pop(ctx);
         },
       ),

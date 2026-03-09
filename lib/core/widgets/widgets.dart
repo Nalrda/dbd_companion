@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/item.dart';
+import '../models/offering.dart';
 import '../models/perk.dart';
 import '../providers/providers.dart';
 import '../theme/app_theme.dart';
@@ -750,6 +751,374 @@ class _ItemPickerSheetState extends ConsumerState<ItemPickerSheet> {
                                 decoration: BoxDecoration(
                                     color: rarityColor, shape: BoxShape.circle),
                               ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Offering helpers ─────────────────────────────────────────────────────────
+
+Color offeringRarityColor(String rarity) {
+  switch (rarity) {
+    case 'common':     return const Color(0xFFB0BEC5);
+    case 'uncommon':   return const Color(0xFFFFD54F);
+    case 'rare':       return const Color(0xFFBA68C8);
+    case 'very_rare':  return const Color(0xFFEF5350);
+    case 'ultra_rare': return const Color(0xFF37474F);
+    default:           return AppTheme.textDim;
+  }
+}
+
+IconData offeringCategoryIcon(String category) {
+  switch (category) {
+    case 'bloodpoints': return Icons.monetization_on_outlined;
+    case 'map':         return Icons.map_outlined;
+    case 'fog':         return Icons.cloud_outlined;
+    case 'hook':        return Icons.anchor_outlined;
+    case 'chest':       return Icons.inventory_2_outlined;
+    case 'mori':        return Icons.sports_kabaddi_outlined;
+    case 'escape':      return Icons.directions_run_outlined;
+    case 'hatch':       return Icons.door_sliding_outlined;
+    default:            return Icons.card_giftcard_outlined;
+  }
+}
+
+String offeringRarityLabel(String rarity) {
+  switch (rarity) {
+    case 'common':     return 'Common';
+    case 'uncommon':   return 'Uncommon';
+    case 'rare':       return 'Rare';
+    case 'very_rare':  return 'Very Rare';
+    case 'ultra_rare': return 'Ultra Rare';
+    default:           return '';
+  }
+}
+
+// ─── OfferingSlot ─────────────────────────────────────────────────────────────
+
+class OfferingSlot extends ConsumerWidget {
+  final String? selectedOfferingId;
+  final bool isSurvivor;
+  final VoidCallback onTap;
+  final VoidCallback? onRemove;
+
+  const OfferingSlot({
+    super.key,
+    required this.selectedOfferingId,
+    required this.isSurvivor,
+    required this.onTap,
+    this.onRemove,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final offeringsAsync = isSurvivor
+        ? ref.watch(survivorOfferingsProvider)
+        : ref.watch(killerOfferingsProvider);
+
+    final offering = offeringsAsync.whenOrNull(
+      data: (list) => selectedOfferingId != null
+          ? list.where((o) => o.id == selectedOfferingId).firstOrNull
+          : null,
+    );
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 64,
+        decoration: BoxDecoration(
+          color: offering != null ? AppTheme.surfaceElevated : AppTheme.surface,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: offering != null
+                ? offeringRarityColor(offering.rarity).withValues(alpha: 0.5)
+                : AppTheme.border,
+          ),
+        ),
+        child: offering == null
+            ? const Center(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.card_giftcard_outlined, color: AppTheme.textDim, size: 16),
+                    SizedBox(width: 6),
+                    Text('Choose Offering',
+                        style: TextStyle(fontSize: 12, color: AppTheme.textDim)),
+                  ],
+                ),
+              )
+            : Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: offeringRarityColor(offering.rarity).withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: offeringRarityColor(offering.rarity).withValues(alpha: 0.5),
+                        ),
+                      ),
+                      child: Icon(
+                        offeringCategoryIcon(offering.category),
+                        color: offeringRarityColor(offering.rarity),
+                        size: 20,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            offering.name,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: AppTheme.textPrimary,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            offeringRarityLabel(offering.rarity),
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: offeringRarityColor(offering.rarity),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (onRemove != null)
+                      GestureDetector(
+                        onTap: onRemove,
+                        child: const Icon(Icons.close, size: 16, color: AppTheme.textDim),
+                      ),
+                  ],
+                ),
+              ),
+      ),
+    );
+  }
+}
+
+// ─── OfferingPickerSheet ──────────────────────────────────────────────────────
+
+class OfferingPickerSheet extends ConsumerStatefulWidget {
+  final String? selectedId;
+  final bool isSurvivor;
+  final ValueChanged<Offering> onSelect;
+
+  const OfferingPickerSheet({
+    super.key,
+    required this.selectedId,
+    required this.isSurvivor,
+    required this.onSelect,
+  });
+
+  @override
+  ConsumerState<OfferingPickerSheet> createState() => _OfferingPickerSheetState();
+}
+
+class _OfferingPickerSheetState extends ConsumerState<OfferingPickerSheet> {
+  String _search = '';
+  String _selectedCategory = 'all';
+
+  static const _categories = [
+    ('all', 'All'),
+    ('bloodpoints', 'BP'),
+    ('map', 'Map'),
+    ('fog', 'Fog'),
+    ('hook', 'Hook'),
+    ('chest', 'Chest'),
+    ('mori', 'Mori'),
+    ('escape', 'Escape'),
+    ('hatch', 'Hatch'),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final offeringsAsync = widget.isSurvivor
+        ? ref.watch(survivorOfferingsProvider)
+        : ref.watch(killerOfferingsProvider);
+
+    return DraggableScrollableSheet(
+      expand: false,
+      initialChildSize: 0.85,
+      maxChildSize: 0.95,
+      builder: (ctx, controller) => Column(
+        children: [
+          const SizedBox(height: 8),
+          Container(
+            width: 40,
+            height: 4,
+            decoration: BoxDecoration(
+                color: AppTheme.border,
+                borderRadius: BorderRadius.circular(2)),
+          ),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: TextField(
+              onChanged: (v) => setState(() => _search = v),
+              autofocus: false,
+              style: const TextStyle(color: AppTheme.textPrimary),
+              decoration: const InputDecoration(
+                hintText: 'Search offerings...',
+                prefixIcon:
+                    Icon(Icons.search, color: AppTheme.textDim, size: 18),
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          SizedBox(
+            height: 36,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              children: _categories.map((cat) {
+                final isSelected = _selectedCategory == cat.$1;
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: FilterChip(
+                    label: Text(cat.$2,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: isSelected
+                              ? Colors.white
+                              : AppTheme.textSecondary,
+                        )),
+                    selected: isSelected,
+                    onSelected: (_) =>
+                        setState(() => _selectedCategory = cat.$1),
+                    backgroundColor: AppTheme.surfaceElevated,
+                    selectedColor: AppTheme.primary,
+                    checkmarkColor: Colors.white,
+                    side: BorderSide(
+                        color: isSelected
+                            ? AppTheme.primary
+                            : AppTheme.border),
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Expanded(
+            child: offeringsAsync.when(
+              loading: () =>
+                  const Center(child: CircularProgressIndicator()),
+              error: (e, _) => Center(child: Text('$e')),
+              data: (offerings) {
+                final filtered = offerings.where((o) {
+                  if (_selectedCategory != 'all' &&
+                      o.category != _selectedCategory) return false;
+                  if (_search.isNotEmpty &&
+                      !o.name
+                          .toLowerCase()
+                          .contains(_search.toLowerCase())) return false;
+                  return true;
+                }).toList();
+
+                // no_offering first
+                final noOff = offerings
+                    .where((o) => o.id == 'no_offering')
+                    .firstOrNull;
+                final list = [
+                  if (noOff != null && _selectedCategory == 'all' && _search.isEmpty)
+                    noOff,
+                  ...filtered.where((o) => o.id != 'no_offering'),
+                ];
+
+                return ListView.builder(
+                  controller: controller,
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: list.length,
+                  itemBuilder: (ctx, i) {
+                    final o = list[i];
+                    final isSelected = widget.selectedId == o.id;
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(10),
+                        onTap: () => widget.onSelect(o),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 10),
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? AppTheme.primaryDim
+                                : AppTheme.surfaceElevated,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: isSelected
+                                  ? AppTheme.primary
+                                  : offeringRarityColor(o.rarity)
+                                      .withValues(alpha: 0.3),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 36,
+                                height: 36,
+                                decoration: BoxDecoration(
+                                  color: offeringRarityColor(o.rarity)
+                                      .withValues(alpha: 0.15),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Icon(
+                                  offeringCategoryIcon(o.category),
+                                  color: offeringRarityColor(o.rarity),
+                                  size: 18,
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      o.name,
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w600,
+                                        color: AppTheme.textPrimary,
+                                      ),
+                                    ),
+                                    if (o.rarity != 'none')
+                                      Text(
+                                        offeringRarityLabel(o.rarity),
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          color:
+                                              offeringRarityColor(o.rarity),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                              if (isSelected)
+                                const Icon(Icons.check_circle,
+                                    color: AppTheme.primary, size: 18),
                             ],
                           ),
                         ),

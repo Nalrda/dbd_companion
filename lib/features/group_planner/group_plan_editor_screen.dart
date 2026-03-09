@@ -24,6 +24,8 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
   final List<List<Perk?>> _resolvedPerks = List.generate(4, (_) => List.filled(4, null));
   // item id per survivor
   final List<String?> _survivorItemIds = List.filled(4, null);
+  // offering id per survivor
+  final List<String?> _survivorOfferingIds = List.filled(4, null);
   bool _loading = true;
 
   static const List<Color> _survivorColors = [
@@ -67,6 +69,7 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
         for (int i = 0; i < 4; i++) {
           _resolvedPerks[i] = resolved[i];
           _survivorItemIds[i] = plan.getItemIdForSurvivor(i);
+          _survivorOfferingIds[i] = plan.getOfferingIdForSurvivor(i);
         }
         _loading = false;
       });
@@ -81,6 +84,7 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
         _resolvedPerks[i].whereType<Perk>().map((p) => p.id).toList(),
       );
       _plan!.setItemIdForSurvivor(i, _survivorItemIds[i]);
+      _plan!.setOfferingIdForSurvivor(i, _survivorOfferingIds[i]);
     }
     await GroupPlanRepository.instance.save(_plan!);
     ref.invalidate(groupPlansProvider);
@@ -104,6 +108,26 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
         onSelect: (item) {
           setState(() => _survivorItemIds[survivorIndex] =
               item.id == 'no_item' ? null : item.id);
+          Navigator.pop(ctx);
+        },
+      ),
+    );
+  }
+
+  void _pickOffering(int survivorIndex) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppTheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => OfferingPickerSheet(
+        selectedId: _survivorOfferingIds[survivorIndex],
+        isSurvivor: true,
+        onSelect: (offering) {
+          setState(() => _survivorOfferingIds[survivorIndex] =
+              offering.id == 'no_offering' ? null : offering.id);
           Navigator.pop(ctx);
         },
       ),
@@ -184,6 +208,7 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
                 label: _survivorLabels[si],
                 perkSlots: _resolvedPerks[si],
                 itemId: _survivorItemIds[si],
+                offeringId: _survivorOfferingIds[si],
                 onSlotTap: (slotIndex) => _pickPerk(si, slotIndex),
                 onSlotRemove: (slotIndex) => setState(
                   () => _resolvedPerks[si][slotIndex] = null,
@@ -191,6 +216,10 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
                 onItemTap: () => _pickItem(si),
                 onItemRemove: _survivorItemIds[si] != null
                     ? () => setState(() => _survivorItemIds[si] = null)
+                    : null,
+                onOfferingTap: () => _pickOffering(si),
+                onOfferingRemove: _survivorOfferingIds[si] != null
+                    ? () => setState(() => _survivorOfferingIds[si] = null)
                     : null,
               ),
             ),
@@ -211,6 +240,7 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
             label: _survivorLabels[si],
             perkSlots: _resolvedPerks[si],
             itemId: _survivorItemIds[si],
+            offeringId: _survivorOfferingIds[si],
             onSlotTap: (slotIndex) => _pickPerk(si, slotIndex),
             onSlotRemove: (slotIndex) => setState(
               () => _resolvedPerks[si][slotIndex] = null,
@@ -218,6 +248,10 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
             onItemTap: () => _pickItem(si),
             onItemRemove: _survivorItemIds[si] != null
                 ? () => setState(() => _survivorItemIds[si] = null)
+                : null,
+            onOfferingTap: () => _pickOffering(si),
+            onOfferingRemove: _survivorOfferingIds[si] != null
+                ? () => setState(() => _survivorOfferingIds[si] = null)
                 : null,
           ),
         )),
@@ -234,10 +268,13 @@ class _SurvivorColumn extends StatelessWidget {
   final String label;
   final List<Perk?> perkSlots;
   final String? itemId;
+  final String? offeringId;
   final ValueChanged<int> onSlotTap;
   final ValueChanged<int> onSlotRemove;
   final VoidCallback onItemTap;
   final VoidCallback? onItemRemove;
+  final VoidCallback onOfferingTap;
+  final VoidCallback? onOfferingRemove;
 
   const _SurvivorColumn({
     required this.survivorIndex,
@@ -245,10 +282,13 @@ class _SurvivorColumn extends StatelessWidget {
     required this.label,
     required this.perkSlots,
     required this.itemId,
+    required this.offeringId,
     required this.onSlotTap,
     required this.onSlotRemove,
     required this.onItemTap,
     this.onItemRemove,
+    required this.onOfferingTap,
+    this.onOfferingRemove,
   });
 
   @override
@@ -337,7 +377,7 @@ class _SurvivorColumn extends StatelessWidget {
 
           // Item slot
           Padding(
-            padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+            padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -357,6 +397,34 @@ class _SurvivorColumn extends StatelessWidget {
                   selectedItemId: itemId,
                   onTap: onItemTap,
                   onRemove: onItemRemove,
+                ),
+              ],
+            ),
+          ),
+
+          // Offering slot
+          Padding(
+            padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 6),
+                  child: Text(
+                    'OFFERING',
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w600,
+                      color: color.withValues(alpha: 0.7),
+                      letterSpacing: 0.8,
+                    ),
+                  ),
+                ),
+                OfferingSlot(
+                  selectedOfferingId: offeringId,
+                  isSurvivor: true,
+                  onTap: onOfferingTap,
+                  onRemove: onOfferingRemove,
                 ),
               ],
             ),

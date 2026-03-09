@@ -43,6 +43,18 @@ class GroupPlan extends HiveObject {
   @HiveField(12)
   String? survivor4ItemId;
 
+  @HiveField(13)
+  String? survivor1OfferingId;
+
+  @HiveField(14)
+  String? survivor2OfferingId;
+
+  @HiveField(15)
+  String? survivor3OfferingId;
+
+  @HiveField(16)
+  String? survivor4OfferingId;
+
   GroupPlan({
     required this.id,
     required this.name,
@@ -57,6 +69,10 @@ class GroupPlan extends HiveObject {
     this.survivor2ItemId,
     this.survivor3ItemId,
     this.survivor4ItemId,
+    this.survivor1OfferingId,
+    this.survivor2OfferingId,
+    this.survivor3OfferingId,
+    this.survivor4OfferingId,
   })  : survivor1PerkIds = survivor1PerkIds ?? [],
         survivor2PerkIds = survivor2PerkIds ?? [],
         survivor3PerkIds = survivor3PerkIds ?? [],
@@ -104,6 +120,26 @@ class GroupPlan extends HiveObject {
     updatedAt = DateTime.now();
   }
 
+  String? getOfferingIdForSurvivor(int index) {
+    switch (index) {
+      case 0: return survivor1OfferingId;
+      case 1: return survivor2OfferingId;
+      case 2: return survivor3OfferingId;
+      case 3: return survivor4OfferingId;
+      default: return null;
+    }
+  }
+
+  void setOfferingIdForSurvivor(int index, String? id) {
+    switch (index) {
+      case 0: survivor1OfferingId = id; break;
+      case 1: survivor2OfferingId = id; break;
+      case 2: survivor3OfferingId = id; break;
+      case 3: survivor4OfferingId = id; break;
+    }
+    updatedAt = DateTime.now();
+  }
+
   int get totalPerksCount =>
       survivor1PerkIds.length +
       survivor2PerkIds.length +
@@ -124,6 +160,10 @@ class GroupPlan extends HiveObject {
     'survivor2ItemId': survivor2ItemId,
     'survivor3ItemId': survivor3ItemId,
     'survivor4ItemId': survivor4ItemId,
+    'survivor1OfferingId': survivor1OfferingId,
+    'survivor2OfferingId': survivor2OfferingId,
+    'survivor3OfferingId': survivor3OfferingId,
+    'survivor4OfferingId': survivor4OfferingId,
   };
 
   factory GroupPlan.fromJson(Map<String, dynamic> json) => GroupPlan(
@@ -140,5 +180,9 @@ class GroupPlan extends HiveObject {
     survivor2ItemId: json['survivor2ItemId'] as String?,
     survivor3ItemId: json['survivor3ItemId'] as String?,
     survivor4ItemId: json['survivor4ItemId'] as String?,
+    survivor1OfferingId: json['survivor1OfferingId'] as String?,
+    survivor2OfferingId: json['survivor2OfferingId'] as String?,
+    survivor3OfferingId: json['survivor3OfferingId'] as String?,
+    survivor4OfferingId: json['survivor4OfferingId'] as String?,
   );
 }

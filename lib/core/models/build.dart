@@ -40,6 +40,10 @@ class Build extends HiveObject {
   @HiveField(10)
   String? addon2;
 
+  /// Offering id from offerings.json (both survivor and killer).
+  @HiveField(11)
+  String? offeringId;
+
   Build({
     required this.id,
     required this.name,
@@ -52,6 +56,7 @@ class Build extends HiveObject {
     this.itemId,
     this.addon1,
     this.addon2,
+    this.offeringId,
   })  : tags = tags ?? [],
         createdAt = createdAt ?? DateTime.now(),
         updatedAt = updatedAt ?? DateTime.now();
@@ -67,6 +72,7 @@ class Build extends HiveObject {
     Object? itemId = _sentinel,
     Object? addon1 = _sentinel,
     Object? addon2 = _sentinel,
+    Object? offeringId = _sentinel,
   }) {
     return Build(
       id: id,
@@ -80,6 +86,7 @@ class Build extends HiveObject {
       itemId: itemId == _sentinel ? this.itemId : itemId as String?,
       addon1: addon1 == _sentinel ? this.addon1 : addon1 as String?,
       addon2: addon2 == _sentinel ? this.addon2 : addon2 as String?,
+      offeringId: offeringId == _sentinel ? this.offeringId : offeringId as String?,
     );
   }
 
@@ -96,6 +103,7 @@ class Build extends HiveObject {
       'itemId': itemId,
       'addon1': addon1,
       'addon2': addon2,
+      'offeringId': offeringId,
     };
   }
 
@@ -112,6 +120,7 @@ class Build extends HiveObject {
       itemId: json['itemId'] as String?,
       addon1: json['addon1'] as String?,
       addon2: json['addon2'] as String?,
+      offeringId: json['offeringId'] as String?,
     );
   }
 }
