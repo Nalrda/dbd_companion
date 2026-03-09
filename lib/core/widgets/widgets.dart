@@ -536,10 +536,10 @@ class ItemSlot extends ConsumerWidget {
           ),
         ),
         child: item == null
-            ? Center(
+            ? const Center(
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: const [
+                  children: [
                     Icon(Icons.backpack_outlined, color: AppTheme.textDim, size: 16),
                     SizedBox(width: 6),
                     Text('Choose Item',

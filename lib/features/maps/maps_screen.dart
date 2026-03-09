@@ -102,7 +102,7 @@ class _MapListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       borderRadius: BorderRadius.circular(12),
-      onTap: () => context.push('/maps/${realmId}/${map.id}'),
+      onTap: () => context.push('/maps/$realmId/${map.id}'),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(

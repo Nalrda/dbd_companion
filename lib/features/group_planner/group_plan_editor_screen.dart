@@ -210,10 +210,15 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
             color: _survivorColors[si],
             label: _survivorLabels[si],
             perkSlots: _resolvedPerks[si],
+            itemId: _survivorItemIds[si],
             onSlotTap: (slotIndex) => _pickPerk(si, slotIndex),
             onSlotRemove: (slotIndex) => setState(
               () => _resolvedPerks[si][slotIndex] = null,
             ),
+            onItemTap: () => _pickItem(si),
+            onItemRemove: _survivorItemIds[si] != null
+                ? () => setState(() => _survivorItemIds[si] = null)
+                : null,
           ),
         )),
       ),
