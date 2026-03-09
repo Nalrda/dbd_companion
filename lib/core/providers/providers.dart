@@ -1,0 +1,150 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../models/build.dart';
+import '../models/group_plan.dart';
+import '../models/perk.dart';
+import '../repositories/build_repository.dart';
+import '../repositories/group_plan_repository.dart';
+import '../repositories/perk_repository.dart';
+
+// ─── Perk providers ───────────────────────────────────────────────────────────
+
+final allPerksProvider = FutureProvider<List<Perk>>((ref) async {
+  return PerkRepository.instance.getAllPerks();
+});
+
+final survivorPerksProvider = FutureProvider<List<Perk>>((ref) async {
+  return PerkRepository.instance.getSurvivorPerks();
+});
+
+final killerPerksProvider = FutureProvider<List<Perk>>((ref) async {
+  return PerkRepository.instance.getKillerPerks();
+});
+
+// ─── Build providers ──────────────────────────────────────────────────────────
+
+final buildsProvider =
+    AsyncNotifierProvider<BuildsNotifier, List<Build>>(BuildsNotifier.new);
+
+class BuildsNotifier extends AsyncNotifier<List<Build>> {
+  @override
+  Future<List<Build>> build() async {
+    return BuildRepository.instance.getAllBuilds();
+  }
+
+  Future<Build> create({
+    required String name,
+    required bool isSurvivor,
+    List<String>? perkIds,
+    String? notes,
+    List<String>? tags,
+  }) async {
+    final newBuild = await BuildRepository.instance.createBuild(
+      name: name,
+      isSurvivor: isSurvivor,
+      perkIds: perkIds,
+      notes: notes,
+      tags: tags,
+    );
+    ref.invalidateSelf();
+    return newBuild;
+  }
+
+  Future<void> save(Build build) async {
+    await BuildRepository.instance.saveBuild(build);
+    ref.invalidateSelf();
+  }
+
+  Future<void> delete(String id) async {
+    await BuildRepository.instance.deleteBuild(id);
+    ref.invalidateSelf();
+  }
+}
+
+// ─── Randomizer state ─────────────────────────────────────────────────────────
+
+class RandomizerState {
+  final bool isSurvivor;
+  final List<Perk> selectedPerks;
+  final bool isRolling;
+
+  const RandomizerState({
+    this.isSurvivor = true,
+    this.selectedPerks = const [],
+    this.isRolling = false,
+  });
+
+  RandomizerState copyWith({
+    bool? isSurvivor,
+    List<Perk>? selectedPerks,
+    bool? isRolling,
+  }) {
+    return RandomizerState(
+      isSurvivor: isSurvivor ?? this.isSurvivor,
+      selectedPerks: selectedPerks ?? this.selectedPerks,
+      isRolling: isRolling ?? this.isRolling,
+    );
+  }
+}
+
+final randomizerProvider =
+    NotifierProvider<RandomizerNotifier, RandomizerState>(
+        RandomizerNotifier.new);
+
+class RandomizerNotifier extends Notifier<RandomizerState> {
+  @override
+  RandomizerState build() => const RandomizerState();
+
+  void toggleRole() {
+    state = state.copyWith(
+      isSurvivor: !state.isSurvivor,
+      selectedPerks: [],
+    );
+  }
+
+  Future<void> roll() async {
+    state = state.copyWith(isRolling: true);
+
+    await Future.delayed(const Duration(milliseconds: 600));
+
+    final perks = state.isSurvivor
+        ? await PerkRepository.instance.getSurvivorPerks()
+        : await PerkRepository.instance.getKillerPerks();
+
+    perks.shuffle();
+    final picked = perks.take(4).toList();
+
+    state = state.copyWith(selectedPerks: picked, isRolling: false);
+  }
+
+  void setRole(bool isSurvivor) {
+    state = state.copyWith(isSurvivor: isSurvivor, selectedPerks: []);
+  }
+}
+
+// ─── Group Plan providers ─────────────────────────────────────────────────────
+
+final groupPlansProvider =
+    AsyncNotifierProvider<GroupPlansNotifier, List<GroupPlan>>(GroupPlansNotifier.new);
+
+class GroupPlansNotifier extends AsyncNotifier<List<GroupPlan>> {
+  @override
+  Future<List<GroupPlan>> build() async {
+    return GroupPlanRepository.instance.getAll();
+  }
+
+  Future<GroupPlan> create({required String name}) async {
+    final plan = await GroupPlanRepository.instance.create(name: name);
+    ref.invalidateSelf();
+    return plan;
+  }
+
+  Future<void> save(GroupPlan plan) async {
+    await GroupPlanRepository.instance.save(plan);
+    ref.invalidateSelf();
+  }
+
+  Future<void> delete(String id) async {
+    await GroupPlanRepository.instance.delete(id);
+    ref.invalidateSelf();
+  }
+}
