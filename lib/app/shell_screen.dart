@@ -8,6 +8,7 @@ class ShellScreen extends StatelessWidget {
   static const _tabs = [
     _TabItem(path: '/builds', icon: Icons.build_outlined, activeIcon: Icons.build, label: 'Builds'),
     _TabItem(path: '/randomizer', icon: Icons.casino_outlined, activeIcon: Icons.casino, label: 'Randomizer'),
+    _TabItem(path: '/maps', icon: Icons.map_outlined, activeIcon: Icons.map, label: 'Maps'),
     _TabItem(path: '/group', icon: Icons.groups_outlined, activeIcon: Icons.groups, label: 'Group'),
   ];
 

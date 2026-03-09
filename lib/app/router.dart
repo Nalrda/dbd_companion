@@ -2,6 +2,8 @@ import 'package:go_router/go_router.dart';
 import '../features/builds/build_detail_screen.dart';
 import '../features/builds/build_editor_screen.dart';
 import '../features/builds/builds_screen.dart';
+import '../features/maps/map_detail_screen.dart';
+import '../features/maps/maps_screen.dart';
 import '../features/randomizer/randomizer_screen.dart';
 import '../features/group_planner/group_planner_screen.dart';
 import '../features/group_planner/group_plan_editor_screen.dart';
@@ -15,6 +17,7 @@ final router = GoRouter(
       routes: [
         GoRoute(path: '/builds', builder: (_, __) => const BuildsScreen()),
         GoRoute(path: '/randomizer', builder: (_, __) => const RandomizerScreen()),
+        GoRoute(path: '/maps', builder: (_, __) => const MapsScreen()),
         GoRoute(path: '/group', builder: (_, __) => const GroupPlannerScreen()),
       ],
     ),
@@ -41,6 +44,13 @@ final router = GoRouter(
       path: '/group/:id',
       builder: (context, state) =>
           GroupPlanEditorScreen(planId: state.pathParameters['id']!),
+    ),
+    GoRoute(
+      path: '/maps/:realmId/:mapId',
+      builder: (context, state) => MapDetailScreen(
+        realmId: state.pathParameters['realmId']!,
+        mapId: state.pathParameters['mapId']!,
+      ),
     ),
   ],
 );

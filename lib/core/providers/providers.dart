@@ -1,9 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/build.dart';
 import '../models/group_plan.dart';
+import '../models/map_callout.dart';
 import '../models/perk.dart';
 import '../repositories/build_repository.dart';
 import '../repositories/group_plan_repository.dart';
+import '../repositories/map_repository.dart';
 import '../repositories/perk_repository.dart';
 
 // ─── Perk providers ───────────────────────────────────────────────────────────
@@ -120,6 +122,12 @@ class RandomizerNotifier extends Notifier<RandomizerState> {
     state = state.copyWith(isSurvivor: isSurvivor, selectedPerks: []);
   }
 }
+
+// ─── Map Callout providers ────────────────────────────────────────────────────
+
+final mapRealmsProvider = FutureProvider<List<MapRealm>>((ref) async {
+  return MapRepository().getRealms();
+});
 
 // ─── Group Plan providers ─────────────────────────────────────────────────────
 
