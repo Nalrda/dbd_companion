@@ -997,11 +997,11 @@ class _OfferingPickerSheetState extends ConsumerState<OfferingPickerSheet> {
               data: (offerings) {
                 final filtered = offerings.where((o) {
                   if (_selectedCategory != 'all' &&
-                      o.category != _selectedCategory) return false;
+                      o.category != _selectedCategory) { return false; }
                   if (_search.isNotEmpty &&
                       !o.name
                           .toLowerCase()
-                          .contains(_search.toLowerCase())) return false;
+                          .contains(_search.toLowerCase())) { return false; }
                   return true;
                 }).toList();
 
