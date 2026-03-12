@@ -44,6 +44,9 @@ class Build extends HiveObject {
   @HiveField(11)
   String? offeringId;
 
+  @HiveField(12)
+  bool isFavorite;
+
   Build({
     required this.id,
     required this.name,
@@ -57,6 +60,7 @@ class Build extends HiveObject {
     this.addon1,
     this.addon2,
     this.offeringId,
+    this.isFavorite = false,
   })  : tags = tags ?? [],
         createdAt = createdAt ?? DateTime.now(),
         updatedAt = updatedAt ?? DateTime.now();
@@ -73,6 +77,7 @@ class Build extends HiveObject {
     Object? addon1 = _sentinel,
     Object? addon2 = _sentinel,
     Object? offeringId = _sentinel,
+    bool? isFavorite,
   }) {
     return Build(
       id: id,
@@ -87,6 +92,7 @@ class Build extends HiveObject {
       addon1: addon1 == _sentinel ? this.addon1 : addon1 as String?,
       addon2: addon2 == _sentinel ? this.addon2 : addon2 as String?,
       offeringId: offeringId == _sentinel ? this.offeringId : offeringId as String?,
+      isFavorite: isFavorite ?? this.isFavorite,
     );
   }
 
@@ -104,6 +110,7 @@ class Build extends HiveObject {
       'addon1': addon1,
       'addon2': addon2,
       'offeringId': offeringId,
+      'isFavorite': isFavorite,
     };
   }
 
@@ -121,6 +128,7 @@ class Build extends HiveObject {
       addon1: json['addon1'] as String?,
       addon2: json['addon2'] as String?,
       offeringId: json['offeringId'] as String?,
+      isFavorite: json['isFavorite'] as bool? ?? false,
     );
   }
 }

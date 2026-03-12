@@ -10,11 +10,15 @@ import '../../core/widgets/widgets.dart';
 class BuildEditorScreen extends ConsumerStatefulWidget {
   final String? buildId;
   final bool isSurvivor;
+  final List<String>? sharedPerkIds;
+  final String? sharedName;
 
   const BuildEditorScreen({
     super.key,
     this.buildId,
     this.isSurvivor = true,
+    this.sharedPerkIds,
+    this.sharedName,
   });
 
   @override
@@ -40,10 +44,15 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
     super.initState();
     _isSurvivor = widget.isSurvivor;
     _perkSlots = List.filled(4, null);
-    _nameController = TextEditingController();
+    _nameController = TextEditingController(text: widget.sharedName ?? '');
     _notesController = TextEditingController();
     _addon1Controller = TextEditingController();
     _addon2Controller = TextEditingController();
+    if (widget.sharedPerkIds != null) {
+      for (int i = 0; i < widget.sharedPerkIds!.length && i < 4; i++) {
+        _perkSlots[i] = widget.sharedPerkIds![i];
+      }
+    }
     _loadExistingBuild();
   }
 
@@ -152,7 +161,8 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
     final filtered = allPerks.where((p) {
       if (_searchQuery.isEmpty) return true;
       return p.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-          p.character.toLowerCase().contains(_searchQuery.toLowerCase());
+          p.character.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+          p.description.toLowerCase().contains(_searchQuery.toLowerCase());
     }).toList();
 
     return Row(
@@ -439,7 +449,8 @@ class _PerkPickerSheetState extends ConsumerState<_PerkPickerSheet> {
                 final filtered = perks.where((p) {
                   if (_search.isEmpty) return true;
                   return p.name.toLowerCase().contains(_search.toLowerCase()) ||
-                      p.character.toLowerCase().contains(_search.toLowerCase());
+                      p.character.toLowerCase().contains(_search.toLowerCase()) ||
+                      p.description.toLowerCase().contains(_search.toLowerCase());
                 }).toList();
                 return ListView.builder(
                   controller: controller,

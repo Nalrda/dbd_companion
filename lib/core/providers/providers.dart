@@ -64,6 +64,15 @@ class BuildsNotifier extends AsyncNotifier<List<Build>> {
     await BuildRepository.instance.deleteBuild(id);
     ref.invalidateSelf();
   }
+
+  Future<void> toggleFavorite(String id) async {
+    final builds = state.value ?? [];
+    final build = builds.firstWhere((b) => b.id == id);
+    await BuildRepository.instance.saveBuild(
+      build.copyWith(isFavorite: !build.isFavorite),
+    );
+    ref.invalidateSelf();
+  }
 }
 
 // ─── Randomizer state ─────────────────────────────────────────────────────────

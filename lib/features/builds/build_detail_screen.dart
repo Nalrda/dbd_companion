@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/models/build.dart';
@@ -59,12 +61,32 @@ class _BuildDetailViewState extends State<_BuildDetailView> {
     if (mounted) setState(() => _perks = perks);
   }
 
+  void _shareLink(BuildContext context) {
+    final perks = widget.build.perkIds.join(',');
+    final name = Uri.encodeComponent(widget.build.name);
+    final survivor = widget.build.isSurvivor.toString();
+    final path = '/builds/create?survivor=$survivor&name=$name&perks=$perks';
+    final url = kIsWeb ? '${Uri.base.origin}$path' : path;
+    Clipboard.setData(ClipboardData(text: url));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Share link copied to clipboard'),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.build.name),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.share_outlined),
+            tooltip: 'Copy share link',
+            onPressed: () => _shareLink(context),
+          ),
           IconButton(
             icon: const Icon(Icons.edit_outlined),
             onPressed: () => context.push('/builds/${widget.build.id}/edit'),
