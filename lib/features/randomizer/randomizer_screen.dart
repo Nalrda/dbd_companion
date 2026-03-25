@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/models/perk.dart';
@@ -104,21 +105,88 @@ class _LoadingSlots extends StatelessWidget {
   }
 }
 
-class _ResultSlots extends StatelessWidget {
+class _ResultSlots extends StatefulWidget {
   final List<Perk> perks;
   const _ResultSlots({required this.perks});
 
   @override
+  State<_ResultSlots> createState() => _ResultSlotsState();
+}
+
+class _ResultSlotsState extends State<_ResultSlots> {
+  int _revealed = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _revealSequentially();
+  }
+
+  @override
+  void didUpdateWidget(_ResultSlots old) {
+    super.didUpdateWidget(old);
+    if (old.perks != widget.perks) {
+      setState(() => _revealed = 0);
+      _revealSequentially();
+    }
+  }
+
+  Future<void> _revealSequentially() async {
+    for (int i = 0; i < widget.perks.length; i++) {
+      await Future.delayed(const Duration(milliseconds: 220));
+      if (mounted) setState(() => _revealed = i + 1);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
-      children: List.generate(
-        perks.length,
-        (i) => Padding(
+      children: List.generate(widget.perks.length, (i) {
+        final isVisible = i < _revealed;
+        return Padding(
           padding: const EdgeInsets.only(bottom: 8),
-          child: PerkCard(perk: perks[i])
-              .animate(delay: (i * 80).ms)
-              .fadeIn(duration: 300.ms)
-              .slideX(begin: -0.05, end: 0),
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 320),
+            transitionBuilder: (child, anim) => ScaleTransition(
+              scale: Tween<double>(begin: 0.82, end: 1.0).animate(
+                CurvedAnimation(parent: anim, curve: Curves.easeOutBack),
+              ),
+              child: FadeTransition(opacity: anim, child: child),
+            ),
+            child: isVisible
+                ? PerkCard(key: ValueKey('perk_$i'), perk: widget.perks[i])
+                : _PlaceholderSlot(key: ValueKey('placeholder_$i'), index: i),
+          ),
+        );
+      }),
+    );
+  }
+}
+
+class _PlaceholderSlot extends StatelessWidget {
+  final int index;
+  const _PlaceholderSlot({super.key, required this.index});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 84,
+      decoration: const BoxDecoration(
+        color: AppTheme.surfaceElevated,
+        borderRadius: BorderRadius.all(Radius.circular(12)),
+        border: Border.fromBorderSide(BorderSide(color: AppTheme.border)),
+      ),
+      child: Center(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.question_mark, color: AppTheme.textDim, size: 16),
+            const SizedBox(width: 8),
+            Text(
+              'Perk ${index + 1}',
+              style: const TextStyle(color: AppTheme.textDim, fontSize: 13),
+            ),
+          ],
         ),
       ),
     );
@@ -135,40 +203,11 @@ class _RollButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 52,
-      child: ElevatedButton(
+      child: DbdButton(
+        label: 'Roll Perks',
+        icon: Icons.casino_outlined,
         onPressed: isRolling ? null : onRoll,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppTheme.primary,
-          foregroundColor: Colors.white,
-          disabledBackgroundColor: AppTheme.primaryDim,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          elevation: 0,
-        ),
-        child: isRolling
-            ? const SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: Colors.white,
-                ),
-              )
-            : const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.casino_outlined, size: 20),
-                  SizedBox(width: 8),
-                  Text(
-                    'Roll Perks',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ],
-              ),
+        isLoading: isRolling,
       ),
     );
   }
@@ -189,17 +228,11 @@ class _SaveButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 44,
-      child: OutlinedButton.icon(
+      child: DbdButton(
+        label: 'Save as Build',
+        icon: Icons.bookmark_border,
+        outlined: true,
         onPressed: () => _showSaveDialog(context),
-        style: OutlinedButton.styleFrom(
-          foregroundColor: AppTheme.textPrimary,
-          side: const BorderSide(color: AppTheme.border),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12)),
-        ),
-        icon: const Icon(Icons.bookmark_border, size: 18),
-        label: const Text('Save as Build'),
       ),
     );
   }

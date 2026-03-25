@@ -129,19 +129,11 @@ class _BuildsScreenState extends ConsumerState<BuildsScreen> {
                           : 'Create your first killer build',
               action: (_showFavoritesOnly || _search.isNotEmpty)
                   ? null
-                  : ElevatedButton.icon(
+                  : DbdButton(
+                      label: 'Create Build',
+                      icon: Icons.add,
                       onPressed: () =>
                           context.push('/builds/create?survivor=$_showSurvivor'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.primary,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 12),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                      ),
-                      icon: const Icon(Icons.add, size: 18),
-                      label: const Text('Create Build'),
                     ),
             );
           }

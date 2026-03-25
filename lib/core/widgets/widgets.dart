@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/item.dart';
@@ -7,58 +8,144 @@ import '../models/perk.dart';
 import '../providers/providers.dart';
 import '../theme/app_theme.dart';
 
+// ─── Octagon Clipper ──────────────────────────────────────────────────────────
+
+class _OctagonClipper extends CustomClipper<Path> {
+  final double cut;
+  const _OctagonClipper({this.cut = 7});
+
+  @override
+  Path getClip(Size size) {
+    final c = cut;
+    return Path()
+      ..moveTo(c, 0)
+      ..lineTo(size.width - c, 0)
+      ..lineTo(size.width, c)
+      ..lineTo(size.width, size.height - c)
+      ..lineTo(size.width - c, size.height)
+      ..lineTo(c, size.height)
+      ..lineTo(0, size.height - c)
+      ..lineTo(0, c)
+      ..close();
+  }
+
+  @override
+  bool shouldReclip(_OctagonClipper old) => old.cut != cut;
+}
+
 // ─── Perk Icon ────────────────────────────────────────────────────────────────
 
 class PerkIcon extends StatelessWidget {
   final Perk perk;
   final double size;
+  final bool showCategoryGlow;
 
-  const PerkIcon({super.key, required this.perk, this.size = 48});
+  const PerkIcon({
+    super.key,
+    required this.perk,
+    this.size = 48,
+    this.showCategoryGlow = false,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final categoryColor = AppTheme.perkCategoryColor(perk.category);
+    final cut = size * 0.14;
     return Container(
       width: size,
       height: size,
       decoration: BoxDecoration(
         color: AppTheme.surfaceElevated,
-        borderRadius: BorderRadius.circular(size * 0.2),
-        border: Border.all(color: AppTheme.border, width: 1.5),
+        boxShadow: showCategoryGlow
+            ? [BoxShadow(color: categoryColor.withValues(alpha: 0.35), blurRadius: 8, spreadRadius: 0)]
+            : null,
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(size * 0.18),
-        child: perk.iconUrl != null
-            ? Image.network(
-                perk.iconUrl!,
-                width: size,
-                height: size,
-                fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => _fallbackIcon(),
-                loadingBuilder: (_, child, progress) {
-                  if (progress == null) return child;
-                  return _fallbackIcon();
-                },
-              )
-            : _fallbackIcon(),
+      child: ClipPath(
+        clipper: _OctagonClipper(cut: cut),
+        child: Stack(
+          children: [
+            // subtle category-tinted background
+            Container(color: categoryColor.withValues(alpha: 0.08)),
+            // icon image
+            perk.iconUrl != null
+                ? Image.network(
+                    perk.iconUrl!,
+                    width: size,
+                    height: size,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => _fallbackIcon(categoryColor),
+                    loadingBuilder: (_, child, progress) {
+                      if (progress == null) return child;
+                      return _fallbackIcon(categoryColor);
+                    },
+                  )
+                : _fallbackIcon(categoryColor),
+            // octagonal border overlay
+            CustomPaint(
+              size: Size(size, size),
+              painter: _OctagonBorderPainter(
+                cut: cut,
+                color: categoryColor.withValues(alpha: 0.55),
+                strokeWidth: 1.5,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _fallbackIcon() {
+  Widget _fallbackIcon(Color categoryColor) {
     return Container(
-      color: AppTheme.border.withValues(alpha: 0.2),
+      color: categoryColor.withValues(alpha: 0.12),
       child: Center(
         child: Text(
           perk.name[0],
           style: TextStyle(
-            color: AppTheme.textDim,
-            fontSize: size * 0.4,
+            color: categoryColor.withValues(alpha: 0.8),
+            fontSize: size * 0.38,
             fontWeight: FontWeight.w800,
           ),
         ),
       ),
     );
   }
+}
+
+class _OctagonBorderPainter extends CustomPainter {
+  final double cut;
+  final Color color;
+  final double strokeWidth;
+
+  const _OctagonBorderPainter({
+    required this.cut,
+    required this.color,
+    this.strokeWidth = 1.5,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth;
+    final c = cut;
+    final path = Path()
+      ..moveTo(c, 0)
+      ..lineTo(size.width - c, 0)
+      ..lineTo(size.width, c)
+      ..lineTo(size.width, size.height - c)
+      ..lineTo(size.width - c, size.height)
+      ..lineTo(c, size.height)
+      ..lineTo(0, size.height - c)
+      ..lineTo(0, c)
+      ..close();
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(_OctagonBorderPainter old) =>
+      old.cut != cut || old.color != color;
 }
 
 // ─── Perk Card ────────────────────────────────────────────────────────────────
@@ -84,14 +171,42 @@ class PerkCard extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
-          color: isSelected
-              ? AppTheme.primaryDim.withValues(alpha: 0.3)
-              : AppTheme.surfaceElevated,
+          gradient: isSelected
+              ? LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    AppTheme.primaryGlow.withValues(alpha: 0.22),
+                    AppTheme.surfaceElevated,
+                  ],
+                )
+              : AppTheme.surfaceGradient,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isSelected ? AppTheme.primary : AppTheme.border,
-            width: isSelected ? 1.5 : 1,
+          border: Border(
+            left: BorderSide(
+              color: AppTheme.perkCategoryColor(perk.category),
+              width: 3,
+            ),
+            top: BorderSide(
+                color: isSelected ? AppTheme.primary : AppTheme.border,
+                width: isSelected ? 1.5 : 1),
+            right: BorderSide(
+                color: isSelected ? AppTheme.primary : AppTheme.border,
+                width: isSelected ? 1.5 : 1),
+            bottom: BorderSide(
+                color: isSelected ? AppTheme.primary : AppTheme.border,
+                width: isSelected ? 1.5 : 1),
           ),
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: AppTheme.primaryGlow,
+                    blurRadius: 14,
+                    spreadRadius: 0,
+                    offset: const Offset(0, 2),
+                  )
+                ]
+              : null,
         ),
         child: compact ? _buildCompact() : _buildFull(),
       ),
@@ -103,7 +218,7 @@ class PerkCard extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       child: Row(
         children: [
-          PerkIcon(perk: perk, size: 40),
+          PerkIcon(perk: perk, size: 40, showCategoryGlow: isSelected),
           const SizedBox(width: 10),
           Expanded(
             child: Column(
@@ -137,7 +252,7 @@ class PerkCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          PerkIcon(perk: perk, size: 56),
+          PerkIcon(perk: perk, size: 56, showCategoryGlow: isSelected),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
@@ -279,19 +394,140 @@ class SectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
+        Container(
+          width: 2,
+          height: 14,
+          color: AppTheme.primary,
+          margin: const EdgeInsets.only(right: 8),
+        ),
         Text(
           title,
-          style: const TextStyle(
+          style: GoogleFonts.rajdhani(
             fontSize: 12,
-            fontWeight: FontWeight.w600,
+            fontWeight: FontWeight.w700,
             color: AppTheme.textSecondary,
-            letterSpacing: 0.8,
+            letterSpacing: 1.5,
           ),
         ),
-        const SizedBox(width: 8),
+        const SizedBox(width: 10),
         Expanded(child: Container(height: 1, color: AppTheme.border)),
         if (trailing != null) ...[const SizedBox(width: 8), trailing!],
       ],
+    );
+  }
+}
+
+// ─── DbdButton ────────────────────────────────────────────────────────────────
+
+class DbdButton extends StatefulWidget {
+  final String label;
+  final IconData? icon;
+  final VoidCallback? onPressed;
+  final bool isLoading;
+  final bool outlined;
+
+  const DbdButton({
+    super.key,
+    required this.label,
+    this.icon,
+    this.onPressed,
+    this.isLoading = false,
+    this.outlined = false,
+  });
+
+  @override
+  State<DbdButton> createState() => _DbdButtonState();
+}
+
+class _DbdButtonState extends State<DbdButton> {
+  bool _pressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final isEnabled = widget.onPressed != null && !widget.isLoading;
+    return GestureDetector(
+      onTapDown: isEnabled ? (_) => setState(() => _pressed = true) : null,
+      onTapUp: isEnabled
+          ? (_) {
+              setState(() => _pressed = false);
+              widget.onPressed!();
+            }
+          : null,
+      onTapCancel: () => setState(() => _pressed = false),
+      child: AnimatedScale(
+        scale: _pressed ? 0.97 : 1.0,
+        duration: const Duration(milliseconds: 80),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          height: 52,
+          decoration: BoxDecoration(
+            gradient: widget.outlined
+                ? null
+                : isEnabled
+                    ? AppTheme.primaryGradient
+                    : null,
+            color: widget.outlined
+                ? null
+                : isEnabled
+                    ? null
+                    : AppTheme.primaryDim,
+            border: widget.outlined
+                ? Border.all(color: AppTheme.primary)
+                : null,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(12),
+              topRight: Radius.circular(12),
+              bottomRight: Radius.circular(12),
+              bottomLeft: Radius.circular(4),
+            ),
+            boxShadow: !widget.outlined && isEnabled
+                ? [
+                    BoxShadow(
+                      color: AppTheme.primaryGlow,
+                      blurRadius: _pressed ? 6 : 16,
+                      spreadRadius: 0,
+                      offset: const Offset(0, 4),
+                    )
+                  ]
+                : null,
+          ),
+          child: Center(
+            child: widget.isLoading
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                        strokeWidth: 2, color: Colors.white),
+                  )
+                : Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (widget.icon != null) ...[
+                        Icon(
+                          widget.icon,
+                          size: 18,
+                          color: widget.outlined
+                              ? AppTheme.primary
+                              : Colors.white,
+                        ),
+                        const SizedBox(width: 8),
+                      ],
+                      Text(
+                        widget.label,
+                        style: GoogleFonts.rajdhani(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.8,
+                          color: widget.outlined
+                              ? AppTheme.primary
+                              : Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+          ),
+        ),
+      ),
     );
   }
 }
