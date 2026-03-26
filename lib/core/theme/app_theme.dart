@@ -3,35 +3,35 @@ import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   // ─── Base Colors ────────────────────────────────────────────────────────────
-  static const Color background     = Color(0xFF0A0A0F);
-  static const Color surface        = Color(0xFF13131A);
-  static const Color surfaceElevated = Color(0xFF1C1C26);
-  static const Color border         = Color(0xFF2A2A38);
+  static const Color background     = Color(0xFF060609); // near-black, cold purple tint
+  static const Color surface        = Color(0xFF0D0D15); // dark Entity-realm surface
+  static const Color surfaceElevated = Color(0xFF131320); // slightly lifted surface
+  static const Color border         = Color(0xFF1E1E30); // dark purple-gray border
 
-  static const Color primary        = Color(0xFFE8223A);
-  static const Color primaryDim     = Color(0xFF8B1424);
-  static const Color accent         = Color(0xFFFF6B35);
+  static const Color primary        = Color(0xFFD4883A); // warm amber
+  static const Color primaryDim     = Color(0xFF8A5520); // dark amber
+  static const Color accent         = Color(0xFFE06040); // coral
 
-  static const Color textPrimary    = Color(0xFFF0F0F5);
-  static const Color textSecondary  = Color(0xFF8A8A9A);
-  static const Color textDim        = Color(0xFF4A4A5A);
+  static const Color textPrimary    = Color(0xFFECEAF5); // cool moonlight white
+  static const Color textSecondary  = Color(0xFF787896); // purple-gray
+  static const Color textDim        = Color(0xFF38384F); // deep dim
 
   // ─── Glow / Atmosphere ──────────────────────────────────────────────────────
-  static const Color primaryGlow    = Color(0x33E8223A); // 20% red — BoxShadows, overlays
-  static const Color hexPurple      = Color(0xFF7B2FBE); // hex perk accent
-  static const Color hexPurpleDim   = Color(0xFF3B1366);
+  static const Color primaryGlow    = Color(0x44D4883A); // 27% amber — BoxShadows, overlays
+  static const Color hexPurple      = Color(0xFF8B35D6); // Entity purple
+  static const Color hexPurpleDim   = Color(0xFF3D1270);
 
   // ─── Gradients ──────────────────────────────────────────────────────────────
   static const LinearGradient surfaceGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFF1C1C26), Color(0xFF13131A)],
+    colors: [Color(0xFF131320), Color(0xFF0D0D15)],
   );
 
   static const LinearGradient primaryGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFFE8223A), Color(0xFFB01830)],
+    colors: [Color(0xFFD4883A), Color(0xFF8A5520)],
   );
 
   // ─── Rarity Colors (offerings/items) ────────────────────────────────────────
@@ -43,18 +43,18 @@ class AppTheme {
   // ─── Perk Category Colors ───────────────────────────────────────────────────
   static Color perkCategoryColor(String category) {
     switch (category) {
-      case 'hex':          return const Color(0xFF7B2FBE); // purple
-      case 'chase':        return const Color(0xFFE8223A); // red
-      case 'stealth':      return const Color(0xFF1B9E77); // dark teal
-      case 'healing':      return const Color(0xFF4CAF50); // green
+      case 'hex':          return const Color(0xFF8B35D6); // Entity purple
+      case 'chase':        return const Color(0xFFD4883A); // warm amber
+      case 'stealth':      return const Color(0xFF1A8A6A); // dark teal
+      case 'healing':      return const Color(0xFF3E9E44); // dark green
       case 'generator':    return const Color(0xFF2196F3); // blue
-      case 'endgame':      return const Color(0xFFFF6B35); // orange
-      case 'support':      return const Color(0xFF00BCD4); // cyan
-      case 'awareness':    return const Color(0xFFFFEB3B); // yellow
-      case 'anti-healing': return const Color(0xFFE040FB); // pink-purple
-      case 'anti-grab':    return const Color(0xFFFF5722); // deep orange
+      case 'endgame':      return const Color(0xFFCC4A24); // ember orange
+      case 'support':      return const Color(0xFF00A8C0); // deep cyan
+      case 'awareness':    return const Color(0xFFE6D032); // muted yellow
+      case 'anti-healing': return const Color(0xFFD035E8); // dark pink-purple
+      case 'anti-grab':    return const Color(0xFFE84A1A); // deep orange-red
       case 'utility':      return const Color(0xFF9E9E9E); // gray
-      default:             return const Color(0xFF4A4A5A);
+      default:             return const Color(0xFF38384F);
     }
   }
 
@@ -80,15 +80,15 @@ class AppTheme {
         // Rajdhani for display / headline / label
         displayLarge: GoogleFonts.rajdhani(
           fontSize: 28, fontWeight: FontWeight.w700,
-          letterSpacing: 1.5, color: textPrimary,
+          letterSpacing: 2.0, color: textPrimary,
         ),
         headlineMedium: GoogleFonts.rajdhani(
           fontSize: 18, fontWeight: FontWeight.w700,
-          letterSpacing: 1.2, color: textPrimary,
+          letterSpacing: 1.6, color: textPrimary,
         ),
         labelLarge: GoogleFonts.rajdhani(
           fontSize: 14, fontWeight: FontWeight.w600,
-          letterSpacing: 0.8, color: textPrimary,
+          letterSpacing: 1.2, color: textPrimary,
         ),
       ),
       appBarTheme: AppBarTheme(
@@ -99,7 +99,7 @@ class AppTheme {
           color: textPrimary,
           fontSize: 22,
           fontWeight: FontWeight.w700,
-          letterSpacing: 1.0,
+          letterSpacing: 1.4,
         ),
         iconTheme: const IconThemeData(color: textPrimary),
       ),

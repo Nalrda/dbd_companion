@@ -168,7 +168,9 @@ class PerkCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: AnimatedContainer(
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
           gradient: isSelected
@@ -181,7 +183,6 @@ class PerkCard extends StatelessWidget {
                   ],
                 )
               : AppTheme.surfaceGradient,
-          borderRadius: BorderRadius.circular(12),
           border: Border(
             left: BorderSide(
               color: AppTheme.perkCategoryColor(perk.category),
@@ -199,16 +200,17 @@ class PerkCard extends StatelessWidget {
           ),
           boxShadow: isSelected
               ? [
-                  BoxShadow(
+                  const BoxShadow(
                     color: AppTheme.primaryGlow,
                     blurRadius: 14,
                     spreadRadius: 0,
-                    offset: const Offset(0, 2),
+                    offset: Offset(0, 2),
                   )
                 ]
               : null,
         ),
         child: compact ? _buildCompact() : _buildFull(),
+      ),
       ),
     );
   }
