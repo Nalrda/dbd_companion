@@ -1028,7 +1028,7 @@
   "killer_perks": [
     {
       "id": "kp_001",
-      "name": "No One Escapes Death",
+      "name": "Hex: No One Escapes Death",
       "character": "General",
       "description": "When the last Generator is repaired, all Survivors suffer Exposed. Your Movement speed is increased.",
       "category": "endgame",
@@ -1049,14 +1049,6 @@
       "description": "All Generators not being repaired regress at 100/150/200% of normal speed.",
       "category": "generator",
       "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/6/6c/IconPerks_hexRuin.png"
-    },
-    {
-      "id": "kp_004",
-      "name": "BBQ & Chili",
-      "character": "The Cannibal",
-      "description": "After hooking a Survivor, all other Survivors' Auras are revealed for 4 seconds.",
-      "category": "awareness",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/b/be/IconPerks_barbecueAndChili.png"
     },
     {
       "id": "kp_005",
@@ -1123,14 +1115,6 @@
       "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/a/a0/IconPerks_callOfBrine.png"
     },
     {
-      "id": "kp_013",
-      "name": "Nowhere to Hide",
-      "character": "The Knight",
-      "description": "After kicking a Generator, Survivors within 24m have Auras revealed for 3/4/5 seconds.",
-      "category": "awareness",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/c/c1/IconPerks_nowhereToHide.png"
-    },
-    {
       "id": "kp_014",
       "name": "Starstruck",
       "character": "The Trickster",
@@ -1155,16 +1139,8 @@
       "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/7/70/IconPerks_monitorAndAbuse.png"
     },
     {
-      "id": "kp_017",
-      "name": "Save the Best for Last",
-      "character": "The Shape",
-      "description": "Hits on non-Obsession Survivors gain Tokens reducing attack cooldown. Hits on Obsession lose Tokens.",
-      "category": "chase",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/1/1c/IconPerks_saveTheBestForLast.png"
-    },
-    {
       "id": "kp_018",
-      "name": "Play With Your Food",
+      "name": "Play with Your Food",
       "character": "The Shape",
       "description": "Breaking a chase without a down grants speed Tokens. Tokens lost on attacks.",
       "category": "chase",
@@ -1185,14 +1161,6 @@
       "description": "When a Generator reaches 70%, get a noise notification and become Undetectable for 12 seconds.",
       "category": "awareness",
       "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/5/59/IconPerks_tinkerer.png"
-    },
-    {
-      "id": "kp_021",
-      "name": "Surveillance",
-      "character": "The Pig",
-      "description": "After kicking a Generator, its Aura is shown. Regressing Generators show white Auras.",
-      "category": "generator",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/2/23/IconPerks_surveillance.png"
     },
     {
       "id": "kp_022",
@@ -1251,14 +1219,6 @@
       "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/2/28/IconPerks_trailOfTorment.png"
     },
     {
-      "id": "kp_029",
-      "name": "Merciless Storm",
-      "character": "The Onryō",
-      "description": "When a Generator is at 90%, Survivors repairing it face continuous Skill Checks.",
-      "category": "generator",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/2/21/IconPerks_mercilessStorm.png"
-    },
-    {
       "id": "kp_030",
       "name": "Scourge Hook: Floods of Rage",
       "character": "The Onryō",
@@ -1281,14 +1241,6 @@
       "description": "When stunned by a Pallet, the Survivor who stunned you becomes Exposed for 20 seconds.",
       "category": "chase",
       "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/d/d1/IconPerks_hubris.png"
-    },
-    {
-      "id": "kp_033",
-      "name": "Jolt",
-      "character": "General",
-      "description": "When you put a Survivor in the Dying State, nearby Generators explode and regress.",
-      "category": "generator",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/4/45/IconPerks_jolt.png"
     },
     {
       "id": "kp_034",
@@ -1379,22 +1331,6 @@
       "iconUrl": null
     },
     {
-      "id": "kp_046",
-      "name": "Alien Instinct",
-      "character": "The Xenomorph",
-      "description": "After hooking a Survivor, the Survivor farthest from you is revealed for 6 seconds.",
-      "category": "awareness",
-      "iconUrl": null
-    },
-    {
-      "id": "kp_047",
-      "name": "Rapid Brutality",
-      "character": "The Xenomorph",
-      "description": "If you didn't break a Pallet in the last 15 seconds, gain Haste after a hit.",
-      "category": "chase",
-      "iconUrl": null
-    },
-    {
       "id": "kp_048",
       "name": "Dissolution",
       "character": "The Xenomorph",
@@ -1411,35 +1347,11 @@
       "iconUrl": null
     },
     {
-      "id": "kp_051",
-      "name": "Isolate",
-      "character": "The Dredge",
-      "description": "After hooking a Survivor, their Aura is hidden from other Survivors for 8 seconds.",
-      "category": "awareness",
-      "iconUrl": null
-    },
-    {
       "id": "kp_052",
       "name": "Septic Touch",
       "character": "The Dredge",
       "description": "Survivors healing within your Terror Radius suffer Blindness and Exhaustion.",
       "category": "anti-healing",
-      "iconUrl": null
-    },
-    {
-      "id": "kp_053",
-      "name": "Claustrophobia",
-      "character": "The Skull Merchant",
-      "description": "After kicking a Generator, all Windows and Vault locations in the area become blocked.",
-      "category": "chase",
-      "iconUrl": null
-    },
-    {
-      "id": "kp_054",
-      "name": "Game Afoot",
-      "character": "The Skull Merchant",
-      "description": "While in a Chase with the Obsession, gain Haste. Obsession changed on each hit.",
-      "category": "chase",
       "iconUrl": null
     },
     {
@@ -1452,7 +1364,7 @@
     },
     {
       "id": "kp_056",
-      "name": "Power Surge",
+      "name": "Surge",
       "character": "The Singularity",
       "description": "After putting a Survivor in the Dying State, the nearest Generator explodes and regresses.",
       "category": "generator",
@@ -1484,7 +1396,7 @@
     },
     {
       "id": "kp_061",
-      "name": "Hex: Blood Favour",
+      "name": "Hex: Blood Favor",
       "character": "The Blight",
       "description": "When a Survivor is injured, all Pallets within 16 metres are blocked by the Entity.",
       "category": "hex",
@@ -1499,30 +1411,6 @@
       "iconUrl": null
     },
     {
-      "id": "kp_063",
-      "name": "All-Shaking Thunder",
-      "character": "The Unknown",
-      "description": "After falling from a height, Lunge Attack range is greatly increased for a short time.",
-      "category": "chase",
-      "iconUrl": null
-    },
-    {
-      "id": "kp_064",
-      "name": "Languid Touch",
-      "character": "The Unknown",
-      "description": "When a Survivor scares a Crow within 36m, they suffer Exhaustion for 6/8/10 seconds.",
-      "category": "utility",
-      "iconUrl": null
-    },
-    {
-      "id": "kp_065",
-      "name": "Unforeseen",
-      "character": "The Unknown",
-      "description": "After kicking a Generator, your Terror Radius transfers to that Generator for 20 seconds.",
-      "category": "stealth",
-      "iconUrl": null
-    },
-    {
       "id": "kp_066",
       "name": "Friends 'til the End",
       "character": "The Good Guy",
@@ -1531,16 +1419,8 @@
       "iconUrl": null
     },
     {
-      "id": "kp_067",
-      "name": "Hex: Anguish",
-      "character": "The Good Guy",
-      "description": "2 Hex Totems share this perk. When one is cleansed, the Obsession screams and becomes Oblivious.",
-      "category": "hex",
-      "iconUrl": null
-    },
-    {
       "id": "kp_068",
-      "name": "Scourge Hook: Hangman's Trick",
+      "name": "Hangman's Trick",
       "character": "The Good Guy",
       "description": "Reveals Auras of Survivors near any Hook. Hooking near Survivors reveals their Auras.",
       "category": "awareness",
@@ -1551,22 +1431,6 @@
       "name": "Hex: Two Can Play",
       "character": "The Houndmaster",
       "description": "After being blinded, all Survivors suffer Blindness for 60 seconds.",
-      "category": "hex",
-      "iconUrl": null
-    },
-    {
-      "id": "kp_070",
-      "name": "Weave Attunement",
-      "character": "The Houndmaster",
-      "description": "When a Survivor drops an Item, its Aura is revealed and nearby Survivors are Oblivious.",
-      "category": "awareness",
-      "iconUrl": null
-    },
-    {
-      "id": "kp_071",
-      "name": "Hex: Wretched Fate",
-      "character": "The Houndmaster",
-      "description": "The Entity blocks a random Generator. While it's blocked, Survivors near it suffer Oblivious.",
       "category": "hex",
       "iconUrl": null
     },
@@ -1616,6 +1480,398 @@
       "character": "The Oni",
       "description": "Your Obsession changes upon a missed attack. New Obsession suffers Oblivious.",
       "category": "chase",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_081",
+      "name": "A Nurse's Calling",
+      "character": "The Nurse",
+      "description": "",
+      "category": "awareness",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_082",
+      "name": "Awakened Awareness",
+      "character": "The Knight",
+      "description": "",
+      "category": "awareness",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_083",
+      "name": "Beast of Prey",
+      "character": "The Huntress",
+      "description": "",
+      "category": "stealth",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_084",
+      "name": "Blood Warden",
+      "character": "The Executioner",
+      "description": "",
+      "category": "endgame",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_085",
+      "name": "Bloodhound",
+      "character": "The Trapper",
+      "description": "",
+      "category": "tracking",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_086",
+      "name": "Coulrophobia",
+      "character": "The Clown",
+      "description": "",
+      "category": "debuff",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_087",
+      "name": "Cruel Limits",
+      "character": "The Wraith",
+      "description": "",
+      "category": "utility",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_088",
+      "name": "Dark Devotion",
+      "character": "The Plague",
+      "description": "",
+      "category": "stealth",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_089",
+      "name": "Deerstalker",
+      "character": "The Trapper",
+      "description": "",
+      "category": "tracking",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_090",
+      "name": "Distressing",
+      "character": "General",
+      "description": "",
+      "category": "debuff",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_091",
+      "name": "Dying Light",
+      "character": "The Shape",
+      "description": "",
+      "category": "debuff",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_092",
+      "name": "Enduring",
+      "character": "The Spirit",
+      "description": "",
+      "category": "chase",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_093",
+      "name": "Exhausting Touch",
+      "character": "General",
+      "description": "",
+      "category": "debuff",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_094",
+      "name": "Fearmonger",
+      "character": "The Nemesis",
+      "description": "",
+      "category": "debuff",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_095",
+      "name": "Fire Up",
+      "character": "The Shape",
+      "description": "",
+      "category": "chase",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_096",
+      "name": "Franklin's Demise",
+      "character": "The Cannibal",
+      "description": "",
+      "category": "utility",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_097",
+      "name": "Furtive Chase",
+      "character": "The Ghost Face",
+      "description": "",
+      "category": "stealth",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_098",
+      "name": "Gearhead",
+      "character": "The Executioner",
+      "description": "",
+      "category": "tracking",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_099",
+      "name": "Genetic Anomalies",
+      "character": "General",
+      "description": "",
+      "category": "debuff",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_100",
+      "name": "Hex: Haunted Ground",
+      "character": "General",
+      "description": "",
+      "category": "hex",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_101",
+      "name": "Hex: Huntress Lullaby",
+      "character": "The Huntress",
+      "description": "",
+      "category": "hex",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_102",
+      "name": "Hex: Third Seal",
+      "character": "The Hag",
+      "description": "",
+      "category": "hex",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_103",
+      "name": "Hex: Thrill of the Hunt",
+      "character": "General",
+      "description": "",
+      "category": "hex",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_104",
+      "name": "Hoarder",
+      "character": "The Deathslinger",
+      "description": "",
+      "category": "utility",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_105",
+      "name": "Huntress Lullaby",
+      "character": "The Huntress",
+      "description": "",
+      "category": "awareness",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_106",
+      "name": "Hysteria",
+      "character": "The Executioner",
+      "description": "",
+      "category": "debuff",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_107",
+      "name": "I'm All Ears",
+      "character": "The Ghost Face",
+      "description": "",
+      "category": "awareness",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_108",
+      "name": "Insidious",
+      "character": "The Trapper",
+      "description": "",
+      "category": "stealth",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_109",
+      "name": "Iron Clutch",
+      "character": "General",
+      "description": "",
+      "category": "chase",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_110",
+      "name": "Knock Out",
+      "character": "The Cannibal",
+      "description": "",
+      "category": "chase",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_111",
+      "name": "Lethal Pursuer",
+      "character": "The Nemesis",
+      "description": "",
+      "category": "tracking",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_112",
+      "name": "Mad Grit",
+      "character": "The Shape",
+      "description": "",
+      "category": "chase",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_113",
+      "name": "Make Your Choice",
+      "character": "The Executioner",
+      "description": "",
+      "category": "utility",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_114",
+      "name": "Mindbreaker",
+      "character": "The Engineer",
+      "description": "",
+      "category": "debuff",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_115",
+      "name": "Oppression",
+      "character": "The Twins",
+      "description": "",
+      "category": "generator",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_116",
+      "name": "Overcharge",
+      "character": "The Doctor",
+      "description": "",
+      "category": "generator",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_117",
+      "name": "Overwhelming Presence",
+      "character": "The Doctor",
+      "description": "",
+      "category": "debuff",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_118",
+      "name": "Rancor",
+      "character": "The Shape",
+      "description": "",
+      "category": "endgame",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_119",
+      "name": "Remember Me",
+      "character": "The Shape",
+      "description": "",
+      "category": "endgame",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_120",
+      "name": "Scourge Hook: Monstrous Shrine",
+      "character": "General",
+      "description": "",
+      "category": "scourge",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_121",
+      "name": "Shadowborn",
+      "character": "The Wraith",
+      "description": "",
+      "category": "utility",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_122",
+      "name": "Shattered Hope",
+      "character": "The Hag",
+      "description": "",
+      "category": "utility",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_123",
+      "name": "Spirit Fury",
+      "character": "The Spirit",
+      "description": "",
+      "category": "chase",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_124",
+      "name": "Stridor",
+      "character": "The Nurse",
+      "description": "",
+      "category": "tracking",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_125",
+      "name": "Superior Anatomy",
+      "character": "The Unknown",
+      "description": "",
+      "category": "chase",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_126",
+      "name": "Thanatophobia",
+      "character": "The Nurse",
+      "description": "",
+      "category": "debuff",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_127",
+      "name": "Unbound",
+      "character": "The Dredge",
+      "description": "",
+      "category": "mobility",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_128",
+      "name": "Undying",
+      "character": "The Blight",
+      "description": "",
+      "category": "utility",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_129",
+      "name": "Unnerving Presence",
+      "character": "The Trapper",
+      "description": "",
+      "category": "debuff",
       "iconUrl": null
     }
   ]
