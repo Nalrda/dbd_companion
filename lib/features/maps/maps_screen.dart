@@ -21,16 +21,38 @@ class MapsScreen extends ConsumerWidget {
       body: realmsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error: $e')),
-        data: (realms) => ListView.separated(
-          padding: const EdgeInsets.all(16),
-          itemCount: realms.length,
-          separatorBuilder: (_, __) => const SizedBox(height: 10),
-          itemBuilder: (context, i) {
-            final realm = realms[i];
-            return _RealmCard(realm: realm)
-                .animate()
-                .fadeIn(delay: (i * 40).ms)
-                .slideY(begin: 0.05, end: 0);
+        data: (realms) => LayoutBuilder(
+          builder: (context, constraints) {
+            final isWide = constraints.maxWidth > 700;
+            if (isWide) {
+              return GridView.builder(
+                padding: const EdgeInsets.all(16),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 12,
+                  mainAxisSpacing: 12,
+                  childAspectRatio: 1.6,
+                ),
+                itemCount: realms.length,
+                itemBuilder: (context, i) {
+                  return _RealmCard(realm: realms[i])
+                      .animate()
+                      .fadeIn(delay: (i * 40).ms)
+                      .slideY(begin: 0.05, end: 0);
+                },
+              );
+            }
+            return ListView.separated(
+              padding: const EdgeInsets.all(16),
+              itemCount: realms.length,
+              separatorBuilder: (_, __) => const SizedBox(height: 10),
+              itemBuilder: (context, i) {
+                return _RealmCard(realm: realms[i])
+                    .animate()
+                    .fadeIn(delay: (i * 40).ms)
+                    .slideY(begin: 0.05, end: 0);
+              },
+            );
           },
         ),
       ),
@@ -59,6 +81,7 @@ class _RealmCard extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 16, 0),

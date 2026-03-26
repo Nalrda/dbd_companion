@@ -138,19 +138,46 @@ class _BuildsScreenState extends ConsumerState<BuildsScreen> {
             );
           }
 
-          return ListView.separated(
-            padding: const EdgeInsets.all(16),
-            itemCount: filtered.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 10),
-            itemBuilder: (context, index) {
-              return _BuildListItem(
-                item: filtered[index],
-                onTap: () => context.push('/builds/${filtered[index].id}'),
-                onDelete: () => _confirmDelete(filtered[index]),
-                onToggleFavorite: () => ref
-                    .read(buildsProvider.notifier)
-                    .toggleFavorite(filtered[index].id),
-              ).animate().fadeIn(delay: (index * 40).ms).slideY(begin: 0.05, end: 0);
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              final isWide = constraints.maxWidth > 700;
+              if (isWide) {
+                return GridView.builder(
+                  padding: const EdgeInsets.all(16),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    mainAxisExtent: 110,
+                  ),
+                  itemCount: filtered.length,
+                  itemBuilder: (context, index) {
+                    return _BuildListItem(
+                      item: filtered[index],
+                      onTap: () => context.push('/builds/${filtered[index].id}'),
+                      onDelete: () => _confirmDelete(filtered[index]),
+                      onToggleFavorite: () => ref
+                          .read(buildsProvider.notifier)
+                          .toggleFavorite(filtered[index].id),
+                    ).animate().fadeIn(delay: (index * 30).ms).slideY(begin: 0.05, end: 0);
+                  },
+                );
+              }
+              return ListView.separated(
+                padding: const EdgeInsets.all(16),
+                itemCount: filtered.length,
+                separatorBuilder: (_, __) => const SizedBox(height: 10),
+                itemBuilder: (context, index) {
+                  return _BuildListItem(
+                    item: filtered[index],
+                    onTap: () => context.push('/builds/${filtered[index].id}'),
+                    onDelete: () => _confirmDelete(filtered[index]),
+                    onToggleFavorite: () => ref
+                        .read(buildsProvider.notifier)
+                        .toggleFavorite(filtered[index].id),
+                  ).animate().fadeIn(delay: (index * 40).ms).slideY(begin: 0.05, end: 0);
+                },
+              );
             },
           );
         },
@@ -208,7 +235,7 @@ class _BuildListItem extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: AppTheme.surface,
           borderRadius: BorderRadius.circular(12),
@@ -234,20 +261,23 @@ class _BuildListItem extends StatelessWidget {
                 size: 20,
               ),
             ),
-            const SizedBox(width: 14),
+            const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     item.name,
                     style: const TextStyle(
-                      fontSize: 15,
+                      fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: AppTheme.textPrimary,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 3),
                   Text(
                     '${item.perkIds.length}/4 perks',
                     style: const TextStyle(
@@ -256,13 +286,15 @@ class _BuildListItem extends StatelessWidget {
                     ),
                   ),
                   if (item.tags.isNotEmpty) ...[
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 4),
                     Wrap(
                       spacing: 4,
+                      runSpacing: 2,
                       children: item.tags
+                          .take(3)
                           .map((t) => Container(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 7, vertical: 2),
+                                    horizontal: 6, vertical: 1),
                                 decoration: BoxDecoration(
                                   color: AppTheme.border,
                                   borderRadius: BorderRadius.circular(4),
@@ -287,7 +319,7 @@ class _BuildListItem extends StatelessWidget {
                 child: Icon(
                   item.isFavorite ? Icons.star : Icons.star_outline,
                   color: item.isFavorite ? AppTheme.primary : AppTheme.textDim,
-                  size: 22,
+                  size: 20,
                 ),
               ),
             ),

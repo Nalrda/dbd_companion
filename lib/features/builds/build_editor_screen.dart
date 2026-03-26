@@ -167,18 +167,21 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
           p.description.toLowerCase().contains(_searchQuery.toLowerCase());
     }).toList();
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: MediaQuery.of(context).size.width <= 600
-              ? MediaQuery.of(context).size.width
-              : 360,
-          child: _buildLeftPanel(),
-        ),
-        if (MediaQuery.of(context).size.width > 600 && _editingSlot != null)
-          Expanded(child: _buildPerkPicker(filtered, allPerks)),
-      ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isWide = constraints.maxWidth > 620;
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: isWide ? 360 : constraints.maxWidth,
+              child: _buildLeftPanel(),
+            ),
+            if (isWide && _editingSlot != null)
+              Expanded(child: _buildPerkPicker(filtered, allPerks)),
+          ],
+        );
+      },
     );
   }
 
@@ -319,7 +322,9 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
 
   void _openPerkPicker(int slot) {
     setState(() => _editingSlot = slot);
-    if (MediaQuery.of(context).size.width <= 600) {
+    // On narrow screens always show bottom sheet
+    final isWide = MediaQuery.of(context).size.width > 620;
+    if (!isWide) {
       showModalBottomSheet(
         context: context,
         isScrollControlled: true,

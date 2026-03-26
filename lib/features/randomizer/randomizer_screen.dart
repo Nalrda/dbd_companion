@@ -15,47 +15,52 @@ class RandomizerScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Perk Randomizer')),
-      body: SingleChildScrollView(
+      body: Align(
+        alignment: Alignment.topCenter,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 680),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                RoleToggle(
+                  isSurvivor: state.isSurvivor,
+                  onChanged: (v) =>
+                      ref.read(randomizerProvider.notifier).setRole(v),
+                ),
 
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            RoleToggle(
-              isSurvivor: state.isSurvivor,
-              onChanged: (v) =>
-                  ref.read(randomizerProvider.notifier).setRole(v),
+                const SizedBox(height: 32),
+                const SectionHeader(title: 'YOUR BUILD'),
+                const SizedBox(height: 16),
+
+                if (state.selectedPerks.isEmpty && !state.isRolling)
+                  _EmptySlots()
+                else if (state.isRolling)
+                  _LoadingSlots()
+                else
+                  _ResultSlots(perks: state.selectedPerks),
+
+                const SizedBox(height: 32),
+
+                _RollButton(
+                  isRolling: state.isRolling,
+                  onRoll: () => ref.read(randomizerProvider.notifier).roll(),
+                ),
+
+                if (state.selectedPerks.length == 4) ...[
+                  const SizedBox(height: 12),
+                  _SaveButton(
+                    isSurvivor: state.isSurvivor,
+                    perks: state.selectedPerks,
+                    ref: ref,
+                  ),
+                ],
+
+                const SizedBox(height: 16),
+              ],
             ),
-
-            const SizedBox(height: 32),
-            const SectionHeader(title: 'YOUR BUILD'),
-            const SizedBox(height: 16),
-
-            if (state.selectedPerks.isEmpty && !state.isRolling)
-              _EmptySlots()
-            else if (state.isRolling)
-              _LoadingSlots()
-            else
-              _ResultSlots(perks: state.selectedPerks),
-
-            const SizedBox(height: 32),
-
-            _RollButton(
-              isRolling: state.isRolling,
-              onRoll: () => ref.read(randomizerProvider.notifier).roll(),
-            ),
-
-            if (state.selectedPerks.length == 4) ...[
-              const SizedBox(height: 12),
-              _SaveButton(
-                isSurvivor: state.isSurvivor,
-                perks: state.selectedPerks,
-                ref: ref,
-              ),
-            ],
-
-            const SizedBox(height: 16),
-          ],
+          ),
         ),
       ),
     );
