@@ -25,13 +25,18 @@ class BuildAdapter extends TypeAdapter<Build> {
       tags: (fields[5] as List).cast<String>(),
       createdAt: fields[6] as DateTime,
       updatedAt: fields[7] as DateTime,
+      itemId: fields[8] as String?,
+      addon1: fields[9] as String?,
+      addon2: fields[10] as String?,
+      offeringId: fields[11] as String?,
+      isFavorite: fields[12] as bool? ?? false,
     );
   }
 
   @override
   void write(BinaryWriter writer, Build obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(13)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -47,7 +52,17 @@ class BuildAdapter extends TypeAdapter<Build> {
       ..writeByte(6)
       ..write(obj.createdAt)
       ..writeByte(7)
-      ..write(obj.updatedAt);
+      ..write(obj.updatedAt)
+      ..writeByte(8)
+      ..write(obj.itemId)
+      ..writeByte(9)
+      ..write(obj.addon1)
+      ..writeByte(10)
+      ..write(obj.addon2)
+      ..writeByte(11)
+      ..write(obj.offeringId)
+      ..writeByte(12)
+      ..write(obj.isFavorite);
   }
 
   @override

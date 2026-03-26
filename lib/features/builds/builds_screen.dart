@@ -16,6 +16,16 @@ class BuildsScreen extends ConsumerStatefulWidget {
 
 class _BuildsScreenState extends ConsumerState<BuildsScreen> {
   bool _showSurvivor = true;
+  bool _showFavoritesOnly = false;
+  String _search = '';
+  bool _searchVisible = false;
+  final _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +33,43 @@ class _BuildsScreenState extends ConsumerState<BuildsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Builds'),
+        title: _searchVisible
+            ? TextField(
+                controller: _searchController,
+                autofocus: true,
+                style: const TextStyle(color: AppTheme.textPrimary),
+                decoration: const InputDecoration(
+                  hintText: 'Search builds...',
+                  border: InputBorder.none,
+                  hintStyle: TextStyle(color: AppTheme.textDim),
+                ),
+                onChanged: (v) => setState(() => _search = v),
+              )
+            : const Text('My Builds'),
         actions: [
+          IconButton(
+            icon: Icon(
+              _searchVisible ? Icons.close : Icons.search,
+              color: _searchVisible ? AppTheme.primary : AppTheme.textSecondary,
+            ),
+            onPressed: () => setState(() {
+              _searchVisible = !_searchVisible;
+              if (!_searchVisible) {
+                _search = '';
+                _searchController.clear();
+              }
+            }),
+          ),
+          IconButton(
+            icon: Icon(
+              _showFavoritesOnly ? Icons.star : Icons.star_outline,
+              color: _showFavoritesOnly ? AppTheme.primary : AppTheme.textSecondary,
+            ),
+            tooltip: 'Favorites only',
+            onPressed: () => setState(() => _showFavoritesOnly = !_showFavoritesOnly),
+          ),
           Padding(
-            padding: const EdgeInsets.only(right: 16),
+            padding: const EdgeInsets.only(right: 8),
             child: RoleToggle(
               isSurvivor: _showSurvivor,
               onChanged: (v) => setState(() => _showSurvivor = v),
@@ -43,30 +86,55 @@ class _BuildsScreenState extends ConsumerState<BuildsScreen> {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error: $e')),
         data: (builds) {
-          final filtered =
-              builds.where((b) => b.isSurvivor == _showSurvivor).toList();
+          var filtered = builds.where((b) => b.isSurvivor == _showSurvivor).toList();
+
+          if (_showFavoritesOnly) {
+            filtered = filtered.where((b) => b.isFavorite).toList();
+          }
+
+          if (_search.isNotEmpty) {
+            final q = _search.toLowerCase();
+            filtered = filtered
+                .where((b) =>
+                    b.name.toLowerCase().contains(q) ||
+                    b.tags.any((t) => t.toLowerCase().contains(q)))
+                .toList();
+          }
+
+          // Favorites always at top
+          filtered.sort((a, b) {
+            if (a.isFavorite && !b.isFavorite) return -1;
+            if (!a.isFavorite && b.isFavorite) return 1;
+            return b.updatedAt.compareTo(a.updatedAt);
+          });
 
           if (filtered.isEmpty) {
             return EmptyState(
-              icon: Icons.build_outlined,
-              title: 'No builds yet',
-              subtitle: _showSurvivor
-                  ? 'Create your first survivor build'
-                  : 'Create your first killer build',
-              action: ElevatedButton.icon(
-                onPressed: () =>
-                    context.push('/builds/create?survivor=$_showSurvivor'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.primary,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20, vertical: 12),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-                icon: const Icon(Icons.add, size: 18),
-                label: const Text('Create Build'),
-              ),
+              icon: _showFavoritesOnly
+                  ? Icons.star_outline
+                  : _search.isNotEmpty
+                      ? Icons.search_off
+                      : Icons.build_outlined,
+              title: _showFavoritesOnly
+                  ? 'No favorites yet'
+                  : _search.isNotEmpty
+                      ? 'No results'
+                      : 'No builds yet',
+              subtitle: _showFavoritesOnly
+                  ? 'Star a build to add it here'
+                  : _search.isNotEmpty
+                      ? 'Try a different search'
+                      : _showSurvivor
+                          ? 'Create your first survivor build'
+                          : 'Create your first killer build',
+              action: (_showFavoritesOnly || _search.isNotEmpty)
+                  ? null
+                  : DbdButton(
+                      label: 'Create Build',
+                      icon: Icons.add,
+                      onPressed: () =>
+                          context.push('/builds/create?survivor=$_showSurvivor'),
+                    ),
             );
           }
 
@@ -77,9 +145,11 @@ class _BuildsScreenState extends ConsumerState<BuildsScreen> {
             itemBuilder: (context, index) {
               return _BuildListItem(
                 item: filtered[index],
-                onTap: () =>
-                    context.push('/builds/${filtered[index].id}'),
+                onTap: () => context.push('/builds/${filtered[index].id}'),
                 onDelete: () => _confirmDelete(filtered[index]),
+                onToggleFavorite: () => ref
+                    .read(buildsProvider.notifier)
+                    .toggleFavorite(filtered[index].id),
               ).animate().fadeIn(delay: (index * 40).ms).slideY(begin: 0.05, end: 0);
             },
           );
@@ -124,11 +194,13 @@ class _BuildListItem extends StatelessWidget {
   final Build item;
   final VoidCallback onTap;
   final VoidCallback onDelete;
+  final VoidCallback onToggleFavorite;
 
   const _BuildListItem({
     required this.item,
     required this.onTap,
     required this.onDelete,
+    required this.onToggleFavorite,
   });
 
   @override
@@ -140,7 +212,11 @@ class _BuildListItem extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppTheme.surface,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppTheme.border),
+          border: Border.all(
+            color: item.isFavorite
+                ? AppTheme.primary.withValues(alpha: 0.4)
+                : AppTheme.border,
+          ),
         ),
         child: Row(
           children: [
@@ -202,6 +278,17 @@ class _BuildListItem extends StatelessWidget {
                     ),
                   ],
                 ],
+              ),
+            ),
+            GestureDetector(
+              onTap: onToggleFavorite,
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Icon(
+                  item.isFavorite ? Icons.star : Icons.star_outline,
+                  color: item.isFavorite ? AppTheme.primary : AppTheme.textDim,
+                  size: 22,
+                ),
               ),
             ),
             PopupMenuButton<String>(

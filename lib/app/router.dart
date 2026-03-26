@@ -25,7 +25,14 @@ final router = GoRouter(
       path: '/builds/create',
       builder: (context, state) {
         final isSurvivor = state.uri.queryParameters['survivor'] != 'false';
-        return BuildEditorScreen(isSurvivor: isSurvivor);
+        final perksParam = state.uri.queryParameters['perks'];
+        final sharedPerks = perksParam?.split(',').where((s) => s.isNotEmpty).toList();
+        final sharedName = state.uri.queryParameters['name'];
+        return BuildEditorScreen(
+          isSurvivor: isSurvivor,
+          sharedPerkIds: sharedPerks,
+          sharedName: sharedName,
+        );
       },
     ),
     GoRoute(

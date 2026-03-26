@@ -30,16 +30,10 @@ class GroupPlannerScreen extends ConsumerWidget {
               icon: Icons.groups_outlined,
               title: 'No group plans yet',
               subtitle: 'Plan builds for your full 4-survivor squad',
-              action: ElevatedButton.icon(
+              action: DbdButton(
+                label: 'Create Group Plan',
+                icon: Icons.add,
                 onPressed: () => _createPlan(context, ref),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.primary,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                ),
-                icon: const Icon(Icons.add, size: 18),
-                label: const Text('Create Group Plan'),
               ),
             );
           }

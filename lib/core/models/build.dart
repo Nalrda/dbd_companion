@@ -28,6 +28,25 @@ class Build extends HiveObject {
   @HiveField(7)
   DateTime updatedAt;
 
+  /// Survivor: item id from items.json. Killer: unused (null).
+  @HiveField(8)
+  String? itemId;
+
+  /// Add-on slot 1 (free text — used mainly for killer add-ons).
+  @HiveField(9)
+  String? addon1;
+
+  /// Add-on slot 2 (free text — used mainly for killer add-ons).
+  @HiveField(10)
+  String? addon2;
+
+  /// Offering id from offerings.json (both survivor and killer).
+  @HiveField(11)
+  String? offeringId;
+
+  @HiveField(12)
+  bool isFavorite;
+
   Build({
     required this.id,
     required this.name,
@@ -37,9 +56,16 @@ class Build extends HiveObject {
     List<String>? tags,
     DateTime? createdAt,
     DateTime? updatedAt,
+    this.itemId,
+    this.addon1,
+    this.addon2,
+    this.offeringId,
+    this.isFavorite = false,
   })  : tags = tags ?? [],
         createdAt = createdAt ?? DateTime.now(),
         updatedAt = updatedAt ?? DateTime.now();
+
+  static const Object _sentinel = Object();
 
   Build copyWith({
     String? name,
@@ -47,6 +73,11 @@ class Build extends HiveObject {
     List<String>? perkIds,
     String? notes,
     List<String>? tags,
+    Object? itemId = _sentinel,
+    Object? addon1 = _sentinel,
+    Object? addon2 = _sentinel,
+    Object? offeringId = _sentinel,
+    bool? isFavorite,
   }) {
     return Build(
       id: id,
@@ -57,6 +88,11 @@ class Build extends HiveObject {
       tags: tags ?? List.from(this.tags),
       createdAt: createdAt,
       updatedAt: DateTime.now(),
+      itemId: itemId == _sentinel ? this.itemId : itemId as String?,
+      addon1: addon1 == _sentinel ? this.addon1 : addon1 as String?,
+      addon2: addon2 == _sentinel ? this.addon2 : addon2 as String?,
+      offeringId: offeringId == _sentinel ? this.offeringId : offeringId as String?,
+      isFavorite: isFavorite ?? this.isFavorite,
     );
   }
 
@@ -70,6 +106,11 @@ class Build extends HiveObject {
       'tags': tags,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
+      'itemId': itemId,
+      'addon1': addon1,
+      'addon2': addon2,
+      'offeringId': offeringId,
+      'isFavorite': isFavorite,
     };
   }
 
@@ -83,6 +124,11 @@ class Build extends HiveObject {
       tags: List<String>.from(json['tags'] ?? []),
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
+      itemId: json['itemId'] as String?,
+      addon1: json['addon1'] as String?,
+      addon2: json['addon2'] as String?,
+      offeringId: json['offeringId'] as String?,
+      isFavorite: json['isFavorite'] as bool? ?? false,
     );
   }
 }

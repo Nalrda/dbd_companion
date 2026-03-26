@@ -1,0 +1,31 @@
+{
+  "survivor_items": [
+    { "id": "no_item", "name": "No Item", "category": "none", "rarity": "common" },
+
+    { "id": "standard_medkit",   "name": "Standard Med-Kit",   "category": "medkit",     "rarity": "common"    },
+    { "id": "camping_aid_kit",   "name": "Camping Aid Kit",     "category": "medkit",     "rarity": "uncommon"  },
+    { "id": "first_aid_kit",     "name": "First Aid Kit",       "category": "medkit",     "rarity": "uncommon"  },
+    { "id": "ranger_medkit",     "name": "Ranger Med-Kit",      "category": "medkit",     "rarity": "rare"      },
+    { "id": "emergency_medkit",  "name": "Emergency Med-Kit",   "category": "medkit",     "rarity": "very_rare" },
+
+    { "id": "broken_flashlight",   "name": "Broken Flashlight",   "category": "flashlight", "rarity": "common"    },
+    { "id": "standard_flashlight", "name": "Standard Flashlight", "category": "flashlight", "rarity": "uncommon"  },
+    { "id": "sport_flashlight",    "name": "Sport Flashlight",    "category": "flashlight", "rarity": "rare"      },
+    { "id": "utility_flashlight",  "name": "Utility Flashlight",  "category": "flashlight", "rarity": "very_rare" },
+
+    { "id": "broken_toolbox",     "name": "Broken Toolbox",      "category": "toolbox",    "rarity": "common"    },
+    { "id": "standard_toolbox",   "name": "Standard Toolbox",    "category": "toolbox",    "rarity": "uncommon"  },
+    { "id": "mechanics_toolbox",  "name": "Mechanic's Toolbox",  "category": "toolbox",    "rarity": "uncommon"  },
+    { "id": "commodious_toolbox", "name": "Commodious Toolbox",  "category": "toolbox",    "rarity": "rare"      },
+    { "id": "engineers_toolbox",  "name": "Engineer's Toolbox",  "category": "toolbox",    "rarity": "rare"      },
+    { "id": "alexs_toolbox",      "name": "Alex's Toolbox",      "category": "toolbox",    "rarity": "very_rare" },
+
+    { "id": "dull_key",     "name": "Dull Key",      "category": "key", "rarity": "common"    },
+    { "id": "worn_key",     "name": "Worn-Out Key",  "category": "key", "rarity": "uncommon"  },
+    { "id": "skeleton_key", "name": "Skeleton Key",  "category": "key", "rarity": "very_rare" },
+
+    { "id": "worn_map",     "name": "Worn-Out Map",  "category": "map", "rarity": "common"   },
+    { "id": "survival_map", "name": "Survival Map",  "category": "map", "rarity": "uncommon" },
+    { "id": "rainbow_map",  "name": "Rainbow Map",   "category": "map", "rarity": "rare"     }
+  ]
+}

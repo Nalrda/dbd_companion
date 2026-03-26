@@ -21,17 +21,16 @@ class PerkAdapter extends TypeAdapter<Perk> {
       name: fields[1] as String,
       character: fields[2] as String,
       description: fields[3] as String,
-      rarity: fields[4] as String,
-      category: fields[5] as String,
-      isSurvivor: fields[6] as bool,
-      iconUrl: fields[7] as String?,
+      category: fields[4] as String,
+      isSurvivor: fields[5] as bool,
+      iconUrl: fields[6] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Perk obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -41,12 +40,10 @@ class PerkAdapter extends TypeAdapter<Perk> {
       ..writeByte(3)
       ..write(obj.description)
       ..writeByte(4)
-      ..write(obj.rarity)
-      ..writeByte(5)
       ..write(obj.category)
-      ..writeByte(6)
+      ..writeByte(5)
       ..write(obj.isSurvivor)
-      ..writeByte(7)
+      ..writeByte(6)
       ..write(obj.iconUrl);
   }
 
