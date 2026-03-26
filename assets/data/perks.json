@@ -273,12 +273,12 @@
       "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/a/a4/IconPerks_we%27llMakeIt.png"
     },
     {
-      "id": "sp_036",
-      "name": "Déjà Vu",
+      "id": "sp_035",
+      "name": "Plunderer's Instinct",
       "character": "General",
-      "description": "Reveals the 3 Generators closest to each other. Increases repair speed on those Generators.",
-      "category": "generator",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/d/d6/IconPerks_d%C3%A9j%C3%A0Vu.png"
+      "description": "Unlocks the ability to sense contents of Chests and Lockers. Increases Chest rummaging speed by 40%.",
+      "category": "utility",
+      "iconUrl": null
     },
     {
       "id": "sp_037",
@@ -361,28 +361,12 @@
       "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/5/53/IconPerks_reassurance.png"
     },
     {
-      "id": "sp_047",
-      "name": "Fixated",
-      "character": "Nancy Wheeler",
-      "description": "See your own Scratch Marks. Walk 10/15/20% faster.",
-      "category": "stealth",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/9/9e/IconPerks_fixated.png"
-    },
-    {
       "id": "sp_048",
-      "name": "Inner Strength",
+      "name": "Inner Healing",
       "character": "Nancy Wheeler",
       "description": "After cleansing a Totem, enter a Locker to heal one Health State over 8/7/6 seconds.",
       "category": "healing",
       "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/3/34/IconPerks_innerStrength.png"
-    },
-    {
-      "id": "sp_049",
-      "name": "Fogwise",
-      "character": "Nancy Wheeler",
-      "description": "After completing a Good or Great Skill Check on a Generator, the Killer's Aura is revealed for 6 seconds.",
-      "category": "awareness",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/6/6a/IconPerks_resilience.png"
     },
     {
       "id": "sp_050",
@@ -609,20 +593,20 @@
       "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/6/67/IconPerks_boonExponential.png"
     },
     {
-      "id": "sp_078",
-      "name": "Resurgence",
-      "character": "Jill Valentine",
-      "description": "After being unhooked, instantly heal 40/45/50% of a Health State.",
-      "category": "healing",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/8/8b/IconPerks_resurgence.png"
-    },
-    {
       "id": "sp_079",
       "name": "Blast Mine",
       "character": "Jill Valentine",
       "description": "After repairing 33% of a Generator, install a Blast Mine that stuns the Killer.",
       "category": "generator",
       "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/a/ae/IconPerks_blastMine.png"
+    },
+    {
+      "id": "sp_080",
+      "name": "Deliverance",
+      "character": "Adam Francis",
+      "description": "After performing a Safe Hook Rescue on another Survivor, you can escape from your first Hook on your own.",
+      "category": "utility",
+      "iconUrl": null
     },
     {
       "id": "sp_081",
@@ -646,23 +630,15 @@
       "character": "Yoichi Asakawa",
       "description": "Bless a Totem. All Survivors within 24m gain 2% Haste.",
       "category": "support",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/6/67/IconPerks_boonExponential.png"
+      "iconUrl": null
     },
     {
       "id": "sp_084",
-      "name": "Parental Guidance",
+      "name": "Parentage",
       "character": "Yoichi Asakawa",
-      "description": "After stunning the Killer, suppress Scratch Marks and sounds for 6 seconds.",
+      "description": "After stunning the Killer, suppress your Scratch Marks and sounds for 6/8/10 seconds.",
       "category": "stealth",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/1/18/IconPerks_spineChill.png"
-    },
-    {
-      "id": "sp_085",
-      "name": "Wiretap",
-      "character": "Yoichi Asakawa",
-      "description": "After repairing 50% of a Generator, install a Wiretap that reveals approaching Killers.",
-      "category": "awareness",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/c/c3/IconPerks_bond.png"
+      "iconUrl": null
     },
     {
       "id": "sp_086",
@@ -670,7 +646,7 @@
       "character": "Nicolas Cage",
       "description": "Instantly enter the Dying State silently. Heal yourself from Dying State fully at 70% speed.",
       "category": "utility",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/5/52/IconPerks_deadHard.png"
+      "iconUrl": null
     },
     {
       "id": "sp_087",
@@ -678,7 +654,7 @@
       "character": "Nicolas Cage",
       "description": "When the Killer stares at you, scream and reveal their Aura for 5 seconds.",
       "category": "awareness",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/1/18/IconPerks_spineChill.png"
+      "iconUrl": null
     },
     {
       "id": "sp_088",
@@ -686,7 +662,7 @@
       "character": "Nicolas Cage",
       "description": "While running, activate for a random effect. Causes Exhaustion.",
       "category": "chase",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/8/8e/IconPerks_sprintBurst.png"
+      "iconUrl": null
     },
     {
       "id": "sp_089",
@@ -694,7 +670,7 @@
       "character": "Vittorio Toscano",
       "description": "Each Survivor hooked while not in a chase adds a Token. Tokens boost Skill Check success zones.",
       "category": "generator",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/5/58/IconPerks_proveThyself.png"
+      "iconUrl": null
     },
     {
       "id": "sp_090",
@@ -702,7 +678,7 @@
       "character": "Vittorio Toscano",
       "description": "After completing a Good or Great Skill Check, reveal the Killer's Aura for 6 seconds.",
       "category": "awareness",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/6/65/IconPerks_kindred.png"
+      "iconUrl": null
     },
     {
       "id": "sp_091",
@@ -710,31 +686,15 @@
       "character": "Vittorio Toscano",
       "description": "Completing Skill Checks while repairing stores energy. Release to instantly progress a Generator.",
       "category": "generator",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/9/94/IconPerks_technician.png"
+      "iconUrl": null
     },
     {
       "id": "sp_092",
-      "name": "Invocation: Weaving Spiders",
-      "character": "Unknown",
-      "description": "Perform an Invocation in the Basement. Instantly completes all Generators by a large amount.",
-      "category": "generator",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/5/58/IconPerks_proveThyself.png"
-    },
-    {
-      "id": "sp_093",
-      "name": "Teamwork: Power of Two",
-      "character": "Thalita Lyra",
-      "description": "After healing a Survivor, both gain a speed boost while staying near each other.",
-      "category": "support",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/3/3c/IconPerks_leader.png"
-    },
-    {
-      "id": "sp_094",
-      "name": "Teamwork: Collective Stealth",
-      "character": "Renato Lyra",
-      "description": "After healing a Survivor, both have no scratch marks while near each other.",
-      "category": "stealth",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/5/51/IconPerks_urbanEvasion.png"
+      "name": "Wicked",
+      "character": "Sable Ward",
+      "description": "After unhooking yourself or being unhooked, Auras of Pallets and Windows within 64 metres are revealed for 20 seconds.",
+      "category": "utility",
+      "iconUrl": null
     },
     {
       "id": "sp_095",
@@ -742,7 +702,7 @@
       "character": "Lara Croft",
       "description": "After a rushed vault, teleport through the next vault within 3 seconds.",
       "category": "chase",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/7/73/IconPerks_lithe.png"
+      "iconUrl": null
     },
     {
       "id": "sp_096",
@@ -750,37 +710,325 @@
       "character": "Aestri Yazar",
       "description": "Perform a lute animation to roll a d20. Higher rolls grant bonus Skill Check progress.",
       "category": "generator",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/5/58/IconPerks_proveThyself.png"
+      "iconUrl": null
+    },
+    {
+      "id": "sp_097",
+      "name": "Guardian",
+      "character": "Steve Harrington",
+      "description": "After performing a Safe Hook Rescue, the Killer's Aura is revealed to you and the rescued Survivor for 6 seconds.",
+      "category": "awareness",
+      "iconUrl": null
     },
     {
       "id": "sp_098",
       "name": "Strength in Shadows",
-      "character": "Unknown",
+      "character": "Sable Ward",
       "description": "In a dark area, self-heal at full speed without a Med-Kit.",
       "category": "healing",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/5/53/IconPerks_selfCare.png"
+      "iconUrl": null
     },
     {
       "id": "sp_099",
       "name": "Friendly Competition",
-      "character": "Unknown",
+      "character": "Sable Ward",
       "description": "After completing a Generator with another Survivor, both gain a repair speed bonus.",
       "category": "generator",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/5/58/IconPerks_proveThyself.png"
+      "iconUrl": null
     },
     {
-      "id": "sp_100",
-      "name": "Duty of Care",
-      "character": "Orela Rose",
-      "description": "After a Protection Hit, all Survivors within 12 metres gain Haste for 6 seconds.",
+      "id": "sp_101",
+      "name": "Ace in the Hole",
+      "character": "Ace Visconti",
+      "description": "Allows you to keep one Add-on when retrieving an Item from a Chest. Increases the quality of Items found in Chests.",
+      "category": "utility",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_102",
+      "name": "Open-Handed",
+      "character": "Ace Visconti",
+      "description": "Increases the range of all Aura-reading effects for you and all other Survivors by 4/8/12 metres.",
       "category": "support",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/3/3c/IconPerks_leader.png"
+      "iconUrl": null
+    },
+    {
+      "id": "sp_103",
+      "name": "Up the Ante",
+      "character": "Ace Visconti",
+      "description": "For each other Survivor currently alive in the Trial, gain a 1/2/3% bonus to Luck.",
+      "category": "utility",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_104",
+      "name": "Babysitter",
+      "character": "Steve Harrington",
+      "description": "After unhooking a Survivor, they leave no Scratch Marks and make no noise for 8 seconds. Your own Scratch Marks appear more frequently.",
+      "category": "support",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_105",
+      "name": "Built to Last",
+      "character": "Steve Harrington",
+      "description": "Hiding in a Locker restores an Item you are holding at 33% of its total capacity per second.",
+      "category": "utility",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_106",
+      "name": "Diversion",
+      "character": "Adam Francis",
+      "description": "After crouching in one spot for 4 seconds, throw a pebble to create a noise notification at a location of your choice.",
+      "category": "stealth",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_107",
+      "name": "Hope",
+      "character": "General",
+      "description": "When the Exit Gates are powered, gain a 5% Haste status effect for the remainder of the Trial.",
+      "category": "endgame",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_108",
+      "name": "Lightweight",
+      "character": "General",
+      "description": "Your movement speed is slightly reduced. Scratch Marks you leave behind fade 2/3/4 seconds faster than normal.",
+      "category": "stealth",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_109",
+      "name": "No One Left Behind",
+      "character": "General",
+      "description": "Once all Generators are repaired, gain a 100% bonus to unhooking speed and healing speed for Survivors.",
+      "category": "support",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_110",
+      "name": "Premonition",
+      "character": "General",
+      "description": "Get a warning sound prompt when the Killer is looking at you within 45 degrees from up to 8/12/16 metres away.",
+      "category": "awareness",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_111",
+      "name": "Small Game",
+      "character": "General",
+      "description": "Get a sound and visual prompt when looking in the direction of a Bear Trap or Totem within 8 metres.",
+      "category": "utility",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_112",
+      "name": "Made for This",
+      "character": "Gabriel Soma",
+      "description": "While Injured, you gain the Haste status effect, granting 3% bonus Movement speed.",
+      "category": "chase",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_113",
+      "name": "Visionary",
+      "character": "Gabriel Soma",
+      "description": "While repairing a Generator, reveal the Auras of all other Generators within 32 metres. Completing a Generator reveals all Generators for 4 seconds.",
+      "category": "generator",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_114",
+      "name": "Dark Sense",
+      "character": "Gabriel Soma",
+      "description": "Each time a Generator is completed, the Killer's Aura is revealed to you for 5 seconds.",
+      "category": "awareness",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_115",
+      "name": "Background Player",
+      "character": "General",
+      "description": "While another Survivor is being carried by the Killer, gain Haste and leave no Scratch Marks.",
+      "category": "support",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_116",
+      "name": "Better Than New",
+      "character": "General",
+      "description": "After completing a healing action on another Survivor, they receive a 6% bonus to all Action speeds for 80 seconds.",
+      "category": "support",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_117",
+      "name": "Better Together",
+      "character": "Rebecca Chambers",
+      "description": "While repairing a Generator, its Aura is revealed to all other Survivors. When the Killer damages it, reveal the Killer's Aura to all Survivors for 5 seconds.",
+      "category": "generator",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_118",
+      "name": "Desperate Measures",
+      "character": "Rebecca Chambers",
+      "description": "For each other Survivor in the Injured or Dying State, gain a 10% bonus to Healing speed.",
+      "category": "healing",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_119",
+      "name": "Boon: Illumination",
+      "character": "Alan Wake",
+      "description": "Bless a Totem. Within 24 metres, the Auras of Generators, Chests, and Totems are revealed to all Survivors.",
+      "category": "awareness",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_120",
+      "name": "Mirrored Illusion",
+      "character": "Alan Wake",
+      "description": "After cleansing a Totem, place a fake Totem somewhere on the map. The Killer can see its Aura in yellow.",
+      "category": "stealth",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_121",
+      "name": "Cut Loose",
+      "character": "General",
+      "description": "After a Chase ends without being put into the Dying State, gain Haste and suppress your Scratch Marks for 4 seconds. Causes Exhaustion.",
+      "category": "chase",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_122",
+      "name": "Empathic Connection",
+      "character": "General",
+      "description": "Other Survivors can always see your Aura when you are Injured. You heal other Survivors 10% faster.",
+      "category": "healing",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_123",
+      "name": "Ferrum Fortis",
+      "character": "General",
+      "description": "While Injured, gain a 25% bonus to Pallet and Breakable Wall breaking speed. Earn bonus Bloodpoints for breaking Pallets.",
+      "category": "utility",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_124",
+      "name": "Flow State",
+      "character": "General",
+      "description": "Hitting a Great Skill Check on a Generator instantly grants a burst of repair progress and briefly suppresses the Generator's noise.",
+      "category": "generator",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_125",
+      "name": "Five Moves Ahead",
+      "character": "General",
+      "description": "After stunning the Killer, reveal the Auras of all dropped Pallets and Windows within 32 metres for 10 seconds.",
+      "category": "awareness",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_126",
+      "name": "Hyperfocus",
+      "character": "General",
+      "description": "Each consecutive Great Skill Check grants a Token, increasing Skill Check size and bonus progress. Tokens are lost on a missed Skill Check.",
+      "category": "generator",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_127",
+      "name": "Low Profile",
+      "character": "General",
+      "description": "When another Survivor is sacrificed, removed, or killed, suppress your Scratch Marks and Blood pools for 90 seconds.",
+      "category": "stealth",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_128",
+      "name": "Lucky Star",
+      "character": "General",
+      "description": "While hiding in a Locker, your Aura is concealed and the Killer's Aura is revealed when they are within 6 metres.",
+      "category": "stealth",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_129",
+      "name": "Reactive Healing",
+      "character": "General",
+      "description": "When another Survivor within 32 metres is put into the Dying State, instantly gain 25% progress towards healing a Health State.",
+      "category": "healing",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_130",
+      "name": "Red Herring",
+      "character": "General",
+      "description": "After working on a Generator for 3 seconds, a false Noise Notification appears at a random other Generator. Suppresses your Skill Check sounds.",
+      "category": "stealth",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_131",
+      "name": "Self-Preservation",
+      "character": "General",
+      "description": "When another Survivor within 16 metres is hit by the Killer's Basic Attack, suppress your Scratch Marks, Blood, and grunts for 6 seconds.",
+      "category": "stealth",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_132",
+      "name": "Smash Hit",
+      "character": "General",
+      "description": "After stunning the Killer with a Pallet, sprint at 150% Movement speed for 3 seconds. Causes Exhaustion.",
+      "category": "chase",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_133",
+      "name": "Soul Guard",
+      "character": "General",
+      "description": "After being healed from the Dying State or recovering yourself, gain Endurance for 6 seconds. If any active Hex Totem exists, you can recover from the Dying State on your own once per Trial.",
+      "category": "healing",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_134",
+      "name": "Still Sight",
+      "character": "General",
+      "description": "While standing still, the Killer's Aura and the Auras of their held Items are revealed within 18 metres.",
+      "category": "awareness",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_135",
+      "name": "This Is Not Happening",
+      "character": "General",
+      "description": "While Injured, your Skill Check warning zones are increased by 10/20/30%.",
+      "category": "utility",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_136",
+      "name": "Troubleshooter",
+      "character": "General",
+      "description": "While repairing a Generator, the Killer's Aura is revealed when they are within 8/10/12 metres of you.",
+      "category": "generator",
+      "iconUrl": null
     }
   ],
   "killer_perks": [
     {
       "id": "kp_001",
-      "name": "No One Escapes Death",
+      "name": "Hex: No One Escapes Death",
       "character": "General",
       "description": "When the last Generator is repaired, all Survivors suffer Exposed. Your Movement speed is increased.",
       "category": "endgame",
@@ -801,14 +1049,6 @@
       "description": "All Generators not being repaired regress at 100/150/200% of normal speed.",
       "category": "generator",
       "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/6/6c/IconPerks_hexRuin.png"
-    },
-    {
-      "id": "kp_004",
-      "name": "BBQ & Chili",
-      "character": "The Cannibal",
-      "description": "After hooking a Survivor, all other Survivors' Auras are revealed for 4 seconds.",
-      "category": "awareness",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/b/be/IconPerks_barbecueAndChili.png"
     },
     {
       "id": "kp_005",
@@ -875,14 +1115,6 @@
       "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/a/a0/IconPerks_callOfBrine.png"
     },
     {
-      "id": "kp_013",
-      "name": "Nowhere to Hide",
-      "character": "The Knight",
-      "description": "After kicking a Generator, Survivors within 24m have Auras revealed for 3/4/5 seconds.",
-      "category": "awareness",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/c/c1/IconPerks_nowhereToHide.png"
-    },
-    {
       "id": "kp_014",
       "name": "Starstruck",
       "character": "The Trickster",
@@ -907,16 +1139,8 @@
       "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/7/70/IconPerks_monitorAndAbuse.png"
     },
     {
-      "id": "kp_017",
-      "name": "Save the Best for Last",
-      "character": "The Shape",
-      "description": "Hits on non-Obsession Survivors gain Tokens reducing attack cooldown. Hits on Obsession lose Tokens.",
-      "category": "chase",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/1/1c/IconPerks_saveTheBestForLast.png"
-    },
-    {
       "id": "kp_018",
-      "name": "Play With Your Food",
+      "name": "Play with Your Food",
       "character": "The Shape",
       "description": "Breaking a chase without a down grants speed Tokens. Tokens lost on attacks.",
       "category": "chase",
@@ -937,14 +1161,6 @@
       "description": "When a Generator reaches 70%, get a noise notification and become Undetectable for 12 seconds.",
       "category": "awareness",
       "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/5/59/IconPerks_tinkerer.png"
-    },
-    {
-      "id": "kp_021",
-      "name": "Surveillance",
-      "character": "The Pig",
-      "description": "After kicking a Generator, its Aura is shown. Regressing Generators show white Auras.",
-      "category": "generator",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/2/23/IconPerks_surveillance.png"
     },
     {
       "id": "kp_022",
@@ -1003,14 +1219,6 @@
       "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/2/28/IconPerks_trailOfTorment.png"
     },
     {
-      "id": "kp_029",
-      "name": "Merciless Storm",
-      "character": "The Onryō",
-      "description": "When a Generator is at 90%, Survivors repairing it face continuous Skill Checks.",
-      "category": "generator",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/2/21/IconPerks_mercilessStorm.png"
-    },
-    {
       "id": "kp_030",
       "name": "Scourge Hook: Floods of Rage",
       "character": "The Onryō",
@@ -1033,14 +1241,6 @@
       "description": "When stunned by a Pallet, the Survivor who stunned you becomes Exposed for 20 seconds.",
       "category": "chase",
       "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/d/d1/IconPerks_hubris.png"
-    },
-    {
-      "id": "kp_033",
-      "name": "Jolt",
-      "character": "General",
-      "description": "When you put a Survivor in the Dying State, nearby Generators explode and regress.",
-      "category": "generator",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/4/45/IconPerks_jolt.png"
     },
     {
       "id": "kp_034",
@@ -1131,22 +1331,6 @@
       "iconUrl": null
     },
     {
-      "id": "kp_046",
-      "name": "Alien Instinct",
-      "character": "The Xenomorph",
-      "description": "After hooking a Survivor, the Survivor farthest from you is revealed for 6 seconds.",
-      "category": "awareness",
-      "iconUrl": null
-    },
-    {
-      "id": "kp_047",
-      "name": "Rapid Brutality",
-      "character": "The Xenomorph",
-      "description": "If you didn't break a Pallet in the last 15 seconds, gain Haste after a hit.",
-      "category": "chase",
-      "iconUrl": null
-    },
-    {
       "id": "kp_048",
       "name": "Dissolution",
       "character": "The Xenomorph",
@@ -1163,35 +1347,11 @@
       "iconUrl": null
     },
     {
-      "id": "kp_051",
-      "name": "Dissolution",
-      "character": "The Dredge",
-      "description": "After a fast-vault over a Pallet during Chase, that Pallet breaks at end of Chase.",
-      "category": "chase",
-      "iconUrl": null
-    },
-    {
       "id": "kp_052",
       "name": "Septic Touch",
       "character": "The Dredge",
       "description": "Survivors healing within your Terror Radius suffer Blindness and Exhaustion.",
       "category": "anti-healing",
-      "iconUrl": null
-    },
-    {
-      "id": "kp_053",
-      "name": "Claustrophobia",
-      "character": "The Skull Merchant",
-      "description": "After kicking a Generator, all Windows and Vault locations in the area become blocked.",
-      "category": "chase",
-      "iconUrl": null
-    },
-    {
-      "id": "kp_054",
-      "name": "Game Afoot",
-      "character": "The Skull Merchant",
-      "description": "While in a Chase with the Obsession, gain Haste. Obsession changed on each hit.",
-      "category": "chase",
       "iconUrl": null
     },
     {
@@ -1204,7 +1364,7 @@
     },
     {
       "id": "kp_056",
-      "name": "Power Surge",
+      "name": "Surge",
       "character": "The Singularity",
       "description": "After putting a Survivor in the Dying State, the nearest Generator explodes and regresses.",
       "category": "generator",
@@ -1236,7 +1396,7 @@
     },
     {
       "id": "kp_061",
-      "name": "Hex: Blood Favour",
+      "name": "Hex: Blood Favor",
       "character": "The Blight",
       "description": "When a Survivor is injured, all Pallets within 16 metres are blocked by the Entity.",
       "category": "hex",
@@ -1251,30 +1411,6 @@
       "iconUrl": null
     },
     {
-      "id": "kp_063",
-      "name": "All-Shaking Thunder",
-      "character": "The Unknown",
-      "description": "After falling from a height, Lunge Attack range is greatly increased for a short time.",
-      "category": "chase",
-      "iconUrl": null
-    },
-    {
-      "id": "kp_064",
-      "name": "Languid Touch",
-      "character": "The Unknown",
-      "description": "When a Survivor scares a Crow within 36m, they suffer Exhaustion for 6/8/10 seconds.",
-      "category": "utility",
-      "iconUrl": null
-    },
-    {
-      "id": "kp_065",
-      "name": "Unforeseen",
-      "character": "The Unknown",
-      "description": "After kicking a Generator, your Terror Radius transfers to that Generator for 20 seconds.",
-      "category": "stealth",
-      "iconUrl": null
-    },
-    {
       "id": "kp_066",
       "name": "Friends 'til the End",
       "character": "The Good Guy",
@@ -1283,16 +1419,8 @@
       "iconUrl": null
     },
     {
-      "id": "kp_067",
-      "name": "Hex: Anguish",
-      "character": "The Good Guy",
-      "description": "2 Hex Totems share this perk. When one is cleansed, the Obsession screams and becomes Oblivious.",
-      "category": "hex",
-      "iconUrl": null
-    },
-    {
       "id": "kp_068",
-      "name": "Scourge Hook: Hangman's Trick",
+      "name": "Hangman's Trick",
       "character": "The Good Guy",
       "description": "Reveals Auras of Survivors near any Hook. Hooking near Survivors reveals their Auras.",
       "category": "awareness",
@@ -1303,22 +1431,6 @@
       "name": "Hex: Two Can Play",
       "character": "The Houndmaster",
       "description": "After being blinded, all Survivors suffer Blindness for 60 seconds.",
-      "category": "hex",
-      "iconUrl": null
-    },
-    {
-      "id": "kp_070",
-      "name": "Weave Attunement",
-      "character": "The Houndmaster",
-      "description": "When a Survivor drops an Item, its Aura is revealed and nearby Survivors are Oblivious.",
-      "category": "awareness",
-      "iconUrl": null
-    },
-    {
-      "id": "kp_071",
-      "name": "Hex: Wretched Fate",
-      "character": "The Houndmaster",
-      "description": "The Entity blocks a random Generator. While it's blocked, Survivors near it suffer Oblivious.",
       "category": "hex",
       "iconUrl": null
     },
@@ -1368,6 +1480,382 @@
       "character": "The Oni",
       "description": "Your Obsession changes upon a missed attack. New Obsession suffers Oblivious.",
       "category": "chase",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_081",
+      "name": "A Nurse's Calling",
+      "character": "The Nurse",
+      "description": "",
+      "category": "awareness",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_082",
+      "name": "Awakened Awareness",
+      "character": "The Knight",
+      "description": "",
+      "category": "awareness",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_083",
+      "name": "Beast of Prey",
+      "character": "The Huntress",
+      "description": "",
+      "category": "stealth",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_084",
+      "name": "Blood Warden",
+      "character": "The Executioner",
+      "description": "",
+      "category": "endgame",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_085",
+      "name": "Bloodhound",
+      "character": "The Trapper",
+      "description": "",
+      "category": "tracking",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_086",
+      "name": "Coulrophobia",
+      "character": "The Clown",
+      "description": "",
+      "category": "debuff",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_087",
+      "name": "Cruel Limits",
+      "character": "The Wraith",
+      "description": "",
+      "category": "utility",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_088",
+      "name": "Dark Devotion",
+      "character": "The Plague",
+      "description": "",
+      "category": "stealth",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_089",
+      "name": "Deerstalker",
+      "character": "The Trapper",
+      "description": "",
+      "category": "tracking",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_090",
+      "name": "Distressing",
+      "character": "General",
+      "description": "",
+      "category": "debuff",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_091",
+      "name": "Dying Light",
+      "character": "The Shape",
+      "description": "",
+      "category": "debuff",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_092",
+      "name": "Enduring",
+      "character": "The Spirit",
+      "description": "",
+      "category": "chase",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_093",
+      "name": "Exhausting Touch",
+      "character": "General",
+      "description": "",
+      "category": "debuff",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_094",
+      "name": "Fearmonger",
+      "character": "The Nemesis",
+      "description": "",
+      "category": "debuff",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_095",
+      "name": "Fire Up",
+      "character": "The Shape",
+      "description": "",
+      "category": "chase",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_096",
+      "name": "Franklin's Demise",
+      "character": "The Cannibal",
+      "description": "",
+      "category": "utility",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_097",
+      "name": "Furtive Chase",
+      "character": "The Ghost Face",
+      "description": "",
+      "category": "stealth",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_098",
+      "name": "Gearhead",
+      "character": "The Executioner",
+      "description": "",
+      "category": "tracking",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_099",
+      "name": "Genetic Anomalies",
+      "character": "General",
+      "description": "",
+      "category": "debuff",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_100",
+      "name": "Hex: Haunted Ground",
+      "character": "General",
+      "description": "",
+      "category": "hex",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_101",
+      "name": "Hex: Huntress Lullaby",
+      "character": "The Huntress",
+      "description": "",
+      "category": "hex",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_102",
+      "name": "Hex: Third Seal",
+      "character": "The Hag",
+      "description": "",
+      "category": "hex",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_103",
+      "name": "Hex: Thrill of the Hunt",
+      "character": "General",
+      "description": "",
+      "category": "hex",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_104",
+      "name": "Hoarder",
+      "character": "The Deathslinger",
+      "description": "",
+      "category": "utility",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_106",
+      "name": "Hysteria",
+      "character": "The Executioner",
+      "description": "",
+      "category": "debuff",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_107",
+      "name": "I'm All Ears",
+      "character": "The Ghost Face",
+      "description": "",
+      "category": "awareness",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_108",
+      "name": "Insidious",
+      "character": "The Trapper",
+      "description": "",
+      "category": "stealth",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_109",
+      "name": "Iron Clutch",
+      "character": "General",
+      "description": "",
+      "category": "chase",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_110",
+      "name": "Knock Out",
+      "character": "The Cannibal",
+      "description": "",
+      "category": "chase",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_111",
+      "name": "Lethal Pursuer",
+      "character": "The Nemesis",
+      "description": "",
+      "category": "tracking",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_112",
+      "name": "Mad Grit",
+      "character": "The Shape",
+      "description": "",
+      "category": "chase",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_113",
+      "name": "Make Your Choice",
+      "character": "The Executioner",
+      "description": "",
+      "category": "utility",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_114",
+      "name": "Mindbreaker",
+      "character": "The Engineer",
+      "description": "",
+      "category": "debuff",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_115",
+      "name": "Oppression",
+      "character": "The Twins",
+      "description": "",
+      "category": "generator",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_116",
+      "name": "Overcharge",
+      "character": "The Doctor",
+      "description": "",
+      "category": "generator",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_117",
+      "name": "Overwhelming Presence",
+      "character": "The Doctor",
+      "description": "",
+      "category": "debuff",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_118",
+      "name": "Rancor",
+      "character": "The Shape",
+      "description": "",
+      "category": "endgame",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_119",
+      "name": "Remember Me",
+      "character": "The Shape",
+      "description": "",
+      "category": "endgame",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_120",
+      "name": "Scourge Hook: Monstrous Shrine",
+      "character": "General",
+      "description": "",
+      "category": "scourge",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_121",
+      "name": "Shadowborn",
+      "character": "The Wraith",
+      "description": "",
+      "category": "utility",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_122",
+      "name": "Shattered Hope",
+      "character": "The Hag",
+      "description": "",
+      "category": "utility",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_123",
+      "name": "Spirit Fury",
+      "character": "The Spirit",
+      "description": "",
+      "category": "chase",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_124",
+      "name": "Stridor",
+      "character": "The Nurse",
+      "description": "",
+      "category": "tracking",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_125",
+      "name": "Superior Anatomy",
+      "character": "The Unknown",
+      "description": "",
+      "category": "chase",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_126",
+      "name": "Thanatophobia",
+      "character": "The Nurse",
+      "description": "",
+      "category": "debuff",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_127",
+      "name": "Unbound",
+      "character": "The Dredge",
+      "description": "",
+      "category": "mobility",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_129",
+      "name": "Unnerving Presence",
+      "character": "The Trapper",
+      "description": "",
+      "category": "debuff",
       "iconUrl": null
     }
   ]
