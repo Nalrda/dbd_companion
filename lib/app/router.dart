@@ -4,7 +4,6 @@ import '../features/builds/build_editor_screen.dart';
 import '../features/builds/builds_screen.dart';
 import '../features/maps/map_detail_screen.dart';
 import '../features/maps/maps_screen.dart';
-import '../features/perks/perks_screen.dart';
 import '../features/randomizer/randomizer_screen.dart';
 import '../features/group_planner/group_planner_screen.dart';
 import '../features/group_planner/group_plan_editor_screen.dart';
@@ -17,8 +16,7 @@ final router = GoRouter(
       builder: (context, state, child) => ShellScreen(child: child),
       routes: [
         GoRoute(path: '/builds', builder: (_, __) => const BuildsScreen()),
-        GoRoute(path: '/perks', builder: (_, __) => const PerksScreen()),
-        GoRoute(path: '/randomizer', builder: (_, __) => const RandomizerScreen()),
+GoRoute(path: '/randomizer', builder: (_, __) => const RandomizerScreen()),
         GoRoute(path: '/maps', builder: (_, __) => const MapsScreen()),
         GoRoute(path: '/group', builder: (_, __) => const GroupPlannerScreen()),
       ],

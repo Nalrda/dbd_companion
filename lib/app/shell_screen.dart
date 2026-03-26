@@ -9,7 +9,6 @@ class ShellScreen extends StatelessWidget {
 
   static const _tabs = [
     _TabItem(path: '/builds',     label: 'BUILDS'),
-    _TabItem(path: '/perks',      label: 'PERKS'),
     _TabItem(path: '/randomizer', label: 'RANDOMIZER'),
     _TabItem(path: '/maps',       label: 'MAPS'),
     _TabItem(path: '/group',      label: 'GROUP'),
