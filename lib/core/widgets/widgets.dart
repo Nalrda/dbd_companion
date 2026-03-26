@@ -66,20 +66,8 @@ class PerkIcon extends StatelessWidget {
           children: [
             // subtle category-tinted background
             Container(color: categoryColor.withValues(alpha: 0.08)),
-            // icon image
-            perk.iconUrl != null
-                ? Image.network(
-                    perk.iconUrl!,
-                    width: size,
-                    height: size,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => _fallbackIcon(categoryColor),
-                    loadingBuilder: (_, child, progress) {
-                      if (progress == null) return child;
-                      return _fallbackIcon(categoryColor);
-                    },
-                  )
-                : _fallbackIcon(categoryColor),
+            // icon image: local asset → network URL → letter fallback
+            _PerkImage(perk: perk, size: size, fallback: _fallbackIcon(categoryColor)),
             // octagonal border overlay
             CustomPaint(
               size: Size(size, size),
@@ -108,6 +96,39 @@ class PerkIcon extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+// Tries local asset first, then network URL, then falls back to provided widget.
+class _PerkImage extends StatelessWidget {
+  final Perk perk;
+  final double size;
+  final Widget fallback;
+
+  const _PerkImage({required this.perk, required this.size, required this.fallback});
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.asset(
+      'assets/images/perks/${perk.id}.png',
+      width: size,
+      height: size,
+      fit: BoxFit.cover,
+      errorBuilder: (_, __, ___) {
+        if (perk.iconUrl != null) {
+          return Image.network(
+            perk.iconUrl!,
+            width: size,
+            height: size,
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) => fallback,
+            loadingBuilder: (_, child, progress) =>
+                progress == null ? child : fallback,
+          );
+        }
+        return fallback;
+      },
     );
   }
 }

@@ -41,6 +41,7 @@ flutter:
   assets:
     - assets/data/
     - assets/images/
+    - assets/images/perks/
     - assets/data/maps/MacMillan Estate/
     - assets/data/maps/Autohaven Wreckers/
     - assets/data/maps/Coldwind Farm/

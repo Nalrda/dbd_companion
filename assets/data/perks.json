@@ -382,7 +382,7 @@
       "character": "Nancy Wheeler",
       "description": "After completing a Good or Great Skill Check on a Generator, the Killer's Aura is revealed for 6 seconds.",
       "category": "awareness",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/6/6a/IconPerks_resilience.png"
+      "iconUrl": null
     },
     {
       "id": "sp_050",
@@ -646,7 +646,7 @@
       "character": "Yoichi Asakawa",
       "description": "Bless a Totem. All Survivors within 24m gain 2% Haste.",
       "category": "support",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/6/67/IconPerks_boonExponential.png"
+      "iconUrl": null
     },
     {
       "id": "sp_084",
@@ -654,7 +654,7 @@
       "character": "Yoichi Asakawa",
       "description": "After stunning the Killer, suppress Scratch Marks and sounds for 6 seconds.",
       "category": "stealth",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/1/18/IconPerks_spineChill.png"
+      "iconUrl": null
     },
     {
       "id": "sp_085",
@@ -662,7 +662,7 @@
       "character": "Yoichi Asakawa",
       "description": "After repairing 50% of a Generator, install a Wiretap that reveals approaching Killers.",
       "category": "awareness",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/c/c3/IconPerks_bond.png"
+      "iconUrl": null
     },
     {
       "id": "sp_086",
@@ -670,7 +670,7 @@
       "character": "Nicolas Cage",
       "description": "Instantly enter the Dying State silently. Heal yourself from Dying State fully at 70% speed.",
       "category": "utility",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/5/52/IconPerks_deadHard.png"
+      "iconUrl": null
     },
     {
       "id": "sp_087",
@@ -678,7 +678,7 @@
       "character": "Nicolas Cage",
       "description": "When the Killer stares at you, scream and reveal their Aura for 5 seconds.",
       "category": "awareness",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/1/18/IconPerks_spineChill.png"
+      "iconUrl": null
     },
     {
       "id": "sp_088",
@@ -686,7 +686,7 @@
       "character": "Nicolas Cage",
       "description": "While running, activate for a random effect. Causes Exhaustion.",
       "category": "chase",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/8/8e/IconPerks_sprintBurst.png"
+      "iconUrl": null
     },
     {
       "id": "sp_089",
@@ -694,7 +694,7 @@
       "character": "Vittorio Toscano",
       "description": "Each Survivor hooked while not in a chase adds a Token. Tokens boost Skill Check success zones.",
       "category": "generator",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/5/58/IconPerks_proveThyself.png"
+      "iconUrl": null
     },
     {
       "id": "sp_090",
@@ -702,7 +702,7 @@
       "character": "Vittorio Toscano",
       "description": "After completing a Good or Great Skill Check, reveal the Killer's Aura for 6 seconds.",
       "category": "awareness",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/6/65/IconPerks_kindred.png"
+      "iconUrl": null
     },
     {
       "id": "sp_091",
@@ -710,15 +710,15 @@
       "character": "Vittorio Toscano",
       "description": "Completing Skill Checks while repairing stores energy. Release to instantly progress a Generator.",
       "category": "generator",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/9/94/IconPerks_technician.png"
+      "iconUrl": null
     },
     {
       "id": "sp_092",
       "name": "Invocation: Weaving Spiders",
-      "character": "Unknown",
+      "character": "Sable Ward",
       "description": "Perform an Invocation in the Basement. Instantly completes all Generators by a large amount.",
       "category": "generator",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/5/58/IconPerks_proveThyself.png"
+      "iconUrl": null
     },
     {
       "id": "sp_093",
@@ -726,7 +726,7 @@
       "character": "Thalita Lyra",
       "description": "After healing a Survivor, both gain a speed boost while staying near each other.",
       "category": "support",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/3/3c/IconPerks_leader.png"
+      "iconUrl": null
     },
     {
       "id": "sp_094",
@@ -734,7 +734,7 @@
       "character": "Renato Lyra",
       "description": "After healing a Survivor, both have no scratch marks while near each other.",
       "category": "stealth",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/5/51/IconPerks_urbanEvasion.png"
+      "iconUrl": null
     },
     {
       "id": "sp_095",
@@ -742,7 +742,7 @@
       "character": "Lara Croft",
       "description": "After a rushed vault, teleport through the next vault within 3 seconds.",
       "category": "chase",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/7/73/IconPerks_lithe.png"
+      "iconUrl": null
     },
     {
       "id": "sp_096",
@@ -750,23 +750,23 @@
       "character": "Aestri Yazar",
       "description": "Perform a lute animation to roll a d20. Higher rolls grant bonus Skill Check progress.",
       "category": "generator",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/5/58/IconPerks_proveThyself.png"
+      "iconUrl": null
     },
     {
       "id": "sp_098",
       "name": "Strength in Shadows",
-      "character": "Unknown",
+      "character": "Sable Ward",
       "description": "In a dark area, self-heal at full speed without a Med-Kit.",
       "category": "healing",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/5/53/IconPerks_selfCare.png"
+      "iconUrl": null
     },
     {
       "id": "sp_099",
       "name": "Friendly Competition",
-      "character": "Unknown",
+      "character": "Sable Ward",
       "description": "After completing a Generator with another Survivor, both gain a repair speed bonus.",
       "category": "generator",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/5/58/IconPerks_proveThyself.png"
+      "iconUrl": null
     },
     {
       "id": "sp_100",
@@ -774,7 +774,7 @@
       "character": "Orela Rose",
       "description": "After a Protection Hit, all Survivors within 12 metres gain Haste for 6 seconds.",
       "category": "support",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/3/3c/IconPerks_leader.png"
+      "iconUrl": null
     }
   ],
   "killer_perks": [
@@ -1164,10 +1164,10 @@
     },
     {
       "id": "kp_051",
-      "name": "Dissolution",
+      "name": "Isolate",
       "character": "The Dredge",
-      "description": "After a fast-vault over a Pallet during Chase, that Pallet breaks at end of Chase.",
-      "category": "chase",
+      "description": "After hooking a Survivor, their Aura is hidden from other Survivors for 8 seconds.",
+      "category": "awareness",
       "iconUrl": null
     },
     {
