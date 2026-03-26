@@ -191,39 +191,46 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
   }
 
   Widget _buildBody() {
-    final isWide = MediaQuery.of(context).size.width > 700;
+    final width = MediaQuery.of(context).size.width;
+    final isWide = width > 700;
 
     if (isWide) {
-      // Wide layout: 4 columns side by side
-      return SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: List.generate(4, (si) => Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(right: si < 3 ? 12 : 0),
-              child: _SurvivorColumn(
-                survivorIndex: si,
-                color: _survivorColors[si],
-                label: _survivorLabels[si],
-                perkSlots: _resolvedPerks[si],
-                itemId: _survivorItemIds[si],
-                offeringId: _survivorOfferingIds[si],
-                onSlotTap: (slotIndex) => _pickPerk(si, slotIndex),
-                onSlotRemove: (slotIndex) => setState(
-                  () => _resolvedPerks[si][slotIndex] = null,
+      // Wide layout: 4 columns side by side, centered with max width
+      return Align(
+        alignment: Alignment.topCenter,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1100),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: List.generate(4, (si) => Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(right: si < 3 ? 12 : 0),
+                  child: _SurvivorColumn(
+                    survivorIndex: si,
+                    color: _survivorColors[si],
+                    label: _survivorLabels[si],
+                    perkSlots: _resolvedPerks[si],
+                    itemId: _survivorItemIds[si],
+                    offeringId: _survivorOfferingIds[si],
+                    onSlotTap: (slotIndex) => _pickPerk(si, slotIndex),
+                    onSlotRemove: (slotIndex) => setState(
+                      () => _resolvedPerks[si][slotIndex] = null,
+                    ),
+                    onItemTap: () => _pickItem(si),
+                    onItemRemove: _survivorItemIds[si] != null
+                        ? () => setState(() => _survivorItemIds[si] = null)
+                        : null,
+                    onOfferingTap: () => _pickOffering(si),
+                    onOfferingRemove: _survivorOfferingIds[si] != null
+                        ? () => setState(() => _survivorOfferingIds[si] = null)
+                        : null,
+                  ),
                 ),
-                onItemTap: () => _pickItem(si),
-                onItemRemove: _survivorItemIds[si] != null
-                    ? () => setState(() => _survivorItemIds[si] = null)
-                    : null,
-                onOfferingTap: () => _pickOffering(si),
-                onOfferingRemove: _survivorOfferingIds[si] != null
-                    ? () => setState(() => _survivorOfferingIds[si] = null)
-                    : null,
-              ),
+              )),
             ),
-          )),
+          ),
         ),
       );
     }

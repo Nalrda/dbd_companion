@@ -154,13 +154,31 @@ class _PerksScreenState extends ConsumerState<PerksScreen> {
               Expanded(
                 child: filtered.isEmpty
                     ? _EmptyState(search: _search, category: _selectedCategory)
-                    : ListView.builder(
-                        padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
-                        itemCount: filtered.length,
-                        itemBuilder: (context, i) => Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
-                          child: PerkCard(perk: filtered[i]),
-                        ),
+                    : LayoutBuilder(
+                        builder: (context, constraints) {
+                          // 2 columns on wide screens
+                          if (constraints.maxWidth > 700) {
+                            return GridView.builder(
+                              padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 10,
+                                mainAxisSpacing: 8,
+                                mainAxisExtent: 96,
+                              ),
+                              itemCount: filtered.length,
+                              itemBuilder: (context, i) => PerkCard(perk: filtered[i]),
+                            );
+                          }
+                          return ListView.builder(
+                            padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+                            itemCount: filtered.length,
+                            itemBuilder: (context, i) => Padding(
+                              padding: const EdgeInsets.only(bottom: 8),
+                              child: PerkCard(perk: filtered[i]),
+                            ),
+                          );
+                        },
                       ),
               ),
             ],

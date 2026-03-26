@@ -38,15 +38,37 @@ class GroupPlannerScreen extends ConsumerWidget {
             );
           }
 
-          return ListView.separated(
-            padding: const EdgeInsets.all(16),
-            itemCount: plans.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 10),
-            itemBuilder: (ctx, i) => _GroupPlanCard(
-              plan: plans[i],
-              onTap: () => context.push('/group/${plans[i].id}'),
-              onDelete: () => ref.read(groupPlansProvider.notifier).delete(plans[i].id),
-            ).animate().fadeIn(delay: (i * 40).ms).slideY(begin: 0.05, end: 0),
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              final isWide = constraints.maxWidth > 700;
+              if (isWide) {
+                return GridView.builder(
+                  padding: const EdgeInsets.all(16),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    mainAxisExtent: 100,
+                  ),
+                  itemCount: plans.length,
+                  itemBuilder: (ctx, i) => _GroupPlanCard(
+                    plan: plans[i],
+                    onTap: () => context.push('/group/${plans[i].id}'),
+                    onDelete: () => ref.read(groupPlansProvider.notifier).delete(plans[i].id),
+                  ).animate().fadeIn(delay: (i * 30).ms).slideY(begin: 0.05, end: 0),
+                );
+              }
+              return ListView.separated(
+                padding: const EdgeInsets.all(16),
+                itemCount: plans.length,
+                separatorBuilder: (_, __) => const SizedBox(height: 10),
+                itemBuilder: (ctx, i) => _GroupPlanCard(
+                  plan: plans[i],
+                  onTap: () => context.push('/group/${plans[i].id}'),
+                  onDelete: () => ref.read(groupPlansProvider.notifier).delete(plans[i].id),
+                ).animate().fadeIn(delay: (i * 40).ms).slideY(begin: 0.05, end: 0),
+              );
+            },
           );
         },
       ),
@@ -79,6 +101,7 @@ class GroupPlannerScreen extends ConsumerWidget {
               final plan = await ref.read(groupPlansProvider.notifier).create(name: name);
               if (ctx.mounted) {
                 Navigator.pop(ctx);
+                // ignore: use_build_context_synchronously
                 context.push('/group/${plan.id}');
               }
             },
@@ -102,7 +125,7 @@ class _GroupPlanCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: AppTheme.surface,
           borderRadius: BorderRadius.circular(12),
@@ -120,18 +143,21 @@ class _GroupPlanCard extends StatelessWidget {
               ),
               child: const Icon(Icons.groups, color: AppTheme.primary, size: 22),
             ),
-            const SizedBox(width: 14),
+            const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     plan.name,
                     style: const TextStyle(
-                      fontSize: 15,
+                      fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: AppTheme.textPrimary,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
                   // 4 survivor perk count indicators
