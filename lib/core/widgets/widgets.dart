@@ -100,7 +100,7 @@ class PerkIcon extends StatelessWidget {
   }
 }
 
-// Tries local asset first, then network URL, then falls back to provided widget.
+// Tries local asset by name, then by ID, then network URL, then letter fallback.
 class _PerkImage extends StatelessWidget {
   final Perk perk;
   final double size;
@@ -108,27 +108,60 @@ class _PerkImage extends StatelessWidget {
 
   const _PerkImage({required this.perk, required this.size, required this.fallback});
 
+  // Converts perk name to a safe filename:
+  // "Self-Care" → "self_care.png"
+  // "Boon: Circle of Healing" → "boon_circle_of_healing.png"
+  // "Déjà Vu" → "deja_vu.png"
+  // "Coup de Grâce" → "coup_de_grace.png"
+  static String _nameToFilename(String name) {
+    return name
+        .toLowerCase()
+        .replaceAll(RegExp(r'[éèê]'), 'e')
+        .replaceAll(RegExp(r'[àâä]'), 'a')
+        .replaceAll(RegExp(r'[ôö]'), 'o')
+        .replaceAll(RegExp(r'[ûüù]'), 'u')
+        .replaceAll(RegExp(r'[îï]'), 'i')
+        .replaceAll(RegExp(r'[çÇ]'), 'c')
+        .replaceAll(RegExp(r'[ß]'), 'ss')
+        .replaceAll(RegExp(r"[':,!?]"), '')
+        .replaceAll('&', '')
+        .replaceAll(RegExp(r'[-\s]+'), '_')
+        .replaceAll(RegExp(r'_+'), '_')
+        .replaceAll(RegExp(r'^_|_$'), '');
+  }
+
+  Widget _networkFallback() {
+    if (perk.iconUrl != null) {
+      return Image.network(
+        perk.iconUrl!,
+        width: size,
+        height: size,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => fallback,
+        loadingBuilder: (_, child, progress) =>
+            progress == null ? child : fallback,
+      );
+    }
+    return fallback;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final nameFile = 'assets/images/perks/${_nameToFilename(perk.name)}.png';
+    final idFile   = 'assets/images/perks/${perk.id}.png';
+
     return Image.asset(
-      'assets/images/perks/${perk.id}.png',
+      nameFile,
       width: size,
       height: size,
       fit: BoxFit.cover,
-      errorBuilder: (_, __, ___) {
-        if (perk.iconUrl != null) {
-          return Image.network(
-            perk.iconUrl!,
-            width: size,
-            height: size,
-            fit: BoxFit.cover,
-            errorBuilder: (_, __, ___) => fallback,
-            loadingBuilder: (_, child, progress) =>
-                progress == null ? child : fallback,
-          );
-        }
-        return fallback;
-      },
+      errorBuilder: (_, __, ___) => Image.asset(
+        idFile,
+        width: size,
+        height: size,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => _networkFallback(),
+      ),
     );
   }
 }
