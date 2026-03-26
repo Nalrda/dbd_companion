@@ -81,15 +81,6 @@ class _AppBrand extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          Text(
-            'FOG & BLOOD',
-            style: GoogleFonts.rajdhani(
-              color: AppTheme.textDim,
-              fontSize: 10,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 1.8,
-            ),
-          ),
         ],
       ),
     );
