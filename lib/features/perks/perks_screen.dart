@@ -67,7 +67,7 @@ class _PerksScreenState extends ConsumerState<PerksScreen> {
                 controller: _searchController,
                 autofocus: true,
                 style: const TextStyle(color: AppTheme.textPrimary, fontSize: 16),
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Szukaj po nazwie, postaci, kategorii...',
                   hintStyle: TextStyle(color: AppTheme.textDim, fontSize: 14),
                   border: InputBorder.none,
@@ -276,7 +276,7 @@ class _EmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.search_off, color: AppTheme.textDim, size: 48),
+            const Icon(Icons.search_off, color: AppTheme.textDim, size: 48),
             const SizedBox(height: 16),
             Text(
               'Brak wyników',
