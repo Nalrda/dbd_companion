@@ -273,12 +273,12 @@
       "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/a/a4/IconPerks_we%27llMakeIt.png"
     },
     {
-      "id": "sp_036",
-      "name": "Déjà Vu",
+      "id": "sp_035",
+      "name": "Plunderer's Instinct",
       "character": "General",
-      "description": "Reveals the 3 Generators closest to each other. Increases repair speed on those Generators.",
-      "category": "generator",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/d/d6/IconPerks_d%C3%A9j%C3%A0Vu.png"
+      "description": "Unlocks the ability to sense contents of Chests and Lockers. Increases Chest rummaging speed by 40%.",
+      "category": "utility",
+      "iconUrl": null
     },
     {
       "id": "sp_037",
@@ -361,28 +361,12 @@
       "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/5/53/IconPerks_reassurance.png"
     },
     {
-      "id": "sp_047",
-      "name": "Fixated",
-      "character": "Nancy Wheeler",
-      "description": "See your own Scratch Marks. Walk 10/15/20% faster.",
-      "category": "stealth",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/9/9e/IconPerks_fixated.png"
-    },
-    {
       "id": "sp_048",
-      "name": "Inner Strength",
+      "name": "Inner Healing",
       "character": "Nancy Wheeler",
       "description": "After cleansing a Totem, enter a Locker to heal one Health State over 8/7/6 seconds.",
       "category": "healing",
       "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/3/34/IconPerks_innerStrength.png"
-    },
-    {
-      "id": "sp_049",
-      "name": "Fogwise",
-      "character": "Nancy Wheeler",
-      "description": "After completing a Good or Great Skill Check on a Generator, the Killer's Aura is revealed for 6 seconds.",
-      "category": "awareness",
-      "iconUrl": null
     },
     {
       "id": "sp_050",
@@ -609,20 +593,20 @@
       "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/6/67/IconPerks_boonExponential.png"
     },
     {
-      "id": "sp_078",
-      "name": "Resurgence",
-      "character": "Jill Valentine",
-      "description": "After being unhooked, instantly heal 40/45/50% of a Health State.",
-      "category": "healing",
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/8/8b/IconPerks_resurgence.png"
-    },
-    {
       "id": "sp_079",
       "name": "Blast Mine",
       "character": "Jill Valentine",
       "description": "After repairing 33% of a Generator, install a Blast Mine that stuns the Killer.",
       "category": "generator",
       "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/a/ae/IconPerks_blastMine.png"
+    },
+    {
+      "id": "sp_080",
+      "name": "Deliverance",
+      "character": "Adam Francis",
+      "description": "After performing a Safe Hook Rescue on another Survivor, you can escape from your first Hook on your own.",
+      "category": "utility",
+      "iconUrl": null
     },
     {
       "id": "sp_081",
@@ -650,18 +634,10 @@
     },
     {
       "id": "sp_084",
-      "name": "Parental Guidance",
+      "name": "Parentage",
       "character": "Yoichi Asakawa",
-      "description": "After stunning the Killer, suppress Scratch Marks and sounds for 6 seconds.",
+      "description": "After stunning the Killer, suppress your Scratch Marks and sounds for 6/8/10 seconds.",
       "category": "stealth",
-      "iconUrl": null
-    },
-    {
-      "id": "sp_085",
-      "name": "Wiretap",
-      "character": "Yoichi Asakawa",
-      "description": "After repairing 50% of a Generator, install a Wiretap that reveals approaching Killers.",
-      "category": "awareness",
       "iconUrl": null
     },
     {
@@ -714,26 +690,10 @@
     },
     {
       "id": "sp_092",
-      "name": "Invocation: Weaving Spiders",
+      "name": "Wicked",
       "character": "Sable Ward",
-      "description": "Perform an Invocation in the Basement. Instantly completes all Generators by a large amount.",
-      "category": "generator",
-      "iconUrl": null
-    },
-    {
-      "id": "sp_093",
-      "name": "Teamwork: Power of Two",
-      "character": "Thalita Lyra",
-      "description": "After healing a Survivor, both gain a speed boost while staying near each other.",
-      "category": "support",
-      "iconUrl": null
-    },
-    {
-      "id": "sp_094",
-      "name": "Teamwork: Collective Stealth",
-      "character": "Renato Lyra",
-      "description": "After healing a Survivor, both have no scratch marks while near each other.",
-      "category": "stealth",
+      "description": "After unhooking yourself or being unhooked, Auras of Pallets and Windows within 64 metres are revealed for 20 seconds.",
+      "category": "utility",
       "iconUrl": null
     },
     {
@@ -753,6 +713,14 @@
       "iconUrl": null
     },
     {
+      "id": "sp_097",
+      "name": "Guardian",
+      "character": "Steve Harrington",
+      "description": "After performing a Safe Hook Rescue, the Killer's Aura is revealed to you and the rescued Survivor for 6 seconds.",
+      "category": "awareness",
+      "iconUrl": null
+    },
+    {
       "id": "sp_098",
       "name": "Strength in Shadows",
       "character": "Sable Ward",
@@ -769,11 +737,291 @@
       "iconUrl": null
     },
     {
-      "id": "sp_100",
-      "name": "Duty of Care",
-      "character": "Orela Rose",
-      "description": "After a Protection Hit, all Survivors within 12 metres gain Haste for 6 seconds.",
+      "id": "sp_101",
+      "name": "Ace in the Hole",
+      "character": "Ace Visconti",
+      "description": "Allows you to keep one Add-on when retrieving an Item from a Chest. Increases the quality of Items found in Chests.",
+      "category": "utility",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_102",
+      "name": "Open-Handed",
+      "character": "Ace Visconti",
+      "description": "Increases the range of all Aura-reading effects for you and all other Survivors by 4/8/12 metres.",
       "category": "support",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_103",
+      "name": "Up the Ante",
+      "character": "Ace Visconti",
+      "description": "For each other Survivor currently alive in the Trial, gain a 1/2/3% bonus to Luck.",
+      "category": "utility",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_104",
+      "name": "Babysitter",
+      "character": "Steve Harrington",
+      "description": "After unhooking a Survivor, they leave no Scratch Marks and make no noise for 8 seconds. Your own Scratch Marks appear more frequently.",
+      "category": "support",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_105",
+      "name": "Built to Last",
+      "character": "Steve Harrington",
+      "description": "Hiding in a Locker restores an Item you are holding at 33% of its total capacity per second.",
+      "category": "utility",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_106",
+      "name": "Diversion",
+      "character": "Adam Francis",
+      "description": "After crouching in one spot for 4 seconds, throw a pebble to create a noise notification at a location of your choice.",
+      "category": "stealth",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_107",
+      "name": "Hope",
+      "character": "General",
+      "description": "When the Exit Gates are powered, gain a 5% Haste status effect for the remainder of the Trial.",
+      "category": "endgame",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_108",
+      "name": "Lightweight",
+      "character": "General",
+      "description": "Your movement speed is slightly reduced. Scratch Marks you leave behind fade 2/3/4 seconds faster than normal.",
+      "category": "stealth",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_109",
+      "name": "No One Left Behind",
+      "character": "General",
+      "description": "Once all Generators are repaired, gain a 100% bonus to unhooking speed and healing speed for Survivors.",
+      "category": "support",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_110",
+      "name": "Premonition",
+      "character": "General",
+      "description": "Get a warning sound prompt when the Killer is looking at you within 45 degrees from up to 8/12/16 metres away.",
+      "category": "awareness",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_111",
+      "name": "Small Game",
+      "character": "General",
+      "description": "Get a sound and visual prompt when looking in the direction of a Bear Trap or Totem within 8 metres.",
+      "category": "utility",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_112",
+      "name": "Made for This",
+      "character": "Gabriel Soma",
+      "description": "While Injured, you gain the Haste status effect, granting 3% bonus Movement speed.",
+      "category": "chase",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_113",
+      "name": "Visionary",
+      "character": "Gabriel Soma",
+      "description": "While repairing a Generator, reveal the Auras of all other Generators within 32 metres. Completing a Generator reveals all Generators for 4 seconds.",
+      "category": "generator",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_114",
+      "name": "Dark Sense",
+      "character": "Gabriel Soma",
+      "description": "Each time a Generator is completed, the Killer's Aura is revealed to you for 5 seconds.",
+      "category": "awareness",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_115",
+      "name": "Background Player",
+      "character": "General",
+      "description": "While another Survivor is being carried by the Killer, gain Haste and leave no Scratch Marks.",
+      "category": "support",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_116",
+      "name": "Better Than New",
+      "character": "General",
+      "description": "After completing a healing action on another Survivor, they receive a 6% bonus to all Action speeds for 80 seconds.",
+      "category": "support",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_117",
+      "name": "Better Together",
+      "character": "Rebecca Chambers",
+      "description": "While repairing a Generator, its Aura is revealed to all other Survivors. When the Killer damages it, reveal the Killer's Aura to all Survivors for 5 seconds.",
+      "category": "generator",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_118",
+      "name": "Desperate Measures",
+      "character": "Rebecca Chambers",
+      "description": "For each other Survivor in the Injured or Dying State, gain a 10% bonus to Healing speed.",
+      "category": "healing",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_119",
+      "name": "Boon: Illumination",
+      "character": "Alan Wake",
+      "description": "Bless a Totem. Within 24 metres, the Auras of Generators, Chests, and Totems are revealed to all Survivors.",
+      "category": "awareness",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_120",
+      "name": "Mirrored Illusion",
+      "character": "Alan Wake",
+      "description": "After cleansing a Totem, place a fake Totem somewhere on the map. The Killer can see its Aura in yellow.",
+      "category": "stealth",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_121",
+      "name": "Cut Loose",
+      "character": "General",
+      "description": "After a Chase ends without being put into the Dying State, gain Haste and suppress your Scratch Marks for 4 seconds. Causes Exhaustion.",
+      "category": "chase",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_122",
+      "name": "Empathic Connection",
+      "character": "General",
+      "description": "Other Survivors can always see your Aura when you are Injured. You heal other Survivors 10% faster.",
+      "category": "healing",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_123",
+      "name": "Ferrum Fortis",
+      "character": "General",
+      "description": "While Injured, gain a 25% bonus to Pallet and Breakable Wall breaking speed. Earn bonus Bloodpoints for breaking Pallets.",
+      "category": "utility",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_124",
+      "name": "Flow State",
+      "character": "General",
+      "description": "Hitting a Great Skill Check on a Generator instantly grants a burst of repair progress and briefly suppresses the Generator's noise.",
+      "category": "generator",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_125",
+      "name": "Five Moves Ahead",
+      "character": "General",
+      "description": "After stunning the Killer, reveal the Auras of all dropped Pallets and Windows within 32 metres for 10 seconds.",
+      "category": "awareness",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_126",
+      "name": "Hyperfocus",
+      "character": "General",
+      "description": "Each consecutive Great Skill Check grants a Token, increasing Skill Check size and bonus progress. Tokens are lost on a missed Skill Check.",
+      "category": "generator",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_127",
+      "name": "Low Profile",
+      "character": "General",
+      "description": "When another Survivor is sacrificed, removed, or killed, suppress your Scratch Marks and Blood pools for 90 seconds.",
+      "category": "stealth",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_128",
+      "name": "Lucky Star",
+      "character": "General",
+      "description": "While hiding in a Locker, your Aura is concealed and the Killer's Aura is revealed when they are within 6 metres.",
+      "category": "stealth",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_129",
+      "name": "Reactive Healing",
+      "character": "General",
+      "description": "When another Survivor within 32 metres is put into the Dying State, instantly gain 25% progress towards healing a Health State.",
+      "category": "healing",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_130",
+      "name": "Red Herring",
+      "character": "General",
+      "description": "After working on a Generator for 3 seconds, a false Noise Notification appears at a random other Generator. Suppresses your Skill Check sounds.",
+      "category": "stealth",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_131",
+      "name": "Self-Preservation",
+      "character": "General",
+      "description": "When another Survivor within 16 metres is hit by the Killer's Basic Attack, suppress your Scratch Marks, Blood, and grunts for 6 seconds.",
+      "category": "stealth",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_132",
+      "name": "Smash Hit",
+      "character": "General",
+      "description": "After stunning the Killer with a Pallet, sprint at 150% Movement speed for 3 seconds. Causes Exhaustion.",
+      "category": "chase",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_133",
+      "name": "Soul Guard",
+      "character": "General",
+      "description": "After being healed from the Dying State or recovering yourself, gain Endurance for 6 seconds. If any active Hex Totem exists, you can recover from the Dying State on your own once per Trial.",
+      "category": "healing",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_134",
+      "name": "Still Sight",
+      "character": "General",
+      "description": "While standing still, the Killer's Aura and the Auras of their held Items are revealed within 18 metres.",
+      "category": "awareness",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_135",
+      "name": "This Is Not Happening",
+      "character": "General",
+      "description": "While Injured, your Skill Check warning zones are increased by 10/20/30%.",
+      "category": "utility",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_136",
+      "name": "Troubleshooter",
+      "character": "General",
+      "description": "While repairing a Generator, the Killer's Aura is revealed when they are within 8/10/12 metres of you.",
+      "category": "generator",
       "iconUrl": null
     }
   ],
