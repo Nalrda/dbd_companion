@@ -3,7 +3,12 @@
     "allow": [
       "Bash(cmd /c dir \"F:\\\\flutter_projects\\\\dbd_companion\\\\dbd_companion\\\\assets\")",
       "Bash(cmd /c \"rmdir /s /q \"\"F:\\\\flutter_projects\\\\dbd_companion\\\\dbd_companion\\\\build\"\" && echo OK\")",
-      "Bash(cmd /c \"if exist \"\"F:\\\\flutter_projects\\\\dbd_companion\\\\dbd_companion\\\\build\"\" \\(echo EXISTS\\) else \\(echo DELETED\\)\")"
+      "Bash(cmd /c \"if exist \"\"F:\\\\flutter_projects\\\\dbd_companion\\\\dbd_companion\\\\build\"\" \\(echo EXISTS\\) else \\(echo DELETED\\)\")",
+      "Bash(flutter pub:*)",
+      "Bash(where flutter:*)",
+      "Read(//c/Users/adria/flutter/bin/**)",
+      "Read(//c/flutter/bin/**)",
+      "Bash(/c/flutter/bin/flutter pub:*)"
     ]
   }
 }

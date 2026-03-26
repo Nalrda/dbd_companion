@@ -16,7 +16,7 @@ final router = GoRouter(
       builder: (context, state, child) => ShellScreen(child: child),
       routes: [
         GoRoute(path: '/builds', builder: (_, __) => const BuildsScreen()),
-        GoRoute(path: '/randomizer', builder: (_, __) => const RandomizerScreen()),
+GoRoute(path: '/randomizer', builder: (_, __) => const RandomizerScreen()),
         GoRoute(path: '/maps', builder: (_, __) => const MapsScreen()),
         GoRoute(path: '/group', builder: (_, __) => const GroupPlannerScreen()),
       ],

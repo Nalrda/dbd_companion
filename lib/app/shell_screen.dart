@@ -8,10 +8,10 @@ class ShellScreen extends StatelessWidget {
   const ShellScreen({super.key, required this.child});
 
   static const _tabs = [
-    _TabItem(path: '/builds',     icon: Icons.build_outlined,  activeIcon: Icons.build,   label: 'Builds'),
-    _TabItem(path: '/randomizer', icon: Icons.casino_outlined, activeIcon: Icons.casino,  label: 'Randomizer'),
-    _TabItem(path: '/maps',       icon: Icons.map_outlined,    activeIcon: Icons.map,     label: 'Maps'),
-    _TabItem(path: '/group',      icon: Icons.groups_outlined, activeIcon: Icons.groups,  label: 'Group'),
+    _TabItem(path: '/builds',     label: 'BUILDS'),
+    _TabItem(path: '/randomizer', label: 'RANDOMIZER'),
+    _TabItem(path: '/maps',       label: 'MAPS'),
+    _TabItem(path: '/group',      label: 'GROUP'),
   ];
 
   @override
@@ -166,7 +166,7 @@ class _NavItem extends StatelessWidget {
             AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               height: 2,
-              width: isActive ? 32 : 0,
+              width: isActive ? 28 : 0,
               decoration: BoxDecoration(
                 color: AppTheme.primary,
                 boxShadow: isActive
@@ -181,28 +181,18 @@ class _NavItem extends StatelessWidget {
                 borderRadius: BorderRadius.circular(1),
               ),
             ),
-            const SizedBox(height: 8),
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 180),
-              child: Icon(
-                isActive ? tab.activeIcon : tab.icon,
-                key: ValueKey(isActive),
-                color: isActive ? AppTheme.primary : AppTheme.textDim,
-                size: 22,
-              ),
-            ),
-            const SizedBox(height: 3),
+            const SizedBox(height: 10),
             AnimatedDefaultTextStyle(
               duration: const Duration(milliseconds: 180),
               style: GoogleFonts.rajdhani(
-                fontSize: 10,
+                fontSize: isActive ? 12 : 11,
                 fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
-                color: isActive ? AppTheme.primary : AppTheme.textDim,
-                letterSpacing: 0.6,
+                color: isActive ? AppTheme.primary : AppTheme.textSecondary,
+                letterSpacing: 1.2,
               ),
               child: Text(tab.label),
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: 8),
           ],
         ),
       ),
@@ -212,13 +202,9 @@ class _NavItem extends StatelessWidget {
 
 class _TabItem {
   final String path;
-  final IconData icon;
-  final IconData activeIcon;
   final String label;
   const _TabItem({
     required this.path,
-    required this.icon,
-    required this.activeIcon,
     required this.label,
   });
 }
