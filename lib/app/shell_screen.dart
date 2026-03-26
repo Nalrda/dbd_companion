@@ -21,67 +21,11 @@ class ShellScreen extends StatelessWidget {
     final idx = currentIndex < 0 ? 0 : currentIndex;
 
     return Scaffold(
-      body: Column(
-        children: [
-          _AppBrand(),
-          Expanded(child: child),
-        ],
-      ),
+      body: child,
       bottomNavigationBar: _DbdNavBar(
         selectedIndex: idx,
         tabs: _tabs,
         onTap: (i) => context.go(_tabs[i].path),
-      ),
-    );
-  }
-}
-
-// ─── App Brand Header ─────────────────────────────────────────────────────────
-
-class _AppBrand extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final topPad = MediaQuery.of(context).padding.top;
-    return Container(
-      padding: EdgeInsets.only(left: 20, right: 20, top: topPad + 10, bottom: 10),
-      decoration: const BoxDecoration(
-        color: AppTheme.surface,
-        border: Border(bottom: BorderSide(color: AppTheme.border)),
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.primaryGlow,
-            blurRadius: 20,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 28,
-            height: 28,
-            decoration: BoxDecoration(
-              color: AppTheme.primary.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(6),
-              border: Border.all(
-                color: AppTheme.primary.withValues(alpha: 0.35),
-                width: 1,
-              ),
-            ),
-            child: const Icon(Icons.whatshot, color: AppTheme.primary, size: 16),
-          ),
-          const SizedBox(width: 12),
-          Text(
-            'DBD COMPANION',
-            style: GoogleFonts.rajdhani(
-              color: AppTheme.primary,
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 2.5,
-            ),
-          ),
-          const Spacer(),
-        ],
       ),
     );
   }
