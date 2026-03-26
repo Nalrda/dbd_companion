@@ -1675,14 +1675,6 @@
       "iconUrl": null
     },
     {
-      "id": "kp_105",
-      "name": "Huntress Lullaby",
-      "character": "The Huntress",
-      "description": "",
-      "category": "awareness",
-      "iconUrl": null
-    },
-    {
       "id": "kp_106",
       "name": "Hysteria",
       "character": "The Executioner",
@@ -1856,14 +1848,6 @@
       "character": "The Dredge",
       "description": "",
       "category": "mobility",
-      "iconUrl": null
-    },
-    {
-      "id": "kp_128",
-      "name": "Undying",
-      "character": "The Blight",
-      "description": "",
-      "category": "utility",
       "iconUrl": null
     },
     {
