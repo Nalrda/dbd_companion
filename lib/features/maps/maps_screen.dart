@@ -21,38 +21,15 @@ class MapsScreen extends ConsumerWidget {
       body: realmsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error: $e')),
-        data: (realms) => LayoutBuilder(
-          builder: (context, constraints) {
-            final isWide = constraints.maxWidth > 700;
-            if (isWide) {
-              return GridView.builder(
-                padding: const EdgeInsets.all(16),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  childAspectRatio: 1.6,
-                ),
-                itemCount: realms.length,
-                itemBuilder: (context, i) {
-                  return _RealmCard(realm: realms[i])
-                      .animate()
-                      .fadeIn(delay: (i * 40).ms)
-                      .slideY(begin: 0.05, end: 0);
-                },
-              );
-            }
-            return ListView.separated(
-              padding: const EdgeInsets.all(16),
-              itemCount: realms.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 10),
-              itemBuilder: (context, i) {
-                return _RealmCard(realm: realms[i])
-                    .animate()
-                    .fadeIn(delay: (i * 40).ms)
-                    .slideY(begin: 0.05, end: 0);
-              },
-            );
+        data: (realms) => ListView.separated(
+          padding: const EdgeInsets.all(16),
+          itemCount: realms.length,
+          separatorBuilder: (_, __) => const SizedBox(height: 10),
+          itemBuilder: (context, i) {
+            return _RealmCard(realm: realms[i])
+                .animate()
+                .fadeIn(delay: (i * 40).ms)
+                .slideY(begin: 0.05, end: 0);
           },
         ),
       ),
@@ -154,28 +131,33 @@ class _MapListTile extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    map.name,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: AppTheme.textPrimary,
-                    ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  map.name,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: AppTheme.textPrimary,
                   ),
-                  const SizedBox(height: 3),
-                  Text(
-                    'Main: ${map.mainBuilding}',
-                    style: const TextStyle(
-                        fontSize: 12, color: AppTheme.textSecondary),
-                  ),
-                ],
-              ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 3),
+                Text(
+                  'Main: ${map.mainBuilding}',
+                  style: const TextStyle(
+                      fontSize: 12, color: AppTheme.textSecondary),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ),
+            const Spacer(),
             const Icon(Icons.chevron_right,
                 color: AppTheme.textDim, size: 20),
           ],
