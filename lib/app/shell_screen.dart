@@ -155,7 +155,7 @@ class _RailItem extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         width: 80,
-        padding: const EdgeInsets.symmetric(vertical: 12),
+        padding: const EdgeInsets.symmetric(vertical: 6),
         decoration: BoxDecoration(
           color: isActive
               ? AppTheme.primary.withValues(alpha: 0.08)
@@ -186,6 +186,7 @@ class _RailItem extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
               maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),
@@ -294,7 +295,11 @@ class _NavItem extends StatelessWidget {
                 color: isActive ? AppTheme.primary : AppTheme.textSecondary,
                 letterSpacing: 1.0,
               ),
-              child: Text(tab.label),
+              child: Text(
+                tab.label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             const SizedBox(height: 6),
           ],
