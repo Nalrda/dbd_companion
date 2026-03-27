@@ -79,7 +79,8 @@ class _RealmCard extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
+      child: SingleChildScrollView(
+        child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -132,6 +133,7 @@ class _RealmCard extends StatelessWidget {
           const Divider(height: 1, color: AppTheme.border),
           ...realm.maps.map((map) => _MapListTile(map: map, realmId: realm.id)),
         ],
+        ),
       ),
     );
   }
