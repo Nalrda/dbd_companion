@@ -160,11 +160,10 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
 
   Widget _buildBody(List<Perk> allPerks) {
     final filtered = allPerks.where((p) {
-      if (_pickerCategory != null && p.category != _pickerCategory) return false;
+      if (_pickerCategory != null && !p.categories.contains(_pickerCategory)) return false;
       if (_searchQuery.isEmpty) return true;
       return p.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-          p.character.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-          p.description.toLowerCase().contains(_searchQuery.toLowerCase());
+          p.character.toLowerCase().contains(_searchQuery.toLowerCase());
     }).toList();
 
     return LayoutBuilder(
@@ -537,11 +536,10 @@ class _PerkPickerSheetState extends ConsumerState<_PerkPickerSheet> {
               error: (e, _) => Center(child: Text('$e')),
               data: (perks) {
                 final filtered = perks.where((p) {
-                  if (_category != null && p.category != _category) return false;
+                  if (_category != null && !p.categories.contains(_category)) return false;
                   if (_search.isEmpty) return true;
                   return p.name.toLowerCase().contains(_search.toLowerCase()) ||
-                      p.character.toLowerCase().contains(_search.toLowerCase()) ||
-                      p.description.toLowerCase().contains(_search.toLowerCase());
+                      p.character.toLowerCase().contains(_search.toLowerCase());
                 }).toList();
                 return ListView.builder(
                   controller: controller,
