@@ -49,7 +49,7 @@ class PerkIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final categoryColor = AppTheme.perkCategoryColor(perk.category);
+    final categoryColor = AppTheme.perkCategoryColor(perk.categories.isNotEmpty ? perk.categories.first : '');
     final cut = size * 0.14;
     return Container(
       width: size,
@@ -239,7 +239,7 @@ class PerkCard extends StatelessWidget {
               : AppTheme.surfaceGradient,
           border: Border(
             left: BorderSide(
-              color: AppTheme.perkCategoryColor(perk.category),
+              color: AppTheme.perkCategoryColor(perk.categories.isNotEmpty ? perk.categories.first : ''),
               width: 3,
             ),
             top: BorderSide(
@@ -326,15 +326,6 @@ class PerkCard extends StatelessWidget {
                 Text(
                   perk.character,
                   style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  perk.description,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: AppTheme.textSecondary,
-                    height: 1.5,
-                  ),
                 ),
               ],
             ),

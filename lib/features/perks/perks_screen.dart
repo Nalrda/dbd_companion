@@ -46,12 +46,11 @@ class _PerksScreenState extends ConsumerState<PerksScreen> {
     final q = _search.toLowerCase().trim();
     return all.where((p) {
       final matchRole = p.isSurvivor == _isSurvivor;
-      final matchCat = _selectedCategory == null || p.category == _selectedCategory;
+      final matchCat = _selectedCategory == null || p.categories.contains(_selectedCategory);
       final matchSearch = q.isEmpty ||
           p.name.toLowerCase().contains(q) ||
           p.character.toLowerCase().contains(q) ||
-          p.category.toLowerCase().contains(q) ||
-          p.description.toLowerCase().contains(q);
+          p.categories.any((c) => c.toLowerCase().contains(q));
       return matchRole && matchCat && matchSearch;
     }).toList();
   }

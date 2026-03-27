@@ -589,11 +589,10 @@ class _PerkPickerSheetState extends State<_PerkPickerSheet> {
   @override
   Widget build(BuildContext context) {
     final filtered = widget.perks.where((p) {
-      if (_category != null && p.category != _category) return false;
+      if (_category != null && !p.categories.contains(_category)) return false;
       if (_search.isEmpty) return true;
       return p.name.toLowerCase().contains(_search.toLowerCase()) ||
-          p.character.toLowerCase().contains(_search.toLowerCase()) ||
-          p.description.toLowerCase().contains(_search.toLowerCase());
+          p.character.toLowerCase().contains(_search.toLowerCase());
     }).toList();
 
     return DraggableScrollableSheet(
