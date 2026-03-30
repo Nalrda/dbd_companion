@@ -1,48 +1,47 @@
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uuid/uuid.dart';
 import '../models/group_plan.dart';
 
 class GroupPlanRepository {
-  static const String _boxName = 'group_plans';
   static const _uuid = Uuid();
 
   static GroupPlanRepository? _instance;
-  static GroupPlanRepository get instance => _instance ??= GroupPlanRepository._();
+  static GroupPlanRepository get instance =>
+      _instance ??= GroupPlanRepository._();
   GroupPlanRepository._();
 
-  Box<GroupPlan>? _box;
-
-  Future<Box<GroupPlan>> get _openBox async {
-    _box ??= await Hive.openBox<GroupPlan>(_boxName);
-    return _box!;
+  CollectionReference<Map<String, dynamic>> _col() {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('group_plans');
   }
 
   Future<List<GroupPlan>> getAll() async {
-    final box = await _openBox;
-    return box.values.toList()
-      ..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+    final snap = await _col().orderBy('updatedAt', descending: true).get();
+    return snap.docs.map((d) => GroupPlan.fromJson(d.data())).toList();
   }
 
   Future<GroupPlan> create({required String name, String? notes}) async {
-    final box = await _openBox;
     final plan = GroupPlan(id: _uuid.v4(), name: name, notes: notes);
-    await box.put(plan.id, plan);
+    await _col().doc(plan.id).set(plan.toJson());
     return plan;
   }
 
   Future<void> save(GroupPlan plan) async {
-    final box = await _openBox;
     plan.updatedAt = DateTime.now();
-    await box.put(plan.id, plan);
+    await _col().doc(plan.id).set(plan.toJson());
   }
 
   Future<void> delete(String id) async {
-    final box = await _openBox;
-    await box.delete(id);
+    await _col().doc(id).delete();
   }
 
   Future<GroupPlan?> getById(String id) async {
-    final box = await _openBox;
-    return box.get(id);
+    final doc = await _col().doc(id).get();
+    if (!doc.exists) return null;
+    return GroupPlan.fromJson(doc.data()!);
   }
 }

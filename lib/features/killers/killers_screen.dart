@@ -18,10 +18,7 @@ class KillersScreen extends ConsumerStatefulWidget {
 class _KillersScreenState extends ConsumerState<KillersScreen> {
   String _search = '';
   bool _searchVisible = false;
-  String? _filterDifficulty;
   final _searchController = TextEditingController();
-
-  static const _difficulties = ['easy', 'intermediate', 'hard', 'very hard'];
 
   @override
   void dispose() {
@@ -62,32 +59,6 @@ class _KillersScreenState extends ConsumerState<KillersScreen> {
               }
             }),
           ),
-          PopupMenuButton<String?>(
-            color: AppTheme.surfaceElevated,
-            icon: Icon(
-              Icons.filter_list,
-              color: _filterDifficulty != null
-                  ? AppTheme.primary
-                  : AppTheme.textSecondary,
-            ),
-            onSelected: (v) => setState(() => _filterDifficulty = v),
-            itemBuilder: (_) => [
-              const PopupMenuItem(
-                value: null,
-                child: Text('All difficulties',
-                    style: TextStyle(color: AppTheme.textSecondary)),
-              ),
-              ..._difficulties.map(
-                (d) => PopupMenuItem(
-                  value: d,
-                  child: Text(
-                    _capitalize(d),
-                    style: TextStyle(color: _difficultyColor(d)),
-                  ),
-                ),
-              ),
-            ],
-          ),
         ],
       ),
       body: killersAsync.when(
@@ -104,12 +75,6 @@ class _KillersScreenState extends ConsumerState<KillersScreen> {
                     k.power.toLowerCase().contains(q))
                 .toList();
           }
-          if (_filterDifficulty != null) {
-            filtered = filtered
-                .where((k) => k.difficulty == _filterDifficulty)
-                .toList();
-          }
-
           if (filtered.isEmpty) {
             return const EmptyState(
               icon: Icons.search_off,
@@ -155,16 +120,6 @@ class _KillersScreenState extends ConsumerState<KillersScreen> {
       s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
 }
 
-Color _difficultyColor(String difficulty) {
-  switch (difficulty) {
-    case 'easy': return const Color(0xFF3E9E44);
-    case 'intermediate': return AppTheme.primary;
-    case 'hard': return AppTheme.accent;
-    case 'very hard': return const Color(0xFF8B35D6);
-    default: return AppTheme.textSecondary;
-  }
-}
-
 // ─── Killer tile ──────────────────────────────────────────────────────────────
 
 class _KillerTile extends StatelessWidget {
@@ -175,7 +130,6 @@ class _KillerTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final diffColor = _difficultyColor(killer.difficulty);
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -230,25 +184,6 @@ class _KillerTile extends StatelessWidget {
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: diffColor.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(
-                          color: diffColor.withValues(alpha: 0.4)),
-                    ),
-                    child: Text(
-                      _capitalize(killer.difficulty),
-                      style: TextStyle(
-                        fontSize: 10,
-                        color: diffColor,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
                   ),
                 ],
               ),
