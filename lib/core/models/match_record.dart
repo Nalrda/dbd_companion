@@ -32,6 +32,10 @@ class MatchRecord extends HiveObject {
   @HiveField(7)
   DateTime createdAt;
 
+  /// How many generators survivors still had left to do (killer mode only, 0–5)
+  @HiveField(8)
+  int? gensRemaining;
+
   MatchRecord({
     required this.id,
     required this.isSurvivor,
@@ -41,6 +45,7 @@ class MatchRecord extends HiveObject {
     List<String>? perkIds,
     this.notes,
     DateTime? createdAt,
+    this.gensRemaining,
   })  : perkIds = perkIds ?? [],
         createdAt = createdAt ?? DateTime.now();
 

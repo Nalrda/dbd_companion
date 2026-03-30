@@ -30,6 +30,7 @@ class MatchRepository {
     String? mapName,
     List<String>? perkIds,
     String? notes,
+    int? gensRemaining,
   }) async {
     final box = await _openBox;
     final record = MatchRecord(
@@ -40,6 +41,7 @@ class MatchRepository {
       mapName: mapName,
       perkIds: perkIds,
       notes: notes,
+      gensRemaining: gensRemaining,
     );
     await box.put(record.id, record);
     return record;

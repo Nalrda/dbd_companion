@@ -341,6 +341,23 @@ class _MatchTile extends StatelessWidget {
                     ],
                   ],
                 ),
+                if (!record.isSurvivor && record.gensRemaining != null) ...[
+                  const SizedBox(height: 2),
+                  Row(
+                    children: [
+                      const Icon(Icons.bolt_outlined,
+                          size: 12, color: AppTheme.textSecondary),
+                      const SizedBox(width: 3),
+                      Text(
+                        '${record.gensRemaining} gens remaining',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: AppTheme.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
                 const SizedBox(height: 2),
                 Text(
                   _formatDate(record.createdAt),

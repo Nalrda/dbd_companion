@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../core/models/killer.dart';
+import '../../core/models/map_callout.dart';
 import '../../core/providers/providers.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
@@ -17,8 +19,9 @@ class MatchEditorScreen extends ConsumerStatefulWidget {
 class _MatchEditorScreenState extends ConsumerState<MatchEditorScreen> {
   late bool _isSurvivor;
   String? _outcome;
-  final _characterController = TextEditingController();
-  final _mapController = TextEditingController();
+  String? _selectedKillerName;
+  String? _selectedMapName;
+  int _gensRemaining = 0;
   final _notesController = TextEditingController();
 
   static const _survivorOutcomes = ['escaped', 'killed'];
@@ -32,8 +35,6 @@ class _MatchEditorScreenState extends ConsumerState<MatchEditorScreen> {
 
   @override
   void dispose() {
-    _characterController.dispose();
-    _mapController.dispose();
     _notesController.dispose();
     super.dispose();
   }
@@ -79,12 +80,9 @@ class _MatchEditorScreenState extends ConsumerState<MatchEditorScreen> {
     await ref.read(matchesProvider.notifier).add(
       isSurvivor: _isSurvivor,
       outcome: _outcome!,
-      characterName: _characterController.text.trim().isEmpty
-          ? null
-          : _characterController.text.trim(),
-      mapName: _mapController.text.trim().isEmpty
-          ? null
-          : _mapController.text.trim(),
+      characterName: _selectedKillerName,
+      mapName: _selectedMapName,
+      gensRemaining: _isSurvivor ? null : _gensRemaining,
       notes: _notesController.text.trim().isEmpty
           ? null
           : _notesController.text.trim(),
@@ -92,8 +90,37 @@ class _MatchEditorScreenState extends ConsumerState<MatchEditorScreen> {
     if (mounted) context.pop();
   }
 
+  Future<void> _pickKiller(List<Killer> killers) async {
+    final result = await showModalBottomSheet<String>(
+      context: context,
+      backgroundColor: AppTheme.surface,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (ctx) => _KillerPickerSheet(killers: killers),
+    );
+    if (result != null) setState(() => _selectedKillerName = result);
+  }
+
+  Future<void> _pickMap(List<MapRealm> realms) async {
+    final result = await showModalBottomSheet<String>(
+      context: context,
+      backgroundColor: AppTheme.surface,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (ctx) => _MapPickerSheet(realms: realms),
+    );
+    if (result != null) setState(() => _selectedMapName = result);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final killersAsync = ref.watch(killersProvider);
+    final mapsAsync = ref.watch(mapRealmsProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Match'),
@@ -125,6 +152,7 @@ class _MatchEditorScreenState extends ConsumerState<MatchEditorScreen> {
               onChanged: (v) => setState(() {
                 _isSurvivor = v;
                 _outcome = null;
+                _gensRemaining = 0;
               }),
             ),
 
@@ -150,9 +178,7 @@ class _MatchEditorScreenState extends ConsumerState<MatchEditorScreen> {
                           : AppTheme.surfaceElevated,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
-                        color: selected
-                            ? color
-                            : AppTheme.border,
+                        color: selected ? color : AppTheme.border,
                         width: selected ? 1.5 : 1,
                       ),
                     ),
@@ -171,28 +197,51 @@ class _MatchEditorScreenState extends ConsumerState<MatchEditorScreen> {
             ),
 
             const SizedBox(height: 24),
-            SectionHeader(
-              title: _isSurvivor ? 'KILLER PLAYED' : 'CHARACTER PLAYED',
-            ),
+            const SectionHeader(title: 'KILLER PLAYED'),
             const SizedBox(height: 10),
-            TextField(
-              controller: _characterController,
-              decoration: InputDecoration(
-                hintText: _isSurvivor
-                    ? 'e.g. The Trapper'
-                    : 'e.g. The Nurse',
+            killersAsync.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (e, _) => Text('Error: $e',
+                  style: const TextStyle(color: AppTheme.accent)),
+              data: (killers) => _PickerButton(
+                value: _selectedKillerName,
+                hint: 'Select killer...',
+                icon: Icons.sports_kabaddi_outlined,
+                onTap: () => _pickKiller(killers),
+                onClear: _selectedKillerName != null
+                    ? () => setState(() => _selectedKillerName = null)
+                    : null,
               ),
             ),
 
             const SizedBox(height: 20),
             const SectionHeader(title: 'MAP'),
             const SizedBox(height: 10),
-            TextField(
-              controller: _mapController,
-              decoration: const InputDecoration(
-                hintText: 'e.g. Badham Preschool',
+            mapsAsync.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (e, _) => Text('Error: $e',
+                  style: const TextStyle(color: AppTheme.accent)),
+              data: (realms) => _PickerButton(
+                value: _selectedMapName,
+                hint: 'Select map...',
+                icon: Icons.map_outlined,
+                onTap: () => _pickMap(realms),
+                onClear: _selectedMapName != null
+                    ? () => setState(() => _selectedMapName = null)
+                    : null,
               ),
             ),
+
+            // Gens remaining — killer mode only
+            if (!_isSurvivor) ...[
+              const SizedBox(height: 20),
+              const SectionHeader(title: 'GENS REMAINING'),
+              const SizedBox(height: 10),
+              _GensCounter(
+                value: _gensRemaining,
+                onChanged: (v) => setState(() => _gensRemaining = v),
+              ),
+            ],
 
             const SizedBox(height: 20),
             const SectionHeader(title: 'NOTES'),
@@ -216,6 +265,320 @@ class _MatchEditorScreenState extends ConsumerState<MatchEditorScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+// ─── Picker button ────────────────────────────────────────────────────────────
+
+class _PickerButton extends StatelessWidget {
+  final String? value;
+  final String hint;
+  final IconData icon;
+  final VoidCallback onTap;
+  final VoidCallback? onClear;
+
+  const _PickerButton({
+    required this.value,
+    required this.hint,
+    required this.icon,
+    required this.onTap,
+    this.onClear,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final hasValue = value != null;
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+        decoration: BoxDecoration(
+          color: AppTheme.surfaceElevated,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: hasValue
+                ? AppTheme.primary.withValues(alpha: 0.5)
+                : AppTheme.border,
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              size: 18,
+              color: hasValue ? AppTheme.primary : AppTheme.textDim,
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                value ?? hint,
+                style: TextStyle(
+                  color: hasValue ? AppTheme.textPrimary : AppTheme.textDim,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+            if (onClear != null)
+              GestureDetector(
+                onTap: onClear,
+                child: const Icon(Icons.close, size: 16, color: AppTheme.textDim),
+              )
+            else
+              const Icon(Icons.chevron_right, size: 18, color: AppTheme.textDim),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Gens remaining counter ───────────────────────────────────────────────────
+
+class _GensCounter extends StatelessWidget {
+  final int value;
+  final ValueChanged<int> onChanged;
+
+  const _GensCounter({required this.value, required this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: AppTheme.surfaceElevated,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: AppTheme.border),
+      ),
+      child: Row(
+        children: [
+          _CounterBtn(
+            icon: Icons.remove,
+            onTap: value > 0 ? () => onChanged(value - 1) : null,
+          ),
+          Expanded(
+            child: Column(
+              children: [
+                Text(
+                  '$value',
+                  style: GoogleFonts.rajdhani(
+                    fontSize: 36,
+                    fontWeight: FontWeight.w800,
+                    color: value == 0
+                        ? const Color(0xFF3E9E44)
+                        : AppTheme.accent,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  value == 0 ? 'all done' : 'gens left',
+                  style: const TextStyle(
+                    fontSize: 11,
+                    color: AppTheme.textDim,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+          _CounterBtn(
+            icon: Icons.add,
+            onTap: value < 5 ? () => onChanged(value + 1) : null,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CounterBtn extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback? onTap;
+
+  const _CounterBtn({required this.icon, this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final active = onTap != null;
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 44,
+        height: 44,
+        decoration: BoxDecoration(
+          color: active
+              ? AppTheme.primary.withValues(alpha: 0.15)
+              : AppTheme.border.withValues(alpha: 0.4),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: active
+                ? AppTheme.primary.withValues(alpha: 0.4)
+                : AppTheme.border,
+          ),
+        ),
+        child: Icon(
+          icon,
+          size: 20,
+          color: active ? AppTheme.primary : AppTheme.textDim,
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Killer picker bottom sheet ───────────────────────────────────────────────
+
+class _KillerPickerSheet extends StatefulWidget {
+  final List<Killer> killers;
+  const _KillerPickerSheet({required this.killers});
+
+  @override
+  State<_KillerPickerSheet> createState() => _KillerPickerSheetState();
+}
+
+class _KillerPickerSheetState extends State<_KillerPickerSheet> {
+  String _search = '';
+
+  @override
+  Widget build(BuildContext context) {
+    final filtered = widget.killers
+        .where((k) => k.name.toLowerCase().contains(_search.toLowerCase()))
+        .toList()
+      ..sort((a, b) => a.name.compareTo(b.name));
+
+    return DraggableScrollableSheet(
+      initialChildSize: 0.7,
+      maxChildSize: 0.95,
+      minChildSize: 0.4,
+      expand: false,
+      builder: (ctx, controller) => Column(
+        children: [
+          const SizedBox(height: 8),
+          Container(
+            width: 40,
+            height: 4,
+            decoration: BoxDecoration(
+              color: AppTheme.border,
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+            child: TextField(
+              autofocus: true,
+              decoration: const InputDecoration(
+                hintText: 'Search killer...',
+                prefixIcon: Icon(Icons.search, size: 18),
+              ),
+              onChanged: (v) => setState(() => _search = v),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              controller: controller,
+              itemCount: filtered.length,
+              itemBuilder: (ctx, i) {
+                final killer = filtered[i];
+                return ListTile(
+                  title: Text(
+                    killer.name,
+                    style: const TextStyle(
+                        color: AppTheme.textPrimary, fontSize: 14),
+                  ),
+                  subtitle: Text(
+                    killer.alias,
+                    style: const TextStyle(
+                        color: AppTheme.textDim, fontSize: 12),
+                  ),
+                  onTap: () => Navigator.pop(ctx, killer.name),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Map picker bottom sheet ──────────────────────────────────────────────────
+
+class _MapPickerSheet extends StatefulWidget {
+  final List<MapRealm> realms;
+  const _MapPickerSheet({required this.realms});
+
+  @override
+  State<_MapPickerSheet> createState() => _MapPickerSheetState();
+}
+
+class _MapPickerSheetState extends State<_MapPickerSheet> {
+  String _search = '';
+
+  @override
+  Widget build(BuildContext context) {
+    final allMaps = <({String name, String realm})>[
+      for (final realm in widget.realms)
+        for (final map in realm.maps)
+          (name: map.name, realm: realm.realm),
+    ];
+    final filtered = allMaps
+        .where((m) =>
+            m.name.toLowerCase().contains(_search.toLowerCase()) ||
+            m.realm.toLowerCase().contains(_search.toLowerCase()))
+        .toList()
+      ..sort((a, b) => a.name.compareTo(b.name));
+
+    return DraggableScrollableSheet(
+      initialChildSize: 0.7,
+      maxChildSize: 0.95,
+      minChildSize: 0.4,
+      expand: false,
+      builder: (ctx, controller) => Column(
+        children: [
+          const SizedBox(height: 8),
+          Container(
+            width: 40,
+            height: 4,
+            decoration: BoxDecoration(
+              color: AppTheme.border,
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+            child: TextField(
+              autofocus: true,
+              decoration: const InputDecoration(
+                hintText: 'Search map...',
+                prefixIcon: Icon(Icons.search, size: 18),
+              ),
+              onChanged: (v) => setState(() => _search = v),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              controller: controller,
+              itemCount: filtered.length,
+              itemBuilder: (ctx, i) {
+                final map = filtered[i];
+                return ListTile(
+                  title: Text(
+                    map.name,
+                    style: const TextStyle(
+                        color: AppTheme.textPrimary, fontSize: 14),
+                  ),
+                  subtitle: Text(
+                    map.realm,
+                    style: const TextStyle(
+                        color: AppTheme.textDim, fontSize: 12),
+                  ),
+                  onTap: () => Navigator.pop(ctx, map.name),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
