@@ -1,4 +1,7 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../core/providers/auth_provider.dart';
+import '../features/auth/login_screen.dart';
 import '../features/builds/build_detail_screen.dart';
 import '../features/builds/build_editor_screen.dart';
 import '../features/builds/builds_screen.dart';
@@ -13,68 +16,82 @@ import '../features/group_planner/group_planner_screen.dart';
 import '../features/group_planner/group_plan_editor_screen.dart';
 import 'shell_screen.dart';
 
-final router = GoRouter(
-  initialLocation: '/builds',
-  routes: [
-    ShellRoute(
-      builder: (context, state, child) => ShellScreen(child: child),
-      routes: [
-        GoRoute(path: '/builds', builder: (_, __) => const BuildsScreen()),
-        GoRoute(path: '/randomizer', builder: (_, __) => const RandomizerScreen()),
-        GoRoute(path: '/killers', builder: (_, __) => const KillersScreen()),
-        GoRoute(path: '/matches', builder: (_, __) => const MatchesScreen()),
-        GoRoute(path: '/maps', builder: (_, __) => const MapsScreen()),
-        GoRoute(path: '/group', builder: (_, __) => const GroupPlannerScreen()),
-      ],
-    ),
-    GoRoute(
-      path: '/builds/create',
-      builder: (context, state) {
-        final isSurvivor = state.uri.queryParameters['survivor'] != 'false';
-        final perksParam = state.uri.queryParameters['perks'];
-        final sharedPerks = perksParam?.split(',').where((s) => s.isNotEmpty).toList();
-        final sharedName = state.uri.queryParameters['name'];
-        return BuildEditorScreen(
-          isSurvivor: isSurvivor,
-          sharedPerkIds: sharedPerks,
-          sharedName: sharedName,
-        );
-      },
-    ),
-    GoRoute(
-      path: '/builds/:id',
-      builder: (context, state) =>
-          BuildDetailScreen(buildId: state.pathParameters['id']!),
-    ),
-    GoRoute(
-      path: '/builds/:id/edit',
-      builder: (context, state) => BuildEditorScreen(
-        buildId: state.pathParameters['id'],
+final routerProvider = Provider<GoRouter>((ref) {
+  final authNotifier = ref.read(authNotifierProvider);
+
+  return GoRouter(
+    initialLocation: '/builds',
+    refreshListenable: authNotifier,
+    redirect: (context, state) {
+      final isLoggedIn = authNotifier.user != null;
+      final isOnLogin = state.matchedLocation == '/login';
+
+      if (!isLoggedIn && !isOnLogin) return '/login';
+      if (isLoggedIn && isOnLogin) return '/builds';
+      return null;
+    },
+    routes: [
+      GoRoute(path: '/login', builder: (_, __) => const LoginScreen()),
+      ShellRoute(
+        builder: (context, state, child) => ShellScreen(child: child),
+        routes: [
+          GoRoute(path: '/builds', builder: (_, __) => const BuildsScreen()),
+          GoRoute(path: '/randomizer', builder: (_, __) => const RandomizerScreen()),
+          GoRoute(path: '/killers', builder: (_, __) => const KillersScreen()),
+          GoRoute(path: '/matches', builder: (_, __) => const MatchesScreen()),
+          GoRoute(path: '/maps', builder: (_, __) => const MapsScreen()),
+          GoRoute(path: '/group', builder: (_, __) => const GroupPlannerScreen()),
+        ],
       ),
-    ),
-    GoRoute(
-      path: '/group/:id',
-      builder: (context, state) =>
-          GroupPlanEditorScreen(planId: state.pathParameters['id']!),
-    ),
-    GoRoute(
-      path: '/maps/:realmId/:mapId',
-      builder: (context, state) => MapDetailScreen(
-        realmId: state.pathParameters['realmId']!,
-        mapId: state.pathParameters['mapId']!,
+      GoRoute(
+        path: '/builds/create',
+        builder: (context, state) {
+          final isSurvivor = state.uri.queryParameters['survivor'] != 'false';
+          final perksParam = state.uri.queryParameters['perks'];
+          final sharedPerks = perksParam?.split(',').where((s) => s.isNotEmpty).toList();
+          final sharedName = state.uri.queryParameters['name'];
+          return BuildEditorScreen(
+            isSurvivor: isSurvivor,
+            sharedPerkIds: sharedPerks,
+            sharedName: sharedName,
+          );
+        },
       ),
-    ),
-    GoRoute(
-      path: '/killers/:id',
-      builder: (context, state) =>
-          KillerDetailScreen(killerId: state.pathParameters['id']!),
-    ),
-    GoRoute(
-      path: '/matches/add',
-      builder: (context, state) {
-        final isSurvivor = state.uri.queryParameters['survivor'] != 'false';
-        return MatchEditorScreen(isSurvivor: isSurvivor);
-      },
-    ),
-  ],
-);
+      GoRoute(
+        path: '/builds/:id',
+        builder: (context, state) =>
+            BuildDetailScreen(buildId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/builds/:id/edit',
+        builder: (context, state) => BuildEditorScreen(
+          buildId: state.pathParameters['id'],
+        ),
+      ),
+      GoRoute(
+        path: '/group/:id',
+        builder: (context, state) =>
+            GroupPlanEditorScreen(planId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/maps/:realmId/:mapId',
+        builder: (context, state) => MapDetailScreen(
+          realmId: state.pathParameters['realmId']!,
+          mapId: state.pathParameters['mapId']!,
+        ),
+      ),
+      GoRoute(
+        path: '/killers/:id',
+        builder: (context, state) =>
+            KillerDetailScreen(killerId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/matches/add',
+        builder: (context, state) {
+          final isSurvivor = state.uri.queryParameters['survivor'] != 'false';
+          return MatchEditorScreen(isSurvivor: isSurvivor);
+        },
+      ),
+    ],
+  );
+});
