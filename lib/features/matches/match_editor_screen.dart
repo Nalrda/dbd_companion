@@ -73,21 +73,29 @@ class _MatchEditorScreenState extends ConsumerState<MatchEditorScreen> {
   Future<void> _save() async {
     if (_outcome == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select an outcome')),
+        const SnackBar(content: Text('Select an outcome first')),
       );
       return;
     }
-    await ref.read(matchesProvider.notifier).add(
-      isSurvivor: _isSurvivor,
-      outcome: _outcome!,
-      characterName: _selectedKillerName,
-      mapName: _selectedMapName,
-      gensRemaining: _isSurvivor ? null : _gensRemaining,
-      notes: _notesController.text.trim().isEmpty
-          ? null
-          : _notesController.text.trim(),
-    );
-    if (mounted) context.pop();
+    try {
+      await ref.read(matchesProvider.notifier).add(
+        isSurvivor: _isSurvivor,
+        outcome: _outcome!,
+        characterName: _selectedKillerName,
+        mapName: _selectedMapName,
+        gensRemaining: _isSurvivor ? null : _gensRemaining,
+        notes: _notesController.text.trim().isEmpty
+            ? null
+            : _notesController.text.trim(),
+      );
+      if (mounted) context.pop();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error saving match: $e')),
+        );
+      }
+    }
   }
 
   Future<void> _pickKiller(List<Killer> killers) async {
