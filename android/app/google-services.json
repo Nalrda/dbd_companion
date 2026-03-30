@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "465574423019",
+    "project_id": "dbd-companion",
+    "storage_bucket": "dbd-companion.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:465574423019:android:aa77f622843119346f51ae",
+        "android_client_info": {
+          "package_name": "com.example.dbd_companion"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "465574423019-b60om0os0sjd13dgk2e1r6nodmnb2fr0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwSwuibg1G_gxJY1m12dZrUAPTFRsv8qA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "465574423019-b60om0os0sjd13dgk2e1r6nodmnb2fr0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
