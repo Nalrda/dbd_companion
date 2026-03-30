@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
+import '../core/providers/auth_provider.dart';
 import '../core/theme/app_theme.dart';
 
-class ShellScreen extends StatelessWidget {
+class ShellScreen extends ConsumerWidget {
   final Widget child;
   const ShellScreen({super.key, required this.child});
 
@@ -47,11 +49,14 @@ class ShellScreen extends StatelessWidget {
   ];
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final location = GoRouterState.of(context).matchedLocation;
     final currentIndex = _tabs.indexWhere((t) => location.startsWith(t.path));
     final idx = currentIndex < 0 ? 0 : currentIndex;
     final isWide = MediaQuery.of(context).size.width >= 600;
+    final user = ref.watch(authNotifierProvider).user;
+
+    void signOut() => ref.read(authNotifierProvider).signOut();
 
     if (isWide) {
       return Scaffold(
@@ -61,6 +66,8 @@ class ShellScreen extends StatelessWidget {
               selectedIndex: idx,
               tabs: _tabs,
               onTap: (i) => context.go(_tabs[i].path),
+              user: user,
+              onSignOut: signOut,
             ),
             const VerticalDivider(width: 1, thickness: 1, color: AppTheme.border),
             Expanded(child: child),
@@ -75,6 +82,7 @@ class ShellScreen extends StatelessWidget {
         selectedIndex: idx,
         tabs: _tabs,
         onTap: (i) => context.go(_tabs[i].path),
+        onSignOut: signOut,
       ),
     );
   }
@@ -86,11 +94,15 @@ class _DbdNavRail extends StatelessWidget {
   final int selectedIndex;
   final List<_TabItem> tabs;
   final ValueChanged<int> onTap;
+  final dynamic user;
+  final VoidCallback onSignOut;
 
   const _DbdNavRail({
     required this.selectedIndex,
     required this.tabs,
     required this.onTap,
+    required this.user,
+    required this.onSignOut,
   });
 
   @override
@@ -141,6 +153,7 @@ class _DbdNavRail extends StatelessWidget {
           ),
           const Spacer(),
           const Divider(color: AppTheme.border, height: 1),
+          _SignOutButton(user: user, onSignOut: onSignOut),
           SizedBox(height: MediaQuery.of(context).padding.bottom + 12),
         ],
       ),
@@ -213,11 +226,13 @@ class _DbdNavBar extends StatelessWidget {
   final int selectedIndex;
   final List<_TabItem> tabs;
   final ValueChanged<int> onTap;
+  final VoidCallback onSignOut;
 
   const _DbdNavBar({
     required this.selectedIndex,
     required this.tabs,
     required this.onTap,
+    required this.onSignOut,
   });
 
   @override
@@ -239,14 +254,17 @@ class _DbdNavBar extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.only(bottom: bottomPad),
         child: Row(
-          children: List.generate(
-            tabs.length,
-            (i) => _NavItem(
-              tab: tabs[i],
-              isActive: i == selectedIndex,
-              onTap: () => onTap(i),
+          children: [
+            ...List.generate(
+              tabs.length,
+              (i) => _NavItem(
+                tab: tabs[i],
+                isActive: i == selectedIndex,
+                onTap: () => onTap(i),
+              ),
             ),
-          ),
+            _NavSignOutItem(onSignOut: onSignOut),
+          ],
         ),
       ),
     );
@@ -320,6 +338,89 @@ class _NavItem extends StatelessWidget {
     );
   }
 }
+
+// ─── Sign-Out button for nav rail ────────────────────────────────────────────
+
+class _SignOutButton extends StatelessWidget {
+  final dynamic user;
+  final VoidCallback onSignOut;
+
+  const _SignOutButton({required this.user, required this.onSignOut});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onSignOut,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        width: 80,
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (user?.photoURL != null)
+              CircleAvatar(
+                radius: 11,
+                backgroundImage: NetworkImage(user!.photoURL as String),
+              )
+            else
+              const Icon(Icons.account_circle_outlined,
+                  color: AppTheme.textSecondary, size: 22),
+            const SizedBox(height: 4),
+            Text(
+              'WYLOGUJ',
+              style: GoogleFonts.rajdhani(
+                fontSize: 8,
+                fontWeight: FontWeight.w600,
+                color: AppTheme.textSecondary,
+                letterSpacing: 0.6,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Sign-Out item for bottom nav bar ────────────────────────────────────────
+
+class _NavSignOutItem extends StatelessWidget {
+  final VoidCallback onSignOut;
+
+  const _NavSignOutItem({required this.onSignOut});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onSignOut,
+      behavior: HitTestBehavior.opaque,
+      child: SizedBox(
+        width: 44,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 2),
+            const Icon(Icons.logout, color: AppTheme.textSecondary, size: 20),
+            const SizedBox(height: 2),
+            Text(
+              'WYLOGUJ',
+              style: GoogleFonts.rajdhani(
+                fontSize: 8,
+                fontWeight: FontWeight.w500,
+                color: AppTheme.textSecondary,
+                letterSpacing: 0.8,
+              ),
+            ),
+            const SizedBox(height: 6),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Tab item data ────────────────────────────────────────────────────────────
 
 class _TabItem {
   final String path;
