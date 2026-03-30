@@ -7,7 +7,6 @@ class Killer {
   final double movementSpeed;
   final int terrorRadius;
   final String height;
-  final String difficulty;
   final String tip;
   final String? iconUrl;
 
@@ -20,7 +19,6 @@ class Killer {
     required this.movementSpeed,
     required this.terrorRadius,
     required this.height,
-    required this.difficulty,
     required this.tip,
     this.iconUrl,
   });
@@ -35,7 +33,6 @@ class Killer {
       movementSpeed: (json['movementSpeed'] as num).toDouble(),
       terrorRadius: json['terrorRadius'] as int,
       height: json['height'] as String,
-      difficulty: json['difficulty'] as String,
       tip: json['tip'] as String,
       iconUrl: json['iconUrl'] as String?,
     );

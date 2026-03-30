@@ -67,4 +67,28 @@ class MatchRecord extends HiveObject {
     if (isSurvivor) return outcome == 'escaped';
     return outcome == '3k' || outcome == '4k';
   }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'isSurvivor': isSurvivor,
+    'outcome': outcome,
+    'characterName': characterName,
+    'mapName': mapName,
+    'perkIds': perkIds,
+    'notes': notes,
+    'createdAt': createdAt.toIso8601String(),
+    'gensRemaining': gensRemaining,
+  };
+
+  factory MatchRecord.fromJson(Map<String, dynamic> json) => MatchRecord(
+    id: json['id'] as String,
+    isSurvivor: json['isSurvivor'] as bool,
+    outcome: json['outcome'] as String,
+    characterName: json['characterName'] as String?,
+    mapName: json['mapName'] as String?,
+    perkIds: List<String>.from(json['perkIds'] ?? []),
+    notes: json['notes'] as String?,
+    createdAt: DateTime.parse(json['createdAt'] as String),
+    gensRemaining: json['gensRemaining'] as int?,
+  );
 }

@@ -1,26 +1,26 @@
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uuid/uuid.dart';
 import '../models/match_record.dart';
 
 class MatchRepository {
-  static const String _boxName = 'matches';
   static const _uuid = Uuid();
 
   static MatchRepository? _instance;
   static MatchRepository get instance => _instance ??= MatchRepository._();
   MatchRepository._();
 
-  Box<MatchRecord>? _box;
-
-  Future<Box<MatchRecord>> get _openBox async {
-    _box ??= await Hive.openBox<MatchRecord>(_boxName);
-    return _box!;
+  CollectionReference<Map<String, dynamic>> _col() {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('matches');
   }
 
   Future<List<MatchRecord>> getAll() async {
-    final box = await _openBox;
-    return box.values.toList()
-      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    final snap = await _col().orderBy('createdAt', descending: true).get();
+    return snap.docs.map((d) => MatchRecord.fromJson(d.data())).toList();
   }
 
   Future<MatchRecord> create({
@@ -32,7 +32,6 @@ class MatchRepository {
     String? notes,
     int? gensRemaining,
   }) async {
-    final box = await _openBox;
     final record = MatchRecord(
       id: _uuid.v4(),
       isSurvivor: isSurvivor,
@@ -43,12 +42,11 @@ class MatchRepository {
       notes: notes,
       gensRemaining: gensRemaining,
     );
-    await box.put(record.id, record);
+    await _col().doc(record.id).set(record.toJson());
     return record;
   }
 
   Future<void> delete(String id) async {
-    final box = await _openBox;
-    await box.delete(id);
+    await _col().doc(id).delete();
   }
 }

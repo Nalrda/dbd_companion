@@ -36,16 +36,6 @@ class _KillerDetailView extends StatelessWidget {
   final Killer killer;
   const _KillerDetailView({required this.killer});
 
-  Color get _diffColor {
-    switch (killer.difficulty) {
-      case 'easy': return const Color(0xFF3E9E44);
-      case 'intermediate': return AppTheme.primary;
-      case 'hard': return AppTheme.accent;
-      case 'very hard': return const Color(0xFF8B35D6);
-      default: return AppTheme.textSecondary;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,27 +107,6 @@ class _KillerDetailView extends StatelessWidget {
                               style: const TextStyle(
                                 fontSize: 13,
                                 color: AppTheme.textSecondary,
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 3),
-                              decoration: BoxDecoration(
-                                color:
-                                    _diffColor.withValues(alpha: 0.12),
-                                borderRadius: BorderRadius.circular(6),
-                                border: Border.all(
-                                    color:
-                                        _diffColor.withValues(alpha: 0.4)),
-                              ),
-                              child: Text(
-                                _capitalize(killer.difficulty),
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  color: _diffColor,
-                                  fontWeight: FontWeight.w700,
-                                ),
                               ),
                             ),
                           ],

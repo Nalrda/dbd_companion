@@ -3,9 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'core/models/build.dart';
-import 'core/models/group_plan.dart';
-import 'core/models/match_record.dart';
 import 'core/models/perk.dart';
 import 'core/theme/app_theme.dart';
 import 'app/router.dart';
@@ -24,9 +21,6 @@ Future<void> _appMain() async {
 
   await Hive.initFlutter();
   if (!Hive.isAdapterRegistered(0)) Hive.registerAdapter(PerkAdapter());
-  if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(BuildAdapter());
-  if (!Hive.isAdapterRegistered(2)) Hive.registerAdapter(GroupPlanAdapter());
-  if (!Hive.isAdapterRegistered(3)) Hive.registerAdapter(MatchRecordAdapter());
 
   runApp(const ProviderScope(child: DBDCompanionApp()));
 }

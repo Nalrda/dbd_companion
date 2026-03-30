@@ -1,26 +1,26 @@
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uuid/uuid.dart';
 import '../models/build.dart';
 
 class BuildRepository {
-  static const String _boxName = 'builds';
   static const _uuid = Uuid();
 
   static BuildRepository? _instance;
   static BuildRepository get instance => _instance ??= BuildRepository._();
   BuildRepository._();
 
-  Box<Build>? _box;
-
-  Future<Box<Build>> get _openBox async {
-    _box ??= await Hive.openBox<Build>(_boxName);
-    return _box!;
+  CollectionReference<Map<String, dynamic>> _col() {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('builds');
   }
 
   Future<List<Build>> getAllBuilds() async {
-    final box = await _openBox;
-    return box.values.toList()
-      ..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+    final snap = await _col().orderBy('updatedAt', descending: true).get();
+    return snap.docs.map((d) => Build.fromJson(d.data())).toList();
   }
 
   Future<List<Build>> getSurvivorBuilds() async {
@@ -40,7 +40,6 @@ class BuildRepository {
     String? notes,
     List<String>? tags,
   }) async {
-    final box = await _openBox;
     final build = Build(
       id: _uuid.v4(),
       name: name,
@@ -49,22 +48,21 @@ class BuildRepository {
       notes: notes,
       tags: tags,
     );
-    await box.put(build.id, build);
+    await _col().doc(build.id).set(build.toJson());
     return build;
   }
 
   Future<void> saveBuild(Build build) async {
-    final box = await _openBox;
-    await box.put(build.id, build);
+    await _col().doc(build.id).set(build.toJson());
   }
 
   Future<void> deleteBuild(String id) async {
-    final box = await _openBox;
-    await box.delete(id);
+    await _col().doc(id).delete();
   }
 
   Future<Build?> getBuildById(String id) async {
-    final box = await _openBox;
-    return box.get(id);
+    final doc = await _col().doc(id).get();
+    if (!doc.exists) return null;
+    return Build.fromJson(doc.data()!);
   }
 }
