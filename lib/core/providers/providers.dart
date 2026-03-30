@@ -186,6 +186,7 @@ class MatchesNotifier extends AsyncNotifier<List<MatchRecord>> {
     String? mapName,
     List<String>? perkIds,
     String? notes,
+    int? gensRemaining,
   }) async {
     await MatchRepository.instance.create(
       isSurvivor: isSurvivor,
@@ -194,6 +195,7 @@ class MatchesNotifier extends AsyncNotifier<List<MatchRecord>> {
       mapName: mapName,
       perkIds: perkIds,
       notes: notes,
+      gensRemaining: gensRemaining,
     );
     ref.invalidateSelf();
   }

@@ -62,14 +62,26 @@ class _MatchesScreenState extends ConsumerState<MatchesScreen> {
           }
 
           final wins = matches.where((m) => m.isWin).length;
-          final winRate = matches.isEmpty ? 0.0 : wins / matches.length;
+
+          // Survivor: escape rate = escapes / total
+          // Killer: kill rate = total kills across all matches / (matches * 4)
+          final double rate;
+          if (_showSurvivor) {
+            rate = wins / matches.length;
+          } else {
+            final totalKills = matches.fold<int>(0, (sum, m) {
+              final k = int.tryParse(m.outcome.replaceAll('k', '')) ?? 0;
+              return sum + k;
+            });
+            rate = totalKills / (matches.length * 4);
+          }
 
           return Column(
             children: [
               _StatsHeader(
                 total: matches.length,
                 wins: wins,
-                winRate: winRate,
+                winRate: rate,
                 isSurvivor: _showSurvivor,
               ),
               Expanded(
@@ -180,7 +192,7 @@ class _StatsHeader extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'WIN RATE',
+            isSurvivor ? 'ESCAPE RATE' : 'KILL RATE',
             style: GoogleFonts.rajdhani(
               fontSize: 11,
               fontWeight: FontWeight.w600,
@@ -341,6 +353,23 @@ class _MatchTile extends StatelessWidget {
                     ],
                   ],
                 ),
+                if (!record.isSurvivor && record.gensRemaining != null) ...[
+                  const SizedBox(height: 2),
+                  Row(
+                    children: [
+                      const Icon(Icons.bolt_outlined,
+                          size: 12, color: AppTheme.textSecondary),
+                      const SizedBox(width: 3),
+                      Text(
+                        '${record.gensRemaining} gens remaining',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: AppTheme.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
                 const SizedBox(height: 2),
                 Text(
                   _formatDate(record.createdAt),

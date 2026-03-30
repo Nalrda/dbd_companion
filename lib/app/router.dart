@@ -50,7 +50,6 @@ final router = GoRouter(
       path: '/builds/:id/edit',
       builder: (context, state) => BuildEditorScreen(
         buildId: state.pathParameters['id'],
-        isSurvivor: true,
       ),
     ),
     GoRoute(

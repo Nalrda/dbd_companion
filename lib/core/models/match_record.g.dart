@@ -25,13 +25,14 @@ class MatchRecordAdapter extends TypeAdapter<MatchRecord> {
       perkIds: (fields[5] as List).cast<String>(),
       notes: fields[6] as String?,
       createdAt: fields[7] as DateTime,
+      gensRemaining: fields[8] as int?,
     );
   }
 
   @override
   void write(BinaryWriter writer, MatchRecord obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -47,7 +48,9 @@ class MatchRecordAdapter extends TypeAdapter<MatchRecord> {
       ..writeByte(6)
       ..write(obj.notes)
       ..writeByte(7)
-      ..write(obj.createdAt);
+      ..write(obj.createdAt)
+      ..writeByte(8)
+      ..write(obj.gensRemaining);
   }
 
   @override
