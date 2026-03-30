@@ -180,7 +180,7 @@ class _StatsHeader extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'WIN RATE',
+            isSurvivor ? 'ESCAPE RATE' : 'KILL RATE',
             style: GoogleFonts.rajdhani(
               fontSize: 11,
               fontWeight: FontWeight.w600,
