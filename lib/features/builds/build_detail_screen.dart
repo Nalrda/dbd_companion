@@ -67,7 +67,7 @@ class _BuildDetailViewState extends State<_BuildDetailView> {
     final name = Uri.encodeComponent(widget.build.name);
     final survivor = widget.build.isSurvivor.toString();
     final path = '/builds/create?survivor=$survivor&name=$name&perks=$perks';
-    final url = kIsWeb ? '${Uri.base.origin}$path' : path;
+    final url = kIsWeb ? '${Uri.base.origin}$path' : 'dbdcompanion:/$path';
     Clipboard.setData(ClipboardData(text: url));
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
