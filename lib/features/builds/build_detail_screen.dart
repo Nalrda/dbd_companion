@@ -93,7 +93,7 @@ class _BuildDetailViewState extends State<_BuildDetailView> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
+              const Text(
                 'SHARE BUILD',
                 style: TextStyle(
                   color: AppTheme.primary,

@@ -174,7 +174,7 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
           children: [
             SizedBox(
               width: isWide ? 360 : constraints.maxWidth,
-              child: _buildLeftPanel(),
+              child: _buildLeftPanel(allPerks),
             ),
             if (isWide && _editingSlot != null)
               Expanded(child: _buildPerkPicker(filtered, allPerks)),
@@ -184,7 +184,7 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
     );
   }
 
-  Widget _buildLeftPanel() {
+  Widget _buildLeftPanel(List<Perk> allPerks) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -210,7 +210,7 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
               padding: const EdgeInsets.only(bottom: 8),
               child: PerkSlot(
                 index: i,
-                perk: perkId != null ? null : null,
+                perk: perkId != null ? allPerks.where((p) => p.id == perkId).firstOrNull : null,
                 onTap: () => _openPerkPicker(i),
                 onRemove: perkId != null ? () => setState(() => _perkSlots[i] = null) : null,
               ),
