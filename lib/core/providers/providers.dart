@@ -2,13 +2,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/build.dart';
 import '../models/group_plan.dart';
 import '../models/item.dart';
+import '../models/killer.dart';
 import '../models/map_callout.dart';
+import '../models/match_record.dart';
 import '../models/offering.dart';
 import '../models/perk.dart';
 import '../repositories/build_repository.dart';
 import '../repositories/group_plan_repository.dart';
 import '../repositories/item_repository.dart';
+import '../repositories/killer_repository.dart';
 import '../repositories/map_repository.dart';
+import '../repositories/match_repository.dart';
 import '../repositories/offering_repository.dart';
 import '../repositories/perk_repository.dart';
 
@@ -157,6 +161,48 @@ final killerOfferingsProvider = FutureProvider<List<Offering>>((ref) async {
 final mapRealmsProvider = FutureProvider<List<MapRealm>>((ref) async {
   return MapRepository().getRealms();
 });
+
+// ─── Killer providers ─────────────────────────────────────────────────────────
+
+final killersProvider = FutureProvider<List<Killer>>((ref) async {
+  return KillerRepository.instance.getAll();
+});
+
+// ─── Match providers ──────────────────────────────────────────────────────────
+
+final matchesProvider =
+    AsyncNotifierProvider<MatchesNotifier, List<MatchRecord>>(MatchesNotifier.new);
+
+class MatchesNotifier extends AsyncNotifier<List<MatchRecord>> {
+  @override
+  Future<List<MatchRecord>> build() async {
+    return MatchRepository.instance.getAll();
+  }
+
+  Future<void> add({
+    required bool isSurvivor,
+    required String outcome,
+    String? characterName,
+    String? mapName,
+    List<String>? perkIds,
+    String? notes,
+  }) async {
+    await MatchRepository.instance.create(
+      isSurvivor: isSurvivor,
+      outcome: outcome,
+      characterName: characterName,
+      mapName: mapName,
+      perkIds: perkIds,
+      notes: notes,
+    );
+    ref.invalidateSelf();
+  }
+
+  Future<void> delete(String id) async {
+    await MatchRepository.instance.delete(id);
+    ref.invalidateSelf();
+  }
+}
 
 // ─── Group Plan providers ─────────────────────────────────────────────────────
 

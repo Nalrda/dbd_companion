@@ -16,9 +16,21 @@ class ShellScreen extends StatelessWidget {
     ),
     _TabItem(
       path: '/randomizer',
-      label: 'RANDOMIZER',
+      label: 'RANDOM',
       icon: Icons.casino_outlined,
       activeIcon: Icons.casino,
+    ),
+    _TabItem(
+      path: '/killers',
+      label: 'KILLERS',
+      icon: Icons.local_fire_department_outlined,
+      activeIcon: Icons.local_fire_department,
+    ),
+    _TabItem(
+      path: '/matches',
+      label: 'MATCHES',
+      icon: Icons.history_outlined,
+      activeIcon: Icons.history,
     ),
     _TabItem(
       path: '/maps',
