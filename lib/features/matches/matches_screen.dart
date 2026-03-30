@@ -62,14 +62,26 @@ class _MatchesScreenState extends ConsumerState<MatchesScreen> {
           }
 
           final wins = matches.where((m) => m.isWin).length;
-          final winRate = matches.isEmpty ? 0.0 : wins / matches.length;
+
+          // Survivor: escape rate = escapes / total
+          // Killer: kill rate = total kills across all matches / (matches * 4)
+          final double rate;
+          if (_showSurvivor) {
+            rate = wins / matches.length;
+          } else {
+            final totalKills = matches.fold<int>(0, (sum, m) {
+              final k = int.tryParse(m.outcome.replaceAll('k', '')) ?? 0;
+              return sum + k;
+            });
+            rate = totalKills / (matches.length * 4);
+          }
 
           return Column(
             children: [
               _StatsHeader(
                 total: matches.length,
                 wins: wins,
-                winRate: winRate,
+                winRate: rate,
                 isSurvivor: _showSurvivor,
               ),
               Expanded(
