@@ -60,49 +60,43 @@ class _PerksScreenState extends ConsumerState<PerksScreen> {
     final allPerksAsync = ref.watch(allPerksProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: _searchVisible
-            ? TextField(
-                controller: _searchController,
-                autofocus: true,
-                style: const TextStyle(color: AppTheme.textPrimary, fontSize: 16),
-                decoration: const InputDecoration(
-                  hintText: 'Szukaj po nazwie, postaci, kategorii...',
-                  hintStyle: TextStyle(color: AppTheme.textDim, fontSize: 14),
-                  border: InputBorder.none,
-                  isDense: true,
-                  contentPadding: EdgeInsets.zero,
-                ),
-                onChanged: (v) => setState(() => _search = v),
-              )
-            : Text(
-                'Perki',
-                style: GoogleFonts.rajdhani(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 1.4,
+      body: Column(
+        children: [
+          PageHeader(
+            title: _searchVisible
+                ? TextField(
+                    controller: _searchController,
+                    autofocus: true,
+                    style: const TextStyle(color: AppTheme.textPrimary, fontSize: 16),
+                    decoration: const InputDecoration(
+                      hintText: 'Szukaj po nazwie, postaci, kategorii...',
+                      hintStyle: TextStyle(color: AppTheme.textDim, fontSize: 14),
+                      border: InputBorder.none,
+                      isDense: true,
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                    onChanged: (v) => setState(() => _search = v),
+                  )
+                : PageHeader.text('Perki'),
+            actions: [
+              IconButton(
+                icon: Icon(
+                  _searchVisible ? Icons.close : Icons.search,
                   color: AppTheme.textPrimary,
                 ),
+                onPressed: () {
+                  setState(() {
+                    _searchVisible = !_searchVisible;
+                    if (!_searchVisible) {
+                      _search = '';
+                      _searchController.clear();
+                    }
+                  });
+                },
               ),
-        actions: [
-          IconButton(
-            icon: Icon(
-              _searchVisible ? Icons.close : Icons.search,
-              color: AppTheme.textPrimary,
-            ),
-            onPressed: () {
-              setState(() {
-                _searchVisible = !_searchVisible;
-                if (!_searchVisible) {
-                  _search = '';
-                  _searchController.clear();
-                }
-              });
-            },
+            ],
           ),
-        ],
-      ),
-      body: allPerksAsync.when(
+          Expanded(child: allPerksAsync.when(
         loading: () => const Center(child: CircularProgressIndicator(color: AppTheme.primary)),
         error: (e, _) => Center(child: Text('Błąd: $e', style: const TextStyle(color: AppTheme.textSecondary))),
         data: (allPerks) {
@@ -183,6 +177,8 @@ class _PerksScreenState extends ConsumerState<PerksScreen> {
             ],
           );
         },
+      )),
+        ],
       ),
     );
   }

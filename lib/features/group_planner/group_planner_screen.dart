@@ -15,13 +15,15 @@ class GroupPlannerScreen extends ConsumerWidget {
     final plansAsync = ref.watch(groupPlansProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Group Planner')),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _createPlan(context, ref),
         backgroundColor: AppTheme.primary,
         child: const Icon(Icons.add, color: Colors.white),
       ),
-      body: plansAsync.when(
+      body: Column(
+        children: [
+          PageHeader(title: PageHeader.text('Group Planner')),
+          Expanded(child: plansAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('$e')),
         data: (plans) {
@@ -71,6 +73,8 @@ class GroupPlannerScreen extends ConsumerWidget {
             },
           );
         },
+      )),
+        ],
       ),
     );
   }

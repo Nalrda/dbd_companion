@@ -31,37 +31,39 @@ class _KillersScreenState extends ConsumerState<KillersScreen> {
     final killersAsync = ref.watch(killersProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: _searchVisible
-            ? TextField(
-                controller: _searchController,
-                autofocus: true,
-                style: const TextStyle(color: AppTheme.textPrimary),
-                decoration: const InputDecoration(
-                  hintText: 'Search killers...',
-                  border: InputBorder.none,
-                  hintStyle: TextStyle(color: AppTheme.textDim),
+      body: Column(
+        children: [
+          PageHeader(
+            title: _searchVisible
+                ? TextField(
+                    controller: _searchController,
+                    autofocus: true,
+                    style: const TextStyle(color: AppTheme.textPrimary),
+                    decoration: const InputDecoration(
+                      hintText: 'Search killers...',
+                      border: InputBorder.none,
+                      hintStyle: TextStyle(color: AppTheme.textDim),
+                    ),
+                    onChanged: (v) => setState(() => _search = v),
+                  )
+                : PageHeader.text('Killers'),
+            actions: [
+              IconButton(
+                icon: Icon(
+                  _searchVisible ? Icons.close : Icons.search,
+                  color: _searchVisible ? AppTheme.primary : AppTheme.textSecondary,
                 ),
-                onChanged: (v) => setState(() => _search = v),
-              )
-            : const Text('Killers'),
-        actions: [
-          IconButton(
-            icon: Icon(
-              _searchVisible ? Icons.close : Icons.search,
-              color: _searchVisible ? AppTheme.primary : AppTheme.textSecondary,
-            ),
-            onPressed: () => setState(() {
-              _searchVisible = !_searchVisible;
-              if (!_searchVisible) {
-                _search = '';
-                _searchController.clear();
-              }
-            }),
+                onPressed: () => setState(() {
+                  _searchVisible = !_searchVisible;
+                  if (!_searchVisible) {
+                    _search = '';
+                    _searchController.clear();
+                  }
+                }),
+              ),
+            ],
           ),
-        ],
-      ),
-      body: killersAsync.when(
+          Expanded(child: killersAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error: $e')),
         data: (killers) {
@@ -112,6 +114,8 @@ class _KillersScreenState extends ConsumerState<KillersScreen> {
             );
           });
         },
+      )),
+        ],
       ),
     );
   }

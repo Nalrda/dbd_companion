@@ -14,8 +14,10 @@ class RandomizerScreen extends ConsumerWidget {
     final state = ref.watch(randomizerProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Perk Randomizer')),
-      body: Align(
+      body: Column(
+        children: [
+          PageHeader(title: PageHeader.text('Perk Randomizer')),
+          Expanded(child: Align(
         alignment: Alignment.topCenter,
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 680),
@@ -61,7 +63,8 @@ class RandomizerScreen extends ConsumerWidget {
               ],
             ),
           ),
-        ),
+        )),
+        ],
       ),
     );
   }

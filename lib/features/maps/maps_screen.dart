@@ -15,10 +15,10 @@ class MapsScreen extends ConsumerWidget {
     final realmsAsync = ref.watch(mapRealmsProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Map Callouts'),
-      ),
-      body: realmsAsync.when(
+      body: Column(
+        children: [
+          PageHeader(title: PageHeader.text('Map Callouts')),
+          Expanded(child: realmsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error: $e')),
         data: (realms) => ListView.separated(
@@ -32,6 +32,8 @@ class MapsScreen extends ConsumerWidget {
                 .slideY(begin: 0.05, end: 0);
           },
         ),
+      )),
+        ],
       ),
     );
   }

@@ -32,57 +32,60 @@ class _BuildsScreenState extends ConsumerState<BuildsScreen> {
     final buildsAsync = ref.watch(buildsProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: _searchVisible
-            ? TextField(
-                controller: _searchController,
-                autofocus: true,
-                style: const TextStyle(color: AppTheme.textPrimary),
-                decoration: const InputDecoration(
-                  hintText: 'Search builds...',
-                  border: InputBorder.none,
-                  hintStyle: TextStyle(color: AppTheme.textDim),
-                ),
-                onChanged: (v) => setState(() => _search = v),
-              )
-            : const Text('My Builds'),
-        actions: [
-          IconButton(
-            icon: Icon(
-              _searchVisible ? Icons.close : Icons.search,
-              color: _searchVisible ? AppTheme.primary : AppTheme.textSecondary,
-            ),
-            onPressed: () => setState(() {
-              _searchVisible = !_searchVisible;
-              if (!_searchVisible) {
-                _search = '';
-                _searchController.clear();
-              }
-            }),
-          ),
-          IconButton(
-            icon: Icon(
-              _showFavoritesOnly ? Icons.star : Icons.star_outline,
-              color: _showFavoritesOnly ? AppTheme.primary : AppTheme.textSecondary,
-            ),
-            tooltip: 'Favorites only',
-            onPressed: () => setState(() => _showFavoritesOnly = !_showFavoritesOnly),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: RoleToggle(
-              isSurvivor: _showSurvivor,
-              onChanged: (v) => setState(() => _showSurvivor = v),
-            ),
-          ),
-        ],
-      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.push('/builds/create?survivor=$_showSurvivor'),
         backgroundColor: AppTheme.primary,
         child: const Icon(Icons.add, color: Colors.white),
       ),
-      body: buildsAsync.when(
+      body: Column(
+        children: [
+          PageHeader(
+            title: _searchVisible
+                ? TextField(
+                    controller: _searchController,
+                    autofocus: true,
+                    style: const TextStyle(color: AppTheme.textPrimary),
+                    decoration: const InputDecoration(
+                      hintText: 'Search builds...',
+                      border: InputBorder.none,
+                      hintStyle: TextStyle(color: AppTheme.textDim),
+                    ),
+                    onChanged: (v) => setState(() => _search = v),
+                  )
+                : PageHeader.text('My Builds'),
+            actions: [
+              IconButton(
+                icon: Icon(
+                  _searchVisible ? Icons.close : Icons.search,
+                  color: _searchVisible ? AppTheme.primary : AppTheme.textSecondary,
+                ),
+                onPressed: () => setState(() {
+                  _searchVisible = !_searchVisible;
+                  if (!_searchVisible) {
+                    _search = '';
+                    _searchController.clear();
+                  }
+                }),
+              ),
+              IconButton(
+                icon: Icon(
+                  _showFavoritesOnly ? Icons.star : Icons.star_outline,
+                  color: _showFavoritesOnly ? AppTheme.primary : AppTheme.textSecondary,
+                ),
+                tooltip: 'Favorites only',
+                onPressed: () => setState(() => _showFavoritesOnly = !_showFavoritesOnly),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 4),
+                child: RoleToggle(
+                  isSurvivor: _showSurvivor,
+                  onChanged: (v) => setState(() => _showSurvivor = v),
+                ),
+              ),
+            ],
+          ),
+          Expanded(
+            child: buildsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error: $e')),
         data: (builds) {
@@ -181,6 +184,9 @@ class _BuildsScreenState extends ConsumerState<BuildsScreen> {
             },
           );
         },
+      ),
+          ),
+        ],
       ),
     );
   }

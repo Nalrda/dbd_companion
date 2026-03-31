@@ -72,7 +72,15 @@ class ShellScreen extends ConsumerWidget {
               onSignOut: signOut,
             ),
             const Divider(height: 1, thickness: 1, color: AppTheme.border),
-            Expanded(child: child),
+            Expanded(
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1200),
+                  child: child,
+                ),
+              ),
+            ),
           ],
         ),
       );

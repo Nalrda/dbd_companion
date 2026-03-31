@@ -1417,3 +1417,50 @@ class _OfferingPickerSheetState extends ConsumerState<OfferingPickerSheet> {
     );
   }
 }
+
+// ─── Page Header ──────────────────────────────────────────────────────────────
+// Inline page header for tab screens (replaces Flutter AppBar).
+// Used on wide screens below the top nav bar to display page title + actions.
+
+class PageHeader extends StatelessWidget {
+  /// The title area — can be a [Text] or a [TextField] (for search mode).
+  final Widget title;
+
+  /// Action widgets placed on the right side.
+  final List<Widget> actions;
+
+  const PageHeader({
+    super.key,
+    required this.title,
+    this.actions = const [],
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 52,
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      decoration: const BoxDecoration(
+        color: AppTheme.background,
+        border: Border(bottom: BorderSide(color: AppTheme.border, width: 1)),
+      ),
+      child: Row(
+        children: [
+          Expanded(child: title),
+          ...actions,
+        ],
+      ),
+    );
+  }
+
+  /// Convenience factory for a plain text title.
+  static Widget text(String label) => Text(
+        label,
+        style: GoogleFonts.rajdhani(
+          fontSize: 18,
+          fontWeight: FontWeight.w700,
+          color: AppTheme.textPrimary,
+          letterSpacing: 1.2,
+        ),
+      );
+}
