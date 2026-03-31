@@ -63,7 +63,7 @@ class RandomizerScreen extends ConsumerWidget {
               ],
             ),
           ),
-        )),
+        ))),
         ],
       ),
     );

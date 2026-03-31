@@ -278,11 +278,11 @@ class _PerkCardState extends State<PerkCard> {
                       ]
                     : _hovered
                         ? [
-                            BoxShadow(
+                            const BoxShadow(
                               color: AppTheme.primaryGlow,
                               blurRadius: 12,
                               spreadRadius: 0,
-                              offset: const Offset(0, 2),
+                              offset: Offset(0, 2),
                             )
                           ]
                         : null,

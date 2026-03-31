@@ -120,8 +120,6 @@ class _KillersScreenState extends ConsumerState<KillersScreen> {
     );
   }
 
-  String _capitalize(String s) =>
-      s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
 }
 
 // ─── Killer tile ──────────────────────────────────────────────────────────────
@@ -200,6 +198,4 @@ class _KillerTile extends StatelessWidget {
     );
   }
 
-  String _capitalize(String s) =>
-      s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
 }

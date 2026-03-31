@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/models/map_callout.dart';
 import '../../core/providers/providers.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/widgets/widgets.dart';
 
 class MapsScreen extends ConsumerWidget {
   const MapsScreen({super.key});
