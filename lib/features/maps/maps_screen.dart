@@ -50,7 +50,7 @@ class _RealmCard extends StatelessWidget {
         border: Border.all(color: AppTheme.border),
         boxShadow: const [
           BoxShadow(
-            color: Color(0x1AE8223A),
+            color: AppTheme.primaryGlow,
             blurRadius: 8,
             offset: Offset(0, 2),
           ),

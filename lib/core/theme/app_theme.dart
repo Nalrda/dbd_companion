@@ -3,35 +3,36 @@ import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   // ─── Base Colors ────────────────────────────────────────────────────────────
-  static const Color background     = Color(0xFF060609); // near-black, cold purple tint
-  static const Color surface        = Color(0xFF0D0D15); // dark Entity-realm surface
-  static const Color surfaceElevated = Color(0xFF131320); // slightly lifted surface
-  static const Color border         = Color(0xFF1E1E30); // dark purple-gray border
+  static const Color background      = Color(0xFF0A0A0A); // pure near-black
+  static const Color surface         = Color(0xFF111111); // dark gray
+  static const Color surfaceElevated = Color(0xFF1A1A1A); // slightly lifted dark gray
+  static const Color hoverSurface    = Color(0xFF222222); // hover highlight
+  static const Color border          = Color(0xFF2A2A2A); // neutral dark gray border
 
-  static const Color primary        = Color(0xFFD4883A); // warm amber
-  static const Color primaryDim     = Color(0xFF8A5520); // dark amber
-  static const Color accent         = Color(0xFFE06040); // coral
+  static const Color primary         = Color(0xFFCC2828); // blood red
+  static const Color primaryDim      = Color(0xFF7A1515); // dark red
+  static const Color accent          = Color(0xFFE05828); // orange-red secondary
 
-  static const Color textPrimary    = Color(0xFFECEAF5); // cool moonlight white
-  static const Color textSecondary  = Color(0xFF787896); // purple-gray
-  static const Color textDim        = Color(0xFF38384F); // deep dim
+  static const Color textPrimary     = Color(0xFFF0EEEC); // warm white
+  static const Color textSecondary   = Color(0xFF888888); // neutral gray
+  static const Color textDim         = Color(0xFF444444); // dark neutral gray
 
   // ─── Glow / Atmosphere ──────────────────────────────────────────────────────
-  static const Color primaryGlow    = Color(0x44D4883A); // 27% amber — BoxShadows, overlays
-  static const Color hexPurple      = Color(0xFF8B35D6); // Entity purple
+  static const Color primaryGlow    = Color(0x44CC2828); // 27% red — BoxShadows, overlays
+  static const Color hexPurple      = Color(0xFF8B35D6); // Entity purple (hex perk category)
   static const Color hexPurpleDim   = Color(0xFF3D1270);
 
   // ─── Gradients ──────────────────────────────────────────────────────────────
   static const LinearGradient surfaceGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFF131320), Color(0xFF0D0D15)],
+    colors: [Color(0xFF1A1A1A), Color(0xFF111111)],
   );
 
   static const LinearGradient primaryGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFFD4883A), Color(0xFF8A5520)],
+    colors: [Color(0xFFCC2828), Color(0xFF7A1515)],
   );
 
   // ─── Rarity Colors (offerings/items) ────────────────────────────────────────

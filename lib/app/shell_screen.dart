@@ -161,7 +161,7 @@ class _DbdNavRail extends StatelessWidget {
   }
 }
 
-class _RailItem extends StatelessWidget {
+class _RailItem extends StatefulWidget {
   final _TabItem tab;
   final bool isActive;
   final VoidCallback onTap;
@@ -173,47 +173,61 @@ class _RailItem extends StatelessWidget {
   });
 
   @override
+  State<_RailItem> createState() => _RailItemState();
+}
+
+class _RailItemState extends State<_RailItem> {
+  bool _hovered = false;
+
+  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        width: 80,
-        padding: const EdgeInsets.symmetric(vertical: 6),
-        decoration: BoxDecoration(
-          color: isActive
-              ? AppTheme.primary.withValues(alpha: 0.08)
-              : Colors.transparent,
-          border: Border(
-            left: BorderSide(
-              color: isActive ? AppTheme.primary : Colors.transparent,
-              width: 2,
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        behavior: HitTestBehavior.opaque,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          width: 80,
+          padding: const EdgeInsets.symmetric(vertical: 6),
+          decoration: BoxDecoration(
+            color: widget.isActive
+                ? AppTheme.primary.withValues(alpha: 0.10)
+                : _hovered
+                    ? AppTheme.primary.withValues(alpha: 0.04)
+                    : Colors.transparent,
+            border: Border(
+              left: BorderSide(
+                color: widget.isActive ? AppTheme.primary : Colors.transparent,
+                width: 2,
+              ),
             ),
           ),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              isActive ? tab.activeIcon : tab.icon,
-              color: isActive ? AppTheme.primary : AppTheme.textSecondary,
-              size: 22,
-            ),
-            const SizedBox(height: 4),
-            Text(
-              tab.label,
-              style: GoogleFonts.rajdhani(
-                fontSize: 9,
-                fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
-                color: isActive ? AppTheme.primary : AppTheme.textSecondary,
-                letterSpacing: 0.8,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                widget.isActive ? widget.tab.activeIcon : widget.tab.icon,
+                color: widget.isActive ? AppTheme.primary : _hovered ? AppTheme.primary.withValues(alpha: 0.6) : AppTheme.textSecondary,
+                size: 22,
               ),
-              textAlign: TextAlign.center,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
+              const SizedBox(height: 4),
+              Text(
+                widget.tab.label,
+                style: GoogleFonts.rajdhani(
+                  fontSize: 9,
+                  fontWeight: widget.isActive ? FontWeight.w700 : FontWeight.w500,
+                  color: widget.isActive ? AppTheme.primary : _hovered ? AppTheme.primary.withValues(alpha: 0.6) : AppTheme.textSecondary,
+                  letterSpacing: 0.8,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -271,7 +285,7 @@ class _DbdNavBar extends StatelessWidget {
   }
 }
 
-class _NavItem extends StatelessWidget {
+class _NavItem extends StatefulWidget {
   final _TabItem tab;
   final bool isActive;
   final VoidCallback onTap;
@@ -283,56 +297,82 @@ class _NavItem extends StatelessWidget {
   });
 
   @override
+  State<_NavItem> createState() => _NavItemState();
+}
+
+class _NavItemState extends State<_NavItem> {
+  bool _hovered = false;
+
+  @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: GestureDetector(
-        onTap: onTap,
-        behavior: HitTestBehavior.opaque,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Active indicator bar at top
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              height: 2,
-              width: isActive ? 28 : 0,
-              decoration: BoxDecoration(
-                color: AppTheme.primary,
-                boxShadow: isActive
-                    ? [
-                        BoxShadow(
-                          color: AppTheme.primary.withValues(alpha: 0.6),
-                          blurRadius: 8,
-                          spreadRadius: 1,
-                        )
-                      ]
-                    : null,
-                borderRadius: BorderRadius.circular(1),
-              ),
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        onEnter: (_) => setState(() => _hovered = true),
+        onExit: (_) => setState(() => _hovered = false),
+        child: GestureDetector(
+          onTap: widget.onTap,
+          behavior: HitTestBehavior.opaque,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
+            color: _hovered && !widget.isActive
+                ? AppTheme.primary.withValues(alpha: 0.04)
+                : Colors.transparent,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Active indicator bar at top
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  height: 2,
+                  width: widget.isActive ? 28 : 0,
+                  decoration: BoxDecoration(
+                    color: AppTheme.primary,
+                    boxShadow: widget.isActive
+                        ? [
+                            BoxShadow(
+                              color: AppTheme.primary.withValues(alpha: 0.6),
+                              blurRadius: 8,
+                              spreadRadius: 1,
+                            )
+                          ]
+                        : null,
+                    borderRadius: BorderRadius.circular(1),
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Icon(
+                  widget.isActive ? widget.tab.activeIcon : widget.tab.icon,
+                  color: widget.isActive
+                      ? AppTheme.primary
+                      : _hovered
+                          ? AppTheme.primary.withValues(alpha: 0.6)
+                          : AppTheme.textSecondary,
+                  size: 20,
+                ),
+                const SizedBox(height: 2),
+                AnimatedDefaultTextStyle(
+                  duration: const Duration(milliseconds: 180),
+                  style: GoogleFonts.rajdhani(
+                    fontSize: widget.isActive ? 10 : 9,
+                    fontWeight: widget.isActive ? FontWeight.w700 : FontWeight.w500,
+                    color: widget.isActive
+                        ? AppTheme.primary
+                        : _hovered
+                            ? AppTheme.primary.withValues(alpha: 0.6)
+                            : AppTheme.textSecondary,
+                    letterSpacing: 1.0,
+                  ),
+                  child: Text(
+                    widget.tab.label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(height: 6),
+              ],
             ),
-            const SizedBox(height: 6),
-            Icon(
-              isActive ? tab.activeIcon : tab.icon,
-              color: isActive ? AppTheme.primary : AppTheme.textSecondary,
-              size: 20,
-            ),
-            const SizedBox(height: 2),
-            AnimatedDefaultTextStyle(
-              duration: const Duration(milliseconds: 180),
-              style: GoogleFonts.rajdhani(
-                fontSize: isActive ? 10 : 9,
-                fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
-                color: isActive ? AppTheme.primary : AppTheme.textSecondary,
-                letterSpacing: 1.0,
-              ),
-              child: Text(
-                tab.label,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            const SizedBox(height: 6),
-          ],
+          ),
         ),
       ),
     );
