@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/models/map_callout.dart';
 import '../../core/providers/providers.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/widgets/widgets.dart';
 
 class MapsScreen extends ConsumerWidget {
   const MapsScreen({super.key});
@@ -15,10 +16,10 @@ class MapsScreen extends ConsumerWidget {
     final realmsAsync = ref.watch(mapRealmsProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Map Callouts'),
-      ),
-      body: realmsAsync.when(
+      body: Column(
+        children: [
+          PageHeader(title: PageHeader.text('Map Callouts')),
+          Expanded(child: realmsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error: $e')),
         data: (realms) => ListView.separated(
@@ -32,6 +33,8 @@ class MapsScreen extends ConsumerWidget {
                 .slideY(begin: 0.05, end: 0);
           },
         ),
+      )),
+        ],
       ),
     );
   }
@@ -50,7 +53,7 @@ class _RealmCard extends StatelessWidget {
         border: Border.all(color: AppTheme.border),
         boxShadow: const [
           BoxShadow(
-            color: Color(0x1AE8223A),
+            color: AppTheme.primaryGlow,
             blurRadius: 8,
             offset: Offset(0, 2),
           ),

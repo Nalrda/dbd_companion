@@ -23,24 +23,26 @@ class _MatchesScreenState extends ConsumerState<MatchesScreen> {
     final matchesAsync = ref.watch(matchesProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Match Tracker'),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: RoleToggle(
-              isSurvivor: _showSurvivor,
-              onChanged: (v) => setState(() => _showSurvivor = v),
-            ),
-          ),
-        ],
-      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.push('/matches/add?survivor=$_showSurvivor'),
         backgroundColor: AppTheme.primary,
         child: const Icon(Icons.add, color: Colors.white),
       ),
-      body: matchesAsync.when(
+      body: Column(
+        children: [
+          PageHeader(
+            title: PageHeader.text('Match Tracker'),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 4),
+                child: RoleToggle(
+                  isSurvivor: _showSurvivor,
+                  onChanged: (v) => setState(() => _showSurvivor = v),
+                ),
+              ),
+            ],
+          ),
+          Expanded(child: matchesAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error: $e')),
         data: (all) {
@@ -98,6 +100,8 @@ class _MatchesScreenState extends ConsumerState<MatchesScreen> {
             ],
           );
         },
+      )),
+        ],
       ),
     );
   }

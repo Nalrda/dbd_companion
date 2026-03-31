@@ -204,7 +204,7 @@ class _OctagonBorderPainter extends CustomPainter {
 
 // ─── Perk Card ────────────────────────────────────────────────────────────────
 
-class PerkCard extends StatelessWidget {
+class PerkCard extends StatefulWidget {
   final Perk perk;
   final bool isSelected;
   final VoidCallback? onTap;
@@ -219,52 +219,78 @@ class PerkCard extends StatelessWidget {
   });
 
   @override
+  State<PerkCard> createState() => _PerkCardState();
+}
+
+class _PerkCardState extends State<PerkCard> {
+  bool _hovered = false;
+
+  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
-        child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        decoration: BoxDecoration(
-          gradient: isSelected
-              ? LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    AppTheme.primaryGlow.withValues(alpha: 0.22),
-                    AppTheme.surfaceElevated,
-                  ],
-                )
-              : AppTheme.surfaceGradient,
-          border: Border(
-            left: BorderSide(
-              color: AppTheme.perkCategoryColor(perk.categories.isNotEmpty ? perk.categories.first : ''),
-              width: 3,
+    final categoryColor = AppTheme.perkCategoryColor(
+        widget.perk.categories.isNotEmpty ? widget.perk.categories.first : '');
+    final borderAccent = widget.isSelected
+        ? AppTheme.primary
+        : _hovered
+            ? AppTheme.primary.withValues(alpha: 0.45)
+            : AppTheme.border;
+    final borderWidth = widget.isSelected ? 1.5 : 1.0;
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedScale(
+          scale: _hovered && !widget.isSelected ? 1.015 : 1.0,
+          duration: const Duration(milliseconds: 160),
+          curve: Curves.easeOut,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              decoration: BoxDecoration(
+                gradient: widget.isSelected
+                    ? LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          AppTheme.primaryGlow.withValues(alpha: 0.22),
+                          AppTheme.surfaceElevated,
+                        ],
+                      )
+                    : AppTheme.surfaceGradient,
+                border: Border(
+                  left: BorderSide(color: categoryColor, width: 3),
+                  top: BorderSide(color: borderAccent, width: borderWidth),
+                  right: BorderSide(color: borderAccent, width: borderWidth),
+                  bottom: BorderSide(color: borderAccent, width: borderWidth),
+                ),
+                boxShadow: widget.isSelected
+                    ? [
+                        const BoxShadow(
+                          color: AppTheme.primaryGlow,
+                          blurRadius: 14,
+                          spreadRadius: 0,
+                          offset: Offset(0, 2),
+                        )
+                      ]
+                    : _hovered
+                        ? [
+                            const BoxShadow(
+                              color: AppTheme.primaryGlow,
+                              blurRadius: 12,
+                              spreadRadius: 0,
+                              offset: Offset(0, 2),
+                            )
+                          ]
+                        : null,
+              ),
+              child: widget.compact ? _buildCompact() : _buildFull(),
             ),
-            top: BorderSide(
-                color: isSelected ? AppTheme.primary : AppTheme.border,
-                width: isSelected ? 1.5 : 1),
-            right: BorderSide(
-                color: isSelected ? AppTheme.primary : AppTheme.border,
-                width: isSelected ? 1.5 : 1),
-            bottom: BorderSide(
-                color: isSelected ? AppTheme.primary : AppTheme.border,
-                width: isSelected ? 1.5 : 1),
           ),
-          boxShadow: isSelected
-              ? [
-                  const BoxShadow(
-                    color: AppTheme.primaryGlow,
-                    blurRadius: 14,
-                    spreadRadius: 0,
-                    offset: Offset(0, 2),
-                  )
-                ]
-              : null,
         ),
-        child: compact ? _buildCompact() : _buildFull(),
-      ),
       ),
     );
   }
@@ -274,14 +300,14 @@ class PerkCard extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       child: Row(
         children: [
-          PerkIcon(perk: perk, size: 40, showCategoryGlow: isSelected),
+          PerkIcon(perk: widget.perk, size: 40, showCategoryGlow: widget.isSelected),
           const SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  perk.name,
+                  widget.perk.name,
                   style: const TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
@@ -291,7 +317,7 @@ class PerkCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  perk.character,
+                  widget.perk.character,
                   style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary),
                 ),
               ],
@@ -308,14 +334,14 @@ class PerkCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          PerkIcon(perk: perk, size: 56, showCategoryGlow: isSelected),
+          PerkIcon(perk: widget.perk, size: 56, showCategoryGlow: widget.isSelected),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  perk.name,
+                  widget.perk.name,
                   style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w700,
@@ -324,7 +350,7 @@ class PerkCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  perk.character,
+                  widget.perk.character,
                   style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary),
                 ),
               ],
@@ -488,11 +514,16 @@ class DbdButton extends StatefulWidget {
 
 class _DbdButtonState extends State<DbdButton> {
   bool _pressed = false;
+  bool _hovered = false;
 
   @override
   Widget build(BuildContext context) {
     final isEnabled = widget.onPressed != null && !widget.isLoading;
-    return GestureDetector(
+    return MouseRegion(
+      cursor: isEnabled ? SystemMouseCursors.click : SystemMouseCursors.basic,
+      onEnter: isEnabled ? (_) => setState(() => _hovered = true) : null,
+      onExit: (_) => setState(() => _hovered = false),
+      child: GestureDetector(
       onTapDown: isEnabled ? (_) => setState(() => _pressed = true) : null,
       onTapUp: isEnabled
           ? (_) {
@@ -531,7 +562,7 @@ class _DbdButtonState extends State<DbdButton> {
                 ? [
                     BoxShadow(
                       color: AppTheme.primaryGlow,
-                      blurRadius: _pressed ? 6 : 16,
+                      blurRadius: _pressed ? 6 : _hovered ? 24 : 16,
                       spreadRadius: 0,
                       offset: const Offset(0, 4),
                     )
@@ -574,6 +605,7 @@ class _DbdButtonState extends State<DbdButton> {
                   ),
           ),
         ),
+      ),
       ),
     );
   }
@@ -1384,4 +1416,51 @@ class _OfferingPickerSheetState extends ConsumerState<OfferingPickerSheet> {
       ),
     );
   }
+}
+
+// ─── Page Header ──────────────────────────────────────────────────────────────
+// Inline page header for tab screens (replaces Flutter AppBar).
+// Used on wide screens below the top nav bar to display page title + actions.
+
+class PageHeader extends StatelessWidget {
+  /// The title area — can be a [Text] or a [TextField] (for search mode).
+  final Widget title;
+
+  /// Action widgets placed on the right side.
+  final List<Widget> actions;
+
+  const PageHeader({
+    super.key,
+    required this.title,
+    this.actions = const [],
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 52,
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      decoration: const BoxDecoration(
+        color: AppTheme.background,
+        border: Border(bottom: BorderSide(color: AppTheme.border, width: 1)),
+      ),
+      child: Row(
+        children: [
+          Expanded(child: title),
+          ...actions,
+        ],
+      ),
+    );
+  }
+
+  /// Convenience factory for a plain text title.
+  static Widget text(String label) => Text(
+        label,
+        style: GoogleFonts.rajdhani(
+          fontSize: 18,
+          fontWeight: FontWeight.w700,
+          color: AppTheme.textPrimary,
+          letterSpacing: 1.2,
+        ),
+      );
 }
