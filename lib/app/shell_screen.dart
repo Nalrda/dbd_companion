@@ -58,27 +58,30 @@ class ShellScreen extends ConsumerWidget {
 
     void signOut() => ref.read(authNotifierProvider).signOut();
 
+    // ── Wide / desktop: top horizontal nav bar ──────────────────────────────
     if (isWide) {
       return Scaffold(
-        body: Row(
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _DbdNavRail(
+            _TopNavBar(
               selectedIndex: idx,
               tabs: _tabs,
               onTap: (i) => context.go(_tabs[i].path),
               user: user,
               onSignOut: signOut,
             ),
-            const VerticalDivider(width: 1, thickness: 1, color: AppTheme.border),
+            const Divider(height: 1, thickness: 1, color: AppTheme.border),
             Expanded(child: child),
           ],
         ),
       );
     }
 
+    // ── Narrow / mobile: bottom navigation bar ──────────────────────────────
     return Scaffold(
       body: child,
-      bottomNavigationBar: _DbdNavBar(
+      bottomNavigationBar: _BottomNavBar(
         selectedIndex: idx,
         tabs: _tabs,
         onTap: (i) => context.go(_tabs[i].path),
@@ -88,16 +91,16 @@ class ShellScreen extends ConsumerWidget {
   }
 }
 
-// ─── Side Navigation Rail (wide screens) ─────────────────────────────────────
+// ─── Top Navigation Bar (wide screens) ───────────────────────────────────────
 
-class _DbdNavRail extends StatelessWidget {
+class _TopNavBar extends StatelessWidget {
   final int selectedIndex;
   final List<_TabItem> tabs;
   final ValueChanged<int> onTap;
   final dynamic user;
   final VoidCallback onSignOut;
 
-  const _DbdNavRail({
+  const _TopNavBar({
     required this.selectedIndex,
     required this.tabs,
     required this.onTap,
@@ -109,78 +112,95 @@ class _DbdNavRail extends StatelessWidget {
   Widget build(BuildContext context) {
     final topPad = MediaQuery.of(context).padding.top;
     return Container(
-      width: 80,
+      height: 56 + topPad,
+      padding: EdgeInsets.only(top: topPad),
       color: AppTheme.surface,
-      child: Column(
-        children: [
-          SizedBox(height: topPad + 16),
-          // DBD Logo mark
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: AppTheme.primaryDim.withValues(alpha: 0.3),
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: AppTheme.primary.withValues(alpha: 0.4)),
-              boxShadow: [
-                BoxShadow(
-                  color: AppTheme.primary.withValues(alpha: 0.15),
-                  blurRadius: 8,
-                ),
-              ],
-            ),
-            child: Center(
-              child: Text(
-                'D',
-                style: GoogleFonts.rajdhani(
-                  color: AppTheme.primary,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w800,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Row(
+          children: [
+            // ── Logo mark ────────────────────────────────────────────────────
+            Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                color: AppTheme.primaryDim.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: AppTheme.primary.withValues(alpha: 0.5)),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppTheme.primary.withValues(alpha: 0.2),
+                    blurRadius: 10,
+                  ),
+                ],
+              ),
+              child: Center(
+                child: Text(
+                  'D',
+                  style: GoogleFonts.rajdhani(
+                    color: AppTheme.primary,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
               ),
             ),
-          ),
-          const SizedBox(height: 24),
-          const Divider(color: AppTheme.border, height: 1),
-          const SizedBox(height: 8),
-          ...List.generate(
-            tabs.length,
-            (i) => _RailItem(
-              tab: tabs[i],
-              isActive: i == selectedIndex,
-              onTap: () => onTap(i),
+            const SizedBox(width: 8),
+            Text(
+              'DBD',
+              style: GoogleFonts.rajdhani(
+                color: AppTheme.textPrimary,
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 2.0,
+              ),
             ),
-          ),
-          const Spacer(),
-          const Divider(color: AppTheme.border, height: 1),
-          _SignOutButton(user: user, onSignOut: onSignOut),
-          SizedBox(height: MediaQuery.of(context).padding.bottom + 12),
-        ],
+            const SizedBox(width: 32),
+            // ── Nav items ─────────────────────────────────────────────────────
+            ...List.generate(
+              tabs.length,
+              (i) => _TopNavItem(
+                tab: tabs[i],
+                isActive: i == selectedIndex,
+                onTap: () => onTap(i),
+              ),
+            ),
+            const Spacer(),
+            // ── User & logout ─────────────────────────────────────────────────
+            _TopSignOutButton(user: user, onSignOut: onSignOut),
+          ],
+        ),
       ),
     );
   }
 }
 
-class _RailItem extends StatefulWidget {
+class _TopNavItem extends StatefulWidget {
   final _TabItem tab;
   final bool isActive;
   final VoidCallback onTap;
 
-  const _RailItem({
+  const _TopNavItem({
     required this.tab,
     required this.isActive,
     required this.onTap,
   });
 
   @override
-  State<_RailItem> createState() => _RailItemState();
+  State<_TopNavItem> createState() => _TopNavItemState();
 }
 
-class _RailItemState extends State<_RailItem> {
+class _TopNavItemState extends State<_TopNavItem> {
   bool _hovered = false;
 
   @override
   Widget build(BuildContext context) {
+    final iconColor = widget.isActive
+        ? AppTheme.primary
+        : _hovered
+            ? AppTheme.primary.withValues(alpha: 0.65)
+            : AppTheme.textSecondary;
+
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       onEnter: (_) => setState(() => _hovered = true),
@@ -189,42 +209,40 @@ class _RailItemState extends State<_RailItem> {
         onTap: widget.onTap,
         behavior: HitTestBehavior.opaque,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          width: 80,
-          padding: const EdgeInsets.symmetric(vertical: 6),
+          duration: const Duration(milliseconds: 180),
+          height: 56,
+          padding: const EdgeInsets.symmetric(horizontal: 14),
           decoration: BoxDecoration(
             color: widget.isActive
-                ? AppTheme.primary.withValues(alpha: 0.10)
+                ? AppTheme.primary.withValues(alpha: 0.07)
                 : _hovered
                     ? AppTheme.primary.withValues(alpha: 0.04)
                     : Colors.transparent,
             border: Border(
-              left: BorderSide(
+              bottom: BorderSide(
                 color: widget.isActive ? AppTheme.primary : Colors.transparent,
                 width: 2,
               ),
             ),
           ),
-          child: Column(
+          child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
                 widget.isActive ? widget.tab.activeIcon : widget.tab.icon,
-                color: widget.isActive ? AppTheme.primary : _hovered ? AppTheme.primary.withValues(alpha: 0.6) : AppTheme.textSecondary,
-                size: 22,
+                color: iconColor,
+                size: 16,
               ),
-              const SizedBox(height: 4),
+              const SizedBox(width: 6),
               Text(
                 widget.tab.label,
                 style: GoogleFonts.rajdhani(
-                  fontSize: 9,
-                  fontWeight: widget.isActive ? FontWeight.w700 : FontWeight.w500,
-                  color: widget.isActive ? AppTheme.primary : _hovered ? AppTheme.primary.withValues(alpha: 0.6) : AppTheme.textSecondary,
-                  letterSpacing: 0.8,
+                  fontSize: 12,
+                  fontWeight:
+                      widget.isActive ? FontWeight.w700 : FontWeight.w600,
+                  color: iconColor,
+                  letterSpacing: 1.0,
                 ),
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
               ),
             ],
           ),
@@ -234,15 +252,84 @@ class _RailItemState extends State<_RailItem> {
   }
 }
 
-// ─── Custom DBD Navigation Bar (narrow/mobile) ────────────────────────────────
+class _TopSignOutButton extends StatefulWidget {
+  final dynamic user;
+  final VoidCallback onSignOut;
 
-class _DbdNavBar extends StatelessWidget {
+  const _TopSignOutButton({required this.user, required this.onSignOut});
+
+  @override
+  State<_TopSignOutButton> createState() => _TopSignOutButtonState();
+}
+
+class _TopSignOutButtonState extends State<_TopSignOutButton> {
+  bool _hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: GestureDetector(
+        onTap: widget.onSignOut,
+        behavior: HitTestBehavior.opaque,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            color: _hovered
+                ? AppTheme.primary.withValues(alpha: 0.08)
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: _hovered
+                  ? AppTheme.primary.withValues(alpha: 0.3)
+                  : AppTheme.border,
+            ),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (widget.user?.photoURL != null)
+                CircleAvatar(
+                  radius: 12,
+                  backgroundImage:
+                      NetworkImage(widget.user!.photoURL as String),
+                )
+              else
+                Icon(
+                  Icons.account_circle_outlined,
+                  color: _hovered ? AppTheme.primary : AppTheme.textSecondary,
+                  size: 18,
+                ),
+              const SizedBox(width: 8),
+              Text(
+                'WYLOGUJ',
+                style: GoogleFonts.rajdhani(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: _hovered ? AppTheme.primary : AppTheme.textSecondary,
+                  letterSpacing: 0.8,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Bottom Navigation Bar (narrow / mobile) ──────────────────────────────────
+
+class _BottomNavBar extends StatelessWidget {
   final int selectedIndex;
   final List<_TabItem> tabs;
   final ValueChanged<int> onTap;
   final VoidCallback onSignOut;
 
-  const _DbdNavBar({
+  const _BottomNavBar({
     required this.selectedIndex,
     required this.tabs,
     required this.onTap,
@@ -271,13 +358,13 @@ class _DbdNavBar extends StatelessWidget {
           children: [
             ...List.generate(
               tabs.length,
-              (i) => _NavItem(
+              (i) => _BottomNavItem(
                 tab: tabs[i],
                 isActive: i == selectedIndex,
                 onTap: () => onTap(i),
               ),
             ),
-            _NavSignOutItem(onSignOut: onSignOut),
+            _BottomSignOutItem(onSignOut: onSignOut),
           ],
         ),
       ),
@@ -285,22 +372,22 @@ class _DbdNavBar extends StatelessWidget {
   }
 }
 
-class _NavItem extends StatefulWidget {
+class _BottomNavItem extends StatefulWidget {
   final _TabItem tab;
   final bool isActive;
   final VoidCallback onTap;
 
-  const _NavItem({
+  const _BottomNavItem({
     required this.tab,
     required this.isActive,
     required this.onTap,
   });
 
   @override
-  State<_NavItem> createState() => _NavItemState();
+  State<_BottomNavItem> createState() => _BottomNavItemState();
 }
 
-class _NavItemState extends State<_NavItem> {
+class _BottomNavItemState extends State<_BottomNavItem> {
   bool _hovered = false;
 
   @override
@@ -321,7 +408,6 @@ class _NavItemState extends State<_NavItem> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Active indicator bar at top
                 AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
                   height: 2,
@@ -355,7 +441,8 @@ class _NavItemState extends State<_NavItem> {
                   duration: const Duration(milliseconds: 180),
                   style: GoogleFonts.rajdhani(
                     fontSize: widget.isActive ? 10 : 9,
-                    fontWeight: widget.isActive ? FontWeight.w700 : FontWeight.w500,
+                    fontWeight:
+                        widget.isActive ? FontWeight.w700 : FontWeight.w500,
                     color: widget.isActive
                         ? AppTheme.primary
                         : _hovered
@@ -379,56 +466,10 @@ class _NavItemState extends State<_NavItem> {
   }
 }
 
-// ─── Sign-Out button for nav rail ────────────────────────────────────────────
-
-class _SignOutButton extends StatelessWidget {
-  final dynamic user;
+class _BottomSignOutItem extends StatelessWidget {
   final VoidCallback onSignOut;
 
-  const _SignOutButton({required this.user, required this.onSignOut});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onSignOut,
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        width: 80,
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (user?.photoURL != null)
-              CircleAvatar(
-                radius: 11,
-                backgroundImage: NetworkImage(user!.photoURL as String),
-              )
-            else
-              const Icon(Icons.account_circle_outlined,
-                  color: AppTheme.textSecondary, size: 22),
-            const SizedBox(height: 4),
-            Text(
-              'WYLOGUJ',
-              style: GoogleFonts.rajdhani(
-                fontSize: 8,
-                fontWeight: FontWeight.w600,
-                color: AppTheme.textSecondary,
-                letterSpacing: 0.6,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ─── Sign-Out item for bottom nav bar ────────────────────────────────────────
-
-class _NavSignOutItem extends StatelessWidget {
-  final VoidCallback onSignOut;
-
-  const _NavSignOutItem({required this.onSignOut});
+  const _BottomSignOutItem({required this.onSignOut});
 
   @override
   Widget build(BuildContext context) {
