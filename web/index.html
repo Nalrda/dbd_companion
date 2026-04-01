@@ -7,6 +7,11 @@
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="A new Flutter project.">
 
+  <!-- Prevent browser from caching this page so users always get the latest build -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -31,6 +36,23 @@
     <span style="font-size:14px;letter-spacing:0.05em;">DBD Companion</span>
   </div>
   <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+  <script>
+    // When the page becomes visible again (tab switch / return from background),
+    // check if a new service worker is waiting and, if so, reload.
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.addEventListener('controllerchange', function () {
+        window.location.reload();
+      });
+
+      document.addEventListener('visibilitychange', function () {
+        if (document.visibilityState === 'visible') {
+          navigator.serviceWorker.getRegistration().then(function (reg) {
+            if (reg) reg.update();
+          });
+        }
+      });
+    }
+  </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>
