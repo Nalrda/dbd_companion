@@ -88,8 +88,8 @@
         "mainBuilding": "Gas Station"
       },
       {
-        "id": "rotting_fields",
-        "name": "Rotting Fields",
+        "id": "wreckers",
+        "name": "Wreckers",
         "image": "assets/data/maps/Autohaven Wreckers/Wreckers.webp",
         "mainBuilding": "Scrapyard"
       },

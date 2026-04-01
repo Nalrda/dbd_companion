@@ -49,7 +49,7 @@ class PerkIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final categoryColor = AppTheme.perkCategoryColor(perk.categories.isNotEmpty ? perk.categories.first : '');
+    final categoryColor = AppTheme.perkCategoryColor('');
     final cut = size * 0.14;
     return Container(
       width: size,
@@ -227,8 +227,7 @@ class _PerkCardState extends State<PerkCard> {
 
   @override
   Widget build(BuildContext context) {
-    final categoryColor = AppTheme.perkCategoryColor(
-        widget.perk.categories.isNotEmpty ? widget.perk.categories.first : '');
+    final categoryColor = AppTheme.perkCategoryColor('');
     final borderAccent = widget.isSelected
         ? AppTheme.primary
         : _hovered

@@ -44,18 +44,28 @@ class AppTheme {
   // ─── Perk Category Colors ───────────────────────────────────────────────────
   static Color perkCategoryColor(String category) {
     switch (category) {
-      case 'hex':          return const Color(0xFF8B35D6); // Entity purple
-      case 'chase':        return const Color(0xFFD4883A); // warm amber
-      case 'stealth':      return const Color(0xFF1A8A6A); // dark teal
-      case 'healing':      return const Color(0xFF3E9E44); // dark green
-      case 'generator':    return const Color(0xFF2196F3); // blue
-      case 'endgame':      return const Color(0xFFCC4A24); // ember orange
-      case 'support':      return const Color(0xFF00A8C0); // deep cyan
-      case 'awareness':    return const Color(0xFFE6D032); // muted yellow
-      case 'anti-healing': return const Color(0xFFD035E8); // dark pink-purple
-      case 'anti-grab':    return const Color(0xFFE84A1A); // deep orange-red
-      case 'utility':      return const Color(0xFF9E9E9E); // gray
-      default:             return const Color(0xFF38384F);
+      // Survivor
+      case 'healing':     return const Color(0xFF3E9E44); // dark green
+      case 'chase':       return const Color(0xFFD4883A); // warm amber
+      case 'stealth':     return const Color(0xFF1A8A6A); // dark teal
+      case 'generator':   return const Color(0xFF2196F3); // blue
+      case 'endgame':     return const Color(0xFFCC4A24); // ember orange
+      case 'teamwork':    return const Color(0xFF26A69A); // medium teal
+      case 'hook':        return const Color(0xFFB71C1C); // dark red
+      case 'information': return const Color(0xFF00B8D4); // cyan
+      case 'aura':        return const Color(0xFF7E57C2); // purple
+      case 'boon':        return const Color(0xFF80CBC4); // light teal
+      case 'invocation':  return const Color(0xFF6A1B9A); // deep purple
+      case 'exhaustion':  return const Color(0xFFE65100); // deep orange
+      case 'item':        return const Color(0xFFFFB300); // amber/gold
+      // Killer
+      case 'tracking':    return const Color(0xFF42A5F5); // light blue
+      case 'control':     return const Color(0xFFEF5350); // red
+      case 'utility':     return const Color(0xFF78909C); // blue-grey
+      case 'exposed':     return const Color(0xFFFF6F00); // orange
+      case 'mobility':    return const Color(0xFF66BB6A); // green
+      case 'general':     return const Color(0xFF9E9E9E); // gray
+      default:            return const Color(0xFF38384F);
     }
   }
 

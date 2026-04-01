@@ -13,9 +13,6 @@ class Perk extends HiveObject {
   @HiveField(2)
   final String character;
 
-  @HiveField(3)
-  final List<String> categories;
-
   @HiveField(5)
   final bool isSurvivor;
 
@@ -26,7 +23,6 @@ class Perk extends HiveObject {
     required this.id,
     required this.name,
     required this.character,
-    required this.categories,
     required this.isSurvivor,
     this.iconUrl,
   });
@@ -36,7 +32,6 @@ class Perk extends HiveObject {
       id: json['id'] as String,
       name: json['name'] as String,
       character: json['character'] as String,
-      categories: List<String>.from(json['categories'] as List),
       isSurvivor: isSurvivor,
       iconUrl: json['iconUrl'] as String?,
     );
@@ -47,7 +42,6 @@ class Perk extends HiveObject {
       'id': id,
       'name': name,
       'character': character,
-      'categories': categories,
       'isSurvivor': isSurvivor,
       'iconUrl': iconUrl,
     };

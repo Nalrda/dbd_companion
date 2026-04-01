@@ -2,2092 +2,1858 @@
   "survivor_perks": [
     {
       "id": "sp_001",
-      "name": "Adrenaline",
-      "character": "Meg Thomas",
-      "categories": [
-        "endgame"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/2/2e/IconPerks_adrenaline.png"
+      "name": "Dark Sense",
+      "character": "General",
+      "iconUrl": null
     },
     {
       "id": "sp_002",
-      "name": "Sprint Burst",
-      "character": "Meg Thomas",
-      "categories": [
-        "chase"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/8/8e/IconPerks_sprintBurst.png"
+      "name": "Deja Vu",
+      "character": "General",
+      "iconUrl": null
     },
     {
       "id": "sp_003",
-      "name": "Quick & Quiet",
-      "character": "Meg Thomas",
-      "categories": [
-        "stealth"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/8/8d/IconPerks_quickAndQuiet.png"
+      "name": "Hope",
+      "character": "General",
+      "iconUrl": null
     },
     {
       "id": "sp_004",
-      "name": "Self-Care",
-      "character": "Claudette Morel",
-      "categories": [
-        "healing"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/5/53/IconPerks_selfCare.png"
+      "name": "Kindred",
+      "character": "General",
+      "iconUrl": null
     },
     {
       "id": "sp_005",
-      "name": "Empathy",
-      "character": "Claudette Morel",
-      "categories": [
-        "awareness"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/9/96/IconPerks_empathy.png"
+      "name": "Lightweight",
+      "character": "General",
+      "iconUrl": null
     },
     {
       "id": "sp_006",
-      "name": "Botany Knowledge",
-      "character": "Claudette Morel",
-      "categories": [
-        "healing"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/0/07/IconPerks_botanyKnowledge.png"
+      "name": "No One Left Behind",
+      "character": "General",
+      "iconUrl": null
     },
     {
       "id": "sp_007",
-      "name": "Bond",
-      "character": "Dwight Fairfield",
-      "categories": [
-        "awareness"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/c/c3/IconPerks_bond.png"
+      "name": "Plunderer's Instinct",
+      "character": "General",
+      "iconUrl": null
     },
     {
       "id": "sp_008",
-      "name": "Prove Thyself",
-      "character": "Dwight Fairfield",
-      "categories": [
-        "generator"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/5/58/IconPerks_proveThyself.png"
+      "name": "Premonition",
+      "character": "General",
+      "iconUrl": null
     },
     {
       "id": "sp_009",
-      "name": "Leader",
-      "character": "Dwight Fairfield",
-      "categories": [
-        "support"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/3/3c/IconPerks_leader.png"
+      "name": "Resilience",
+      "character": "General",
+      "iconUrl": null
     },
     {
       "id": "sp_010",
-      "name": "Iron Will",
-      "character": "Jake Park",
-      "categories": [
-        "stealth"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/7/77/IconPerks_ironWill.png"
+      "name": "Slippery Meat",
+      "character": "General",
+      "iconUrl": null
     },
     {
       "id": "sp_011",
-      "name": "Saboteur",
-      "character": "Jake Park",
-      "categories": [
-        "utility"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/a/ab/IconPerks_saboteur.png"
+      "name": "Small Game",
+      "character": "General",
+      "iconUrl": null
     },
     {
       "id": "sp_012",
-      "name": "Urban Evasion",
-      "character": "Nea Karlsson",
-      "categories": [
-        "stealth"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/5/51/IconPerks_urbanEvasion.png"
+      "name": "Spine Chill",
+      "character": "General",
+      "iconUrl": null
     },
     {
       "id": "sp_013",
-      "name": "Balanced Landing",
-      "character": "Nea Karlsson",
-      "categories": [
-        "chase"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/1/1d/IconPerks_balancedLanding.png"
+      "name": "This Is Not Happening",
+      "character": "General",
+      "iconUrl": null
     },
     {
       "id": "sp_014",
-      "name": "Streetwise",
-      "character": "Nea Karlsson",
-      "categories": [
-        "utility"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/4/48/IconPerks_streetwise.png"
+      "name": "We'll Make It",
+      "character": "General",
+      "iconUrl": null
     },
     {
       "id": "sp_015",
-      "name": "Decisive Strike",
-      "character": "Laurie Strode",
-      "categories": [
-        "anti-grab"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/b/b2/IconPerks_decisiveStrike.png"
+      "name": "Bond",
+      "character": "Dwight Fairfield",
+      "iconUrl": null
     },
     {
       "id": "sp_016",
-      "name": "Sole Survivor",
-      "character": "Laurie Strode",
-      "categories": [
-        "endgame"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/b/b5/IconPerks_soleSurvivor.png"
+      "name": "Leader",
+      "character": "Dwight Fairfield",
+      "iconUrl": null
     },
     {
       "id": "sp_017",
-      "name": "Object of Obsession",
-      "character": "Laurie Strode",
-      "categories": [
-        "awareness"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/0/0b/IconPerks_objectOfObsession.png"
+      "name": "Prove Thyself",
+      "character": "Dwight Fairfield",
+      "iconUrl": null
     },
     {
       "id": "sp_018",
-      "name": "Borrowed Time",
-      "character": "Bill Overbeck",
-      "categories": [
-        "support"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/b/b8/IconPerks_borrowedTime.png"
+      "name": "Adrenaline",
+      "character": "Meg Thomas",
+      "iconUrl": null
     },
     {
       "id": "sp_019",
-      "name": "Unbreakable",
-      "character": "Bill Overbeck",
-      "categories": [
-        "utility"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/9/9d/IconPerks_unbreakable.png"
+      "name": "Quick & Quiet",
+      "character": "Meg Thomas",
+      "iconUrl": null
     },
     {
       "id": "sp_020",
-      "name": "Left Behind",
-      "character": "Bill Overbeck",
-      "categories": [
-        "endgame"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/2/2b/IconPerks_leftBehind.png"
+      "name": "Sprint Burst",
+      "character": "Meg Thomas",
+      "iconUrl": null
     },
     {
       "id": "sp_021",
-      "name": "Lithe",
-      "character": "Feng Min",
-      "categories": [
-        "chase"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/7/73/IconPerks_lithe.png"
+      "name": "Botany Knowledge",
+      "character": "Claudette Morel",
+      "iconUrl": null
     },
     {
       "id": "sp_022",
-      "name": "Alert",
-      "character": "Feng Min",
-      "categories": [
-        "awareness"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/2/23/IconPerks_alert.png"
+      "name": "Empathy",
+      "character": "Claudette Morel",
+      "iconUrl": null
     },
     {
       "id": "sp_023",
-      "name": "Technician",
-      "character": "Feng Min",
-      "categories": [
-        "generator"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/9/94/IconPerks_technician.png"
+      "name": "Self-Care",
+      "character": "Claudette Morel",
+      "iconUrl": null
     },
     {
       "id": "sp_024",
       "name": "Calm Spirit",
       "character": "Jake Park",
-      "categories": [
-        "stealth"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/7/75/IconPerks_calmSpirit.png"
+      "iconUrl": null
     },
     {
       "id": "sp_025",
-      "name": "Windows of Opportunity",
-      "character": "Kate Denson",
-      "categories": [
-        "chase"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/d/db/IconPerks_windowsOfOpportunity.png"
+      "name": "Iron Will",
+      "character": "Jake Park",
+      "iconUrl": null
     },
     {
       "id": "sp_026",
-      "name": "Dance With Me",
-      "character": "Kate Denson",
-      "categories": [
-        "stealth"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/9/9e/IconPerks_danceWithMe.png"
+      "name": "Saboteur",
+      "character": "Jake Park",
+      "iconUrl": null
     },
     {
       "id": "sp_027",
-      "name": "Boil Over",
-      "character": "Kate Denson",
-      "categories": [
-        "anti-grab"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/5/5b/IconPerks_boilOver.png"
+      "name": "Balanced Landing",
+      "character": "Nea Karlsson",
+      "iconUrl": null
     },
     {
       "id": "sp_028",
-      "name": "We're Gonna Live Forever",
-      "character": "David King",
-      "categories": [
-        "support"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/c/c2/IconPerks_we%27reGonnaLiveForever.png"
+      "name": "Urban Evasion",
+      "character": "Nea Karlsson",
+      "iconUrl": null
     },
     {
       "id": "sp_029",
-      "name": "Dead Hard",
-      "character": "David King",
-      "categories": [
-        "chase"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/5/52/IconPerks_deadHard.png"
+      "name": "Streetwise",
+      "character": "Nea Karlsson",
+      "iconUrl": null
     },
     {
       "id": "sp_030",
-      "name": "No Mither",
-      "character": "David King",
-      "categories": [
-        "utility"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/5/5e/IconPerks_noMither.png"
+      "name": "Borrowed Time",
+      "character": "William Bill Overbeck",
+      "iconUrl": null
     },
     {
       "id": "sp_031",
-      "name": "Kindred",
-      "character": "General",
-      "categories": [
-        "awareness"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/6/65/IconPerks_kindred.png"
+      "name": "Unbreakable",
+      "character": "William Bill Overbeck",
+      "iconUrl": null
     },
     {
       "id": "sp_032",
-      "name": "Resilience",
-      "character": "General",
-      "categories": [
-        "utility"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/6/6a/IconPerks_resilience.png"
+      "name": "Left Behind",
+      "character": "William Bill Overbeck",
+      "iconUrl": null
     },
     {
       "id": "sp_033",
-      "name": "Spine Chill",
-      "character": "General",
-      "categories": [
-        "awareness"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/1/18/IconPerks_spineChill.png"
+      "name": "Sole Survivor",
+      "character": "Laurie Strode",
+      "iconUrl": null
     },
     {
       "id": "sp_034",
-      "name": "We'll Make It",
-      "character": "General",
-      "categories": [
-        "healing"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/a/a4/IconPerks_we%27llMakeIt.png"
+      "name": "Decisive Strike",
+      "character": "Laurie Strode",
+      "iconUrl": null
     },
     {
       "id": "sp_035",
-      "name": "Plunderer's Instinct",
-      "character": "General",
-      "categories": [
-        "utility"
-      ],
+      "name": "Object of Obsession",
+      "character": "Laurie Strode",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_036",
+      "name": "Ace in the Hole",
+      "character": "Ace Visconti",
       "iconUrl": null
     },
     {
       "id": "sp_037",
-      "name": "Slippery Meat",
-      "character": "General",
-      "categories": [
-        "utility"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/0/07/IconPerks_slipperyMeat.png"
+      "name": "Open-Handed",
+      "character": "Ace Visconti",
+      "iconUrl": null
     },
     {
       "id": "sp_038",
-      "name": "Vigil",
-      "character": "Quentin Smith",
-      "categories": [
-        "utility"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/3/30/IconPerks_vigil.png"
+      "name": "Up the Ante",
+      "character": "Ace Visconti",
+      "iconUrl": null
     },
     {
       "id": "sp_039",
-      "name": "Wake Up!",
-      "character": "Quentin Smith",
-      "categories": [
-        "endgame"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/a/a4/IconPerks_wakeUp.png"
+      "name": "Technician",
+      "character": "Feng Min",
+      "iconUrl": null
     },
     {
       "id": "sp_040",
-      "name": "Pharmacy",
-      "character": "Quentin Smith",
-      "categories": [
-        "utility"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/3/3e/IconPerks_pharmacy.png"
+      "name": "Lithe",
+      "character": "Feng Min",
+      "iconUrl": null
     },
     {
       "id": "sp_041",
-      "name": "Stake Out",
-      "character": "David Tapp",
-      "categories": [
-        "generator"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/1/13/IconPerks_stakeOut.png"
+      "name": "Alert",
+      "character": "Feng Min",
+      "iconUrl": null
     },
     {
       "id": "sp_042",
-      "name": "Tenacity",
-      "character": "David Tapp",
-      "categories": [
-        "utility"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/d/d8/IconPerks_tenacity.png"
+      "name": "Dead Hard",
+      "character": "David King",
+      "iconUrl": null
     },
     {
       "id": "sp_043",
-      "name": "Detective's Hunch",
-      "character": "David Tapp",
-      "categories": [
-        "awareness"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/2/25/IconPerks_detective%27sHunch.png"
+      "name": "No Mither",
+      "character": "David King",
+      "iconUrl": null
     },
     {
       "id": "sp_044",
-      "name": "Head On",
-      "character": "Jane Romero",
-      "categories": [
-        "chase"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/2/27/IconPerks_headOn.png"
+      "name": "We're Gonna Live Forever",
+      "character": "David King",
+      "iconUrl": null
     },
     {
       "id": "sp_045",
-      "name": "Solidarity",
-      "character": "Jane Romero",
-      "categories": [
-        "healing"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/4/4b/IconPerks_solidarity.png"
+      "name": "Pharmacy",
+      "character": "Quentin Smith",
+      "iconUrl": null
     },
     {
       "id": "sp_046",
-      "name": "Reassurance",
-      "character": "Jane Romero",
-      "categories": [
-        "support"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/5/53/IconPerks_reassurance.png"
+      "name": "Vigil",
+      "character": "Quentin Smith",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_047",
+      "name": "Wake Up!",
+      "character": "Quentin Smith",
+      "iconUrl": null
     },
     {
       "id": "sp_048",
-      "name": "Inner Healing",
-      "character": "Nancy Wheeler",
-      "categories": [
-        "healing"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/3/34/IconPerks_innerStrength.png"
+      "name": "Tenacity",
+      "character": "Detective Tapp",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_049",
+      "name": "Detective's Hunch",
+      "character": "Detective Tapp",
+      "iconUrl": null
     },
     {
       "id": "sp_050",
-      "name": "Aftercare",
-      "character": "Jeff Johansen",
-      "categories": [
-        "awareness"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/a/a5/IconPerks_aftercare.png"
+      "name": "Stake Out",
+      "character": "Detective Tapp",
+      "iconUrl": null
     },
     {
       "id": "sp_051",
-      "name": "Distortion",
-      "character": "Jeff Johansen",
-      "categories": [
-        "stealth"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/d/d7/IconPerks_distortion.png"
+      "name": "Windows of Opportunity",
+      "character": "Kate Denson",
+      "iconUrl": null
     },
     {
       "id": "sp_052",
-      "name": "Breakdown",
-      "character": "Jeff Johansen",
-      "categories": [
-        "utility"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/0/05/IconPerks_breakdown.png"
+      "name": "Boil Over",
+      "character": "Kate Denson",
+      "iconUrl": null
     },
     {
       "id": "sp_053",
-      "name": "Lucky Break",
-      "character": "Yui Kimura",
-      "categories": [
-        "stealth"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/b/b3/IconPerks_luckyBreak.png"
+      "name": "Dance With Me",
+      "character": "Kate Denson",
+      "iconUrl": null
     },
     {
       "id": "sp_054",
-      "name": "Any Means Necessary",
-      "character": "Yui Kimura",
-      "categories": [
-        "chase"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/0/07/IconPerks_anyMeansNecessary.png"
+      "name": "Diversion",
+      "character": "Adam Francis",
+      "iconUrl": null
     },
     {
       "id": "sp_055",
-      "name": "Breakout",
-      "character": "Yui Kimura",
-      "categories": [
-        "support"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/e/e0/IconPerks_breakout.png"
+      "name": "Deliverance",
+      "character": "Adam Francis",
+      "iconUrl": null
     },
     {
       "id": "sp_056",
-      "name": "For the People",
-      "character": "Zarina Kassir",
-      "categories": [
-        "support"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/2/2e/IconPerks_forThePeople.png"
+      "name": "Autodidact",
+      "character": "Adam Francis",
+      "iconUrl": null
     },
     {
       "id": "sp_057",
-      "name": "Off the Record",
-      "character": "Zarina Kassir",
-      "categories": [
-        "anti-grab"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/e/e3/IconPerks_offTheRecord.png"
+      "name": "Breakdown",
+      "character": "Jeff Johansen",
+      "iconUrl": null
     },
     {
       "id": "sp_058",
-      "name": "Deception",
-      "character": "Zarina Kassir",
-      "categories": [
-        "stealth"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/4/45/IconPerks_deception.png"
+      "name": "Aftercare",
+      "character": "Jeff Johansen",
+      "iconUrl": null
     },
     {
       "id": "sp_059",
-      "name": "Mettle of Man",
-      "character": "Ash Williams",
-      "categories": [
-        "utility"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/8/84/IconPerks_mettleOfMan.png"
+      "name": "Distortion",
+      "character": "Jeff Johansen",
+      "iconUrl": null
     },
     {
       "id": "sp_060",
-      "name": "Buckle Up",
-      "character": "Ash Williams",
-      "categories": [
-        "support"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/6/61/IconPerks_buckleUp.png"
+      "name": "Solidarity",
+      "character": "Jane Romero",
+      "iconUrl": null
     },
     {
       "id": "sp_061",
-      "name": "Flip-Flop",
-      "character": "Ash Williams",
-      "categories": [
-        "anti-grab"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/0/0c/IconPerks_flipFlop.png"
+      "name": "Poised",
+      "character": "Jane Romero",
+      "iconUrl": null
     },
     {
       "id": "sp_062",
-      "name": "Boon: Circle of Healing",
-      "character": "Mikaela Reid",
-      "categories": [
-        "healing"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/d/da/IconPerks_boonCircleOfHealing.png"
+      "name": "Head on",
+      "character": "Jane Romero",
+      "iconUrl": null
     },
     {
       "id": "sp_063",
-      "name": "Boon: Shadow Step",
-      "character": "Mikaela Reid",
-      "categories": [
-        "stealth"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/f/f3/IconPerks_boonShadowStep.png"
+      "name": "Flip-Flop",
+      "character": "Ashley J.Williams",
+      "iconUrl": null
     },
     {
       "id": "sp_064",
-      "name": "Clairvoyance",
-      "character": "Mikaela Reid",
-      "categories": [
-        "awareness"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/4/48/IconPerks_clairvoyance.png"
+      "name": "Buckle Up",
+      "character": "Ashley J.Williams",
+      "iconUrl": null
     },
     {
       "id": "sp_065",
-      "name": "Repressed Alliance",
-      "character": "Cheryl Mason",
-      "categories": [
-        "generator"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/7/73/IconPerks_repressedAlliance.png"
+      "name": "Mettle of Man",
+      "character": "Ashley J.Williams",
+      "iconUrl": null
     },
     {
       "id": "sp_066",
-      "name": "Blood Pact",
-      "character": "Cheryl Mason",
-      "categories": [
-        "support"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/9/9b/IconPerks_bloodPact.png"
+      "name": "Better Together",
+      "character": "Nancy Wheeler",
+      "iconUrl": null
     },
     {
       "id": "sp_067",
-      "name": "Counterforce",
-      "character": "Cheryl Mason",
-      "categories": [
-        "utility"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/c/c7/IconPerks_counterforce.png"
+      "name": "Fixated",
+      "character": "Nancy Wheeler",
+      "iconUrl": null
     },
     {
       "id": "sp_068",
-      "name": "Flashbang",
-      "character": "Leon S. Kennedy",
-      "categories": [
-        "utility"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/c/c1/IconPerks_flashbang.png"
+      "name": "Inner Strenght",
+      "character": "Nancy Wheeler",
+      "iconUrl": null
     },
     {
       "id": "sp_069",
-      "name": "Rookie Spirit",
-      "character": "Leon S. Kennedy",
-      "categories": [
-        "generator"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/a/a3/IconPerks_rookieSpirit.png"
+      "name": "Babysitter",
+      "character": "Steve Harrington",
+      "iconUrl": null
     },
     {
       "id": "sp_070",
-      "name": "Bite the Bullet",
-      "character": "Leon S. Kennedy",
-      "categories": [
-        "stealth"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/1/1b/IconPerks_biteTheBullet.png"
+      "name": "Camaraderie",
+      "character": "Steve Harrington",
+      "iconUrl": null
     },
     {
       "id": "sp_071",
-      "name": "Chemical Trap",
-      "character": "Haddie Kaur",
-      "categories": [
-        "utility"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/c/c6/IconPerks_chemicalTrap.png"
+      "name": "Second Wind",
+      "character": "Steve Harrington",
+      "iconUrl": null
     },
     {
       "id": "sp_072",
-      "name": "Residual Manifest",
-      "character": "Haddie Kaur",
-      "categories": [
-        "utility"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/7/7c/IconPerks_residualManifest.png"
+      "name": "Lucky Break",
+      "character": "Yui Kimura",
+      "iconUrl": null
     },
     {
       "id": "sp_073",
-      "name": "Inner Focus",
-      "character": "Haddie Kaur",
-      "categories": [
-        "awareness"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/1/14/IconPerks_innerFocus.png"
+      "name": "Any Means Necessary",
+      "character": "Yui Kimura",
+      "iconUrl": null
     },
     {
       "id": "sp_074",
-      "name": "Overcome",
-      "character": "Jonah Vasquez",
-      "categories": [
-        "chase"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/6/68/IconPerks_overcome.png"
+      "name": "Breakout",
+      "character": "Yui Kimura",
+      "iconUrl": null
     },
     {
       "id": "sp_075",
-      "name": "Corrective Action",
-      "character": "Jonah Vasquez",
-      "categories": [
-        "generator"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/5/52/IconPerks_correctiveAction.png"
+      "name": "Off the Record",
+      "character": "Zarina Kassir",
+      "iconUrl": null
     },
     {
       "id": "sp_076",
-      "name": "Scavenger",
-      "character": "Jonah Vasquez",
-      "categories": [
-        "utility"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/e/e5/IconPerks_scavenger.png"
+      "name": "Red Herring",
+      "character": "Zarina Kassir",
+      "iconUrl": null
     },
     {
       "id": "sp_077",
-      "name": "Boon: Exponential",
-      "character": "Jill Valentine",
-      "categories": [
-        "support"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/6/67/IconPerks_boonExponential.png"
+      "name": "For the People",
+      "character": "Zarina Kassir",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_078",
+      "name": "Soul Guard",
+      "character": "Cheryl Mason",
+      "iconUrl": null
     },
     {
       "id": "sp_079",
-      "name": "Blast Mine",
-      "character": "Jill Valentine",
-      "categories": [
-        "generator"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/a/ae/IconPerks_blastMine.png"
+      "name": "Blood Pact",
+      "character": "Cheryl Mason",
+      "iconUrl": null
     },
     {
       "id": "sp_080",
-      "name": "Deliverance",
-      "character": "Adam Francis",
-      "categories": [
-        "utility"
-      ],
+      "name": "Repressed Alliance",
+      "character": "Cheryl Mason",
       "iconUrl": null
     },
     {
       "id": "sp_081",
-      "name": "Power Struggle",
-      "character": "Elodie Rakoto",
-      "categories": [
-        "anti-grab"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/2/24/IconPerks_powerStruggle.png"
+      "name": "Visionary",
+      "character": "Felix Richter",
+      "iconUrl": null
     },
     {
       "id": "sp_082",
-      "name": "Appraisal",
-      "character": "Elodie Rakoto",
-      "categories": [
-        "utility"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/3/35/IconPerks_appraisal.png"
+      "name": "Desperate Measures",
+      "character": "Felix Richter",
+      "iconUrl": null
     },
     {
       "id": "sp_083",
-      "name": "Boon: Dark Theory",
-      "character": "Yoichi Asakawa",
-      "categories": [
-        "support"
-      ],
+      "name": "Build to Last",
+      "character": "Felix Richter",
       "iconUrl": null
     },
     {
       "id": "sp_084",
-      "name": "Parentage",
-      "character": "Yoichi Asakawa",
-      "categories": [
-        "stealth"
-      ],
+      "name": "Appraisal",
+      "character": "Elodie Rakoto",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_085",
+      "name": "Deception",
+      "character": "Elodie Rakoto",
       "iconUrl": null
     },
     {
       "id": "sp_086",
-      "name": "Plot Twist",
-      "character": "Nicolas Cage",
-      "categories": [
-        "utility"
-      ],
+      "name": "Power Struggle",
+      "character": "Elodie Rakoto",
       "iconUrl": null
     },
     {
       "id": "sp_087",
-      "name": "Scene Partner",
-      "character": "Nicolas Cage",
-      "categories": [
-        "awareness"
-      ],
+      "name": "Fast Track",
+      "character": "Lee Yun-Jin",
       "iconUrl": null
     },
     {
       "id": "sp_088",
-      "name": "Dramaturgy",
-      "character": "Nicolas Cage",
-      "categories": [
-        "chase"
-      ],
+      "name": "Smash Hit",
+      "character": "Lee Yun-Jin",
       "iconUrl": null
     },
     {
       "id": "sp_089",
-      "name": "Fast Track",
-      "character": "Vittorio Toscano",
-      "categories": [
-        "generator"
-      ],
+      "name": "Self-Preservation",
+      "character": "Lee Yun-Jin",
       "iconUrl": null
     },
     {
       "id": "sp_090",
-      "name": "Fogwise",
-      "character": "Vittorio Toscano",
-      "categories": [
-        "awareness"
-      ],
+      "name": "Counterforce",
+      "character": "Jill Valentine",
       "iconUrl": null
     },
     {
       "id": "sp_091",
-      "name": "Potential Energy",
-      "character": "Vittorio Toscano",
-      "categories": [
-        "generator"
-      ],
+      "name": "Resurgence",
+      "character": "Jill Valentine",
       "iconUrl": null
     },
     {
       "id": "sp_092",
-      "name": "Wicked",
-      "character": "Sable Ward",
-      "categories": [
-        "utility"
-      ],
+      "name": "Blast Mine",
+      "character": "Jill Valentine",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_093",
+      "name": "Bite the Bullet",
+      "character": "Leon S.Kennedy",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_094",
+      "name": "FlashBang",
+      "character": "Leon S.Kennedy",
       "iconUrl": null
     },
     {
       "id": "sp_095",
-      "name": "Finesse",
-      "character": "Lara Croft",
-      "categories": [
-        "chase"
-      ],
+      "name": "Rookie Spirit",
+      "character": "Leon S.Kennedy",
       "iconUrl": null
     },
     {
       "id": "sp_096",
-      "name": "Bardic Inspiration",
-      "character": "Aestri Yazar",
-      "categories": [
-        "generator"
-      ],
+      "name": "Clairvoyance",
+      "character": "Mikaela Reid",
       "iconUrl": null
     },
     {
       "id": "sp_097",
-      "name": "Guardian",
-      "character": "Steve Harrington",
-      "categories": [
-        "awareness"
-      ],
+      "name": "Boon: Circle of Healing",
+      "character": "Mikaela Reid",
       "iconUrl": null
     },
     {
       "id": "sp_098",
-      "name": "Strength in Shadows",
-      "character": "Sable Ward",
-      "categories": [
-        "healing"
-      ],
+      "name": "Boon: Shadow Step",
+      "character": "Mikaela Reid",
       "iconUrl": null
     },
     {
       "id": "sp_099",
-      "name": "Friendly Competition",
-      "character": "Sable Ward",
-      "categories": [
-        "generator"
-      ],
+      "name": "Overcome",
+      "character": "Jonah Vasquez",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_100",
+      "name": "Corrective Action",
+      "character": "Jonah Vasquez",
       "iconUrl": null
     },
     {
       "id": "sp_101",
-      "name": "Ace in the Hole",
-      "character": "Ace Visconti",
-      "categories": [
-        "utility"
-      ],
+      "name": "Boon: Exponential",
+      "character": "Jonah Vasquez",
       "iconUrl": null
     },
     {
       "id": "sp_102",
-      "name": "Open-Handed",
-      "character": "Ace Visconti",
-      "categories": [
-        "support"
-      ],
+      "name": "Parental Guidance",
+      "character": "Yoichi Asakawa",
       "iconUrl": null
     },
     {
       "id": "sp_103",
-      "name": "Up the Ante",
-      "character": "Ace Visconti",
-      "categories": [
-        "utility"
-      ],
+      "name": "Empathic Connection",
+      "character": "Yoichi Asakawa",
       "iconUrl": null
     },
     {
       "id": "sp_104",
-      "name": "Babysitter",
-      "character": "Steve Harrington",
-      "categories": [
-        "support"
-      ],
+      "name": "Boon: Dark Theory",
+      "character": "Yoichi Asakawa",
       "iconUrl": null
     },
     {
       "id": "sp_105",
-      "name": "Built to Last",
-      "character": "Steve Harrington",
-      "categories": [
-        "utility"
-      ],
+      "name": "Inner Focus",
+      "character": "Haddie Kaur",
       "iconUrl": null
     },
     {
       "id": "sp_106",
-      "name": "Diversion",
-      "character": "Adam Francis",
-      "categories": [
-        "stealth"
-      ],
+      "name": "Residual Manifest",
+      "character": "Haddie Kaur",
       "iconUrl": null
     },
     {
       "id": "sp_107",
-      "name": "Hope",
-      "character": "General",
-      "categories": [
-        "endgame"
-      ],
+      "name": "Overzealous",
+      "character": "Haddie Kaur",
       "iconUrl": null
     },
     {
       "id": "sp_108",
-      "name": "Lightweight",
-      "character": "General",
-      "categories": [
-        "stealth"
-      ],
+      "name": "Wiretap",
+      "character": "Ada Wong",
       "iconUrl": null
     },
     {
       "id": "sp_109",
-      "name": "No One Left Behind",
-      "character": "General",
-      "categories": [
-        "support"
-      ],
+      "name": "Reactive Healing",
+      "character": "Ada Wong",
       "iconUrl": null
     },
     {
       "id": "sp_110",
-      "name": "Premonition",
-      "character": "General",
-      "categories": [
-        "awareness"
-      ],
+      "name": "Low Profile",
+      "character": "Ada Wong",
       "iconUrl": null
     },
     {
       "id": "sp_111",
-      "name": "Small Game",
-      "character": "General",
-      "categories": [
-        "utility"
-      ],
+      "name": "Better Than New",
+      "character": "Rebecca Chambers",
       "iconUrl": null
     },
     {
       "id": "sp_112",
-      "name": "Made for This",
-      "character": "Gabriel Soma",
-      "categories": [
-        "chase"
-      ],
+      "name": "Reassurance",
+      "character": "Rebecca Chambers",
       "iconUrl": null
     },
     {
       "id": "sp_113",
-      "name": "Visionary",
-      "character": "Gabriel Soma",
-      "categories": [
-        "generator"
-      ],
+      "name": "Hyperfocus",
+      "character": "Rebecca Chambers",
       "iconUrl": null
     },
     {
       "id": "sp_114",
-      "name": "Dark Sense",
-      "character": "Gabriel Soma",
-      "categories": [
-        "awareness"
-      ],
+      "name": "Potential Energy",
+      "character": "Vittorio Toscano",
       "iconUrl": null
     },
     {
       "id": "sp_115",
-      "name": "Background Player",
-      "character": "General",
-      "categories": [
-        "support"
-      ],
+      "name": "Fogwise",
+      "character": "Vittorio Toscano",
       "iconUrl": null
     },
     {
       "id": "sp_116",
-      "name": "Better Than New",
-      "character": "General",
-      "categories": [
-        "support"
-      ],
+      "name": "Quick Gambit",
+      "character": "Vittorio Toscano",
       "iconUrl": null
     },
     {
       "id": "sp_117",
-      "name": "Better Together",
-      "character": "Rebecca Chambers",
-      "categories": [
-        "generator"
-      ],
+      "name": "Cut Loose",
+      "character": "Thalita Lyra",
       "iconUrl": null
     },
     {
       "id": "sp_118",
-      "name": "Desperate Measures",
-      "character": "Rebecca Chambers",
-      "categories": [
-        "healing"
-      ],
+      "name": "Friendly Competition",
+      "character": "Thalita Lyra",
       "iconUrl": null
     },
     {
       "id": "sp_119",
-      "name": "Boon: Illumination",
-      "character": "Alan Wake",
-      "categories": [
-        "awareness"
-      ],
+      "name": "Teamwork: Power of Two",
+      "character": "Thalita Lyra",
       "iconUrl": null
     },
     {
       "id": "sp_120",
-      "name": "Mirrored Illusion",
-      "character": "Alan Wake",
-      "categories": [
-        "stealth"
-      ],
+      "name": "Background Player",
+      "character": "Renato Lyra",
       "iconUrl": null
     },
     {
       "id": "sp_121",
-      "name": "Cut Loose",
-      "character": "General",
-      "categories": [
-        "chase"
-      ],
+      "name": "Blood Rush",
+      "character": "Renato Lyra",
       "iconUrl": null
     },
     {
       "id": "sp_122",
-      "name": "Empathic Connection",
-      "character": "General",
-      "categories": [
-        "healing"
-      ],
+      "name": "Teamwork: Collcetive Stealth",
+      "character": "Renato Lyra",
       "iconUrl": null
     },
     {
       "id": "sp_123",
-      "name": "Ferrum Fortis",
-      "character": "General",
-      "categories": [
-        "utility"
-      ],
+      "name": "Troubleshooter",
+      "character": "Gabriel Soma",
       "iconUrl": null
     },
     {
       "id": "sp_124",
-      "name": "Flow State",
-      "character": "General",
-      "categories": [
-        "generator"
-      ],
+      "name": "Made for This",
+      "character": "Gabriel Soma",
       "iconUrl": null
     },
     {
       "id": "sp_125",
-      "name": "Five Moves Ahead",
-      "character": "General",
-      "categories": [
-        "awareness"
-      ],
+      "name": "Scavenger",
+      "character": "Gabriel Soma",
       "iconUrl": null
     },
     {
       "id": "sp_126",
-      "name": "Hyperfocus",
-      "character": "General",
-      "categories": [
-        "generator"
-      ],
+      "name": "Dramaturgy",
+      "character": "Nicolas Cage",
       "iconUrl": null
     },
     {
       "id": "sp_127",
-      "name": "Low Profile",
-      "character": "General",
-      "categories": [
-        "stealth"
-      ],
+      "name": "Scene Partner",
+      "character": "Nicolas Cage",
       "iconUrl": null
     },
     {
       "id": "sp_128",
-      "name": "Lucky Star",
-      "character": "General",
-      "categories": [
-        "stealth"
-      ],
+      "name": "Plot Twist",
+      "character": "Nicolas Cage",
       "iconUrl": null
     },
     {
       "id": "sp_129",
-      "name": "Reactive Healing",
-      "character": "General",
-      "categories": [
-        "healing"
-      ],
+      "name": "Lucky Star",
+      "character": "Ellen Ripley",
       "iconUrl": null
     },
     {
       "id": "sp_130",
-      "name": "Red Herring",
-      "character": "General",
-      "categories": [
-        "stealth"
-      ],
+      "name": "Chemical Trap",
+      "character": "Ellen Ripley",
       "iconUrl": null
     },
     {
       "id": "sp_131",
-      "name": "Self-Preservation",
-      "character": "General",
-      "categories": [
-        "stealth"
-      ],
+      "name": "Light-Footed",
+      "character": "Ellen Ripley",
       "iconUrl": null
     },
     {
       "id": "sp_132",
-      "name": "Smash Hit",
-      "character": "General",
-      "categories": [
-        "chase"
-      ],
+      "name": "Champion of Light",
+      "character": "Alan Wake",
       "iconUrl": null
     },
     {
       "id": "sp_133",
-      "name": "Soul Guard",
-      "character": "General",
-      "categories": [
-        "healing"
-      ],
+      "name": "Boon: Illumination",
+      "character": "Alan Wake",
       "iconUrl": null
     },
     {
       "id": "sp_134",
-      "name": "Still Sight",
-      "character": "General",
-      "categories": [
-        "awareness"
-      ],
+      "name": "Deadline",
+      "character": "Alan Wake",
       "iconUrl": null
     },
     {
       "id": "sp_135",
-      "name": "This Is Not Happening",
-      "character": "General",
-      "categories": [
-        "utility"
-      ],
+      "name": "Wicked",
+      "character": "Sable Ward",
       "iconUrl": null
     },
     {
       "id": "sp_136",
-      "name": "Troubleshooter",
-      "character": "General",
-      "categories": [
-        "generator"
-      ],
+      "name": "Strength in Shadows",
+      "character": "Sable Ward",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_137",
+      "name": "Invocation: Weaving Spiders",
+      "character": "Sable Ward",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_138",
+      "name": "Mirrored Illusion",
+      "character": "Aestri Yazar",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_139",
+      "name": "Bardic Inspiration",
+      "character": "Aestri Yazar",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_140",
+      "name": "Still Sight",
+      "character": "Aestri Yazar",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_141",
+      "name": "Finesse",
+      "character": "Lara Croft",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_142",
+      "name": "Hardened",
+      "character": "Lara Croft",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_143",
+      "name": "Specialist",
+      "character": "Lara Croft",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_144",
+      "name": "Eyes of Belmont",
+      "character": "Trevor Belmont",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_145",
+      "name": "Exultation",
+      "character": "Trevor Belmont",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_146",
+      "name": "Moment of Glory",
+      "character": "Trevor Belmont",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_147",
+      "name": "Invocation: Treacherous Crows",
+      "character": "Taurie Cain",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_148",
+      "name": "Clean Break",
+      "character": "Taurie Cain",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_149",
+      "name": "Shoulder the Burden",
+      "character": "Taurie Cain",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_150",
+      "name": "Do No Harm",
+      "character": "Orela Rose",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_151",
+      "name": "Duty of Care",
+      "character": "Orela Rose",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_152",
+      "name": "Rapid Response",
+      "character": "Orela Rose",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_153",
+      "name": "Apocalyptic Ingenuity",
+      "character": "Rick Grimes",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_154",
+      "name": "Come and Get Me!",
+      "character": "Rick Grimes",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_155",
+      "name": "Teamwork: Toughen Up",
+      "character": "Rick Grimes",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_156",
+      "name": "Conviction",
+      "character": "Michonne Grimes",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_157",
+      "name": "Last Stand",
+      "character": "Michonne Grimes",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_158",
+      "name": "Teamwork: Throw Down",
+      "character": "Michonne Grimes",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_159",
+      "name": "Road Life",
+      "character": "Vee Boonyasak",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_160",
+      "name": "One-Two-Three-Four!",
+      "character": "Vee Boonyasak",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_161",
+      "name": "Ghost Notes",
+      "character": "Vee Boonyasak",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_162",
+      "name": "Bada Bada Boom",
+      "character": "Dustin Henderson",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_163",
+      "name": "Change of Plan",
+      "character": "Dustin Henderson",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_164",
+      "name": "Teamwork: Full Circuit",
+      "character": "Dustin Henderson",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_165",
+      "name": "Extrasensory Perception",
+      "character": "Eleven",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_166",
+      "name": "We See You",
+      "character": "Eleven",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_167",
+      "name": "Teamwork: Soft-Spoken",
+      "character": "Eleven",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_168",
+      "name": "Flow State",
+      "character": "Kwon Tae-Young",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_169",
+      "name": "A Place for Us",
+      "character": "Kwon Tae-Young",
+      "iconUrl": null
+    },
+    {
+      "id": "sp_170",
+      "name": "Five Moves Ahead",
+      "character": "Kwon Tae-Young",
       "iconUrl": null
     }
   ],
   "killer_perks": [
     {
       "id": "kp_001",
-      "name": "Hex: No One Escapes Death",
+      "name": "Bitter Murmur",
       "character": "General",
-      "categories": [
-        "endgame"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/5/54/IconPerks_noOneEscapesDeath.png"
+      "iconUrl": null
     },
     {
       "id": "kp_002",
-      "name": "Pop Goes the Weasel",
-      "character": "The Clown",
-      "categories": [
-        "generator"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/6/68/IconPerks_popGoesTheWeasel.png"
+      "name": "Deerstalker",
+      "character": "General",
+      "iconUrl": null
     },
     {
       "id": "kp_003",
-      "name": "Hex: Ruin",
-      "character": "The Hag",
-      "categories": [
-        "generator"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/6/6c/IconPerks_hexRuin.png"
+      "name": "Distressing",
+      "character": "General",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_004",
+      "name": "Hex: No One Escapes Death",
+      "character": "General",
+      "iconUrl": null
     },
     {
       "id": "kp_005",
-      "name": "Corrupt Intervention",
-      "character": "The Plague",
-      "categories": [
-        "generator"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/4/42/IconPerks_corruptIntervention.png"
+      "name": "Hex: Thrill of the Hunt",
+      "character": "General",
+      "iconUrl": null
     },
     {
       "id": "kp_006",
-      "name": "Hex: Devour Hope",
-      "character": "The Hag",
-      "categories": [
-        "hex"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/8/89/IconPerks_hexDevourHope.png"
+      "name": "Insidious",
+      "character": "General",
+      "iconUrl": null
     },
     {
       "id": "kp_007",
-      "name": "Hex: Undying",
-      "character": "The Blight",
-      "categories": [
-        "hex"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/d/db/IconPerks_hexUndying.png"
+      "name": "Iron Grasp",
+      "character": "General",
+      "iconUrl": null
     },
     {
       "id": "kp_008",
-      "name": "Sloppy Butcher",
+      "name": "Scourge Hook: monstrous Shrine",
       "character": "General",
-      "categories": [
-        "anti-healing"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/b/b8/IconPerks_sloppyButcher.png"
+      "iconUrl": null
     },
     {
       "id": "kp_009",
-      "name": "Lightborn",
+      "name": "Shattered Hope",
       "character": "General",
-      "categories": [
-        "utility"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/3/34/IconPerks_lightborn.png"
+      "iconUrl": null
     },
     {
       "id": "kp_010",
-      "name": "Deadlock",
-      "character": "The Cenobite",
-      "categories": [
-        "generator"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/5/5e/IconPerks_deadlock.png"
+      "name": "Sloppy Butcher",
+      "character": "General",
+      "iconUrl": null
     },
     {
       "id": "kp_011",
-      "name": "Scourge Hook: Pain Resonance",
-      "character": "The Artist",
-      "categories": [
-        "generator"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/c/c2/IconPerks_scourgeHookPainResonance.png"
+      "name": "Spies from the Shadows",
+      "character": "General",
+      "iconUrl": null
     },
     {
       "id": "kp_012",
-      "name": "Call of Brine",
-      "character": "The Onryō",
-      "categories": [
-        "generator"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/a/a0/IconPerks_callOfBrine.png"
+      "name": "Unrelenting",
+      "character": "General",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_013",
+      "name": "Whispers",
+      "character": "General",
+      "iconUrl": null
     },
     {
       "id": "kp_014",
-      "name": "Starstruck",
-      "character": "The Trickster",
-      "categories": [
-        "chase"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/6/6a/IconPerks_starstruck.png"
+      "name": "Unnerving Presence",
+      "character": "Trapper",
+      "iconUrl": null
     },
     {
       "id": "kp_015",
-      "name": "Bamboozle",
-      "character": "The Clown",
-      "categories": [
-        "chase"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/c/c9/IconPerks_bamboozle.png"
+      "name": "Brutal Strength",
+      "character": "Trapper",
+      "iconUrl": null
     },
     {
       "id": "kp_016",
-      "name": "Monitor & Abuse",
-      "character": "The Doctor",
-      "categories": [
-        "stealth"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/7/70/IconPerks_monitorAndAbuse.png"
+      "name": "Agitation",
+      "character": "Trapper",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_017",
+      "name": "Predator",
+      "character": "Wraith",
+      "iconUrl": null
     },
     {
       "id": "kp_018",
-      "name": "Play with Your Food",
-      "character": "The Shape",
-      "categories": [
-        "chase"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/e/ee/IconPerks_playWithYourFood.png"
+      "name": "Bloodhound",
+      "character": "Wraith",
+      "iconUrl": null
     },
     {
       "id": "kp_019",
-      "name": "Agitation",
-      "character": "The Trapper",
-      "categories": [
-        "utility"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/e/e3/IconPerks_agitation.png"
+      "name": "Shadowborn",
+      "character": "Wraith",
+      "iconUrl": null
     },
     {
       "id": "kp_020",
-      "name": "Tinkerer",
-      "character": "The Hillbilly",
-      "categories": [
-        "awareness"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/5/59/IconPerks_tinkerer.png"
+      "name": "Enduring",
+      "character": "Hillbilly",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_021",
+      "name": "Lightborn",
+      "character": "Hillbilly",
+      "iconUrl": null
     },
     {
       "id": "kp_022",
-      "name": "Dragon's Grip",
-      "character": "The Blight",
-      "categories": [
-        "generator"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/e/e5/IconPerks_dragon%27sGrip.png"
+      "name": "Tinkerer",
+      "character": "Hillbilly",
+      "iconUrl": null
     },
     {
       "id": "kp_023",
-      "name": "Infectious Fright",
-      "character": "The Plague",
-      "categories": [
-        "awareness"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/e/ea/IconPerks_infectiousFright.png"
+      "name": "Stridor",
+      "character": "Nurse",
+      "iconUrl": null
     },
     {
       "id": "kp_024",
-      "name": "Thrilling Tremors",
-      "character": "The Ghost Face",
-      "categories": [
-        "generator"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/9/9a/IconPerks_thrillingTremors.png"
+      "name": "Thanatophobia",
+      "character": "Nurse",
+      "iconUrl": null
     },
     {
       "id": "kp_025",
-      "name": "Hex: Pentimento",
-      "character": "The Artist",
-      "categories": [
-        "hex"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/c/c7/IconPerks_hexPentimento.png"
+      "name": "A Nurse's Calling",
+      "character": "Nurse",
+      "iconUrl": null
     },
     {
       "id": "kp_026",
-      "name": "Grim Embrace",
-      "character": "The Artist",
-      "categories": [
-        "generator"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/a/a3/IconPerks_grimEmbrace.png"
+      "name": "Save the Best for Last",
+      "character": "The Shape",
+      "iconUrl": null
     },
     {
       "id": "kp_027",
-      "name": "Forced Penance",
-      "character": "The Executioner",
-      "categories": [
-        "anti-healing"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/4/42/IconPerks_forcedPenance.png"
+      "name": "Play with Your Food",
+      "character": "The Shape",
+      "iconUrl": null
     },
     {
       "id": "kp_028",
-      "name": "Trail of Torment",
-      "character": "The Nemesis",
-      "categories": [
-        "stealth"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/2/28/IconPerks_trailOfTorment.png"
+      "name": "Dying Light",
+      "character": "The Shape",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_029",
+      "name": "Hex: The Third Seal",
+      "character": "The Hag",
+      "iconUrl": null
     },
     {
       "id": "kp_030",
-      "name": "Scourge Hook: Floods of Rage",
-      "character": "The Onryō",
-      "categories": [
-        "awareness"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/f/f8/IconPerks_scourgeHookFloodsOfRage.png"
+      "name": "Hex: Ruin",
+      "character": "The Hag",
+      "iconUrl": null
     },
     {
       "id": "kp_031",
-      "name": "Hex: Crowd Control",
-      "character": "The Trickster",
-      "categories": [
-        "chase"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/5/5b/IconPerks_hexCrowdControl.png"
+      "name": "Hex: Devour Hope",
+      "character": "The Hag",
+      "iconUrl": null
     },
     {
       "id": "kp_032",
-      "name": "Hubris",
-      "character": "The Skull Merchant",
-      "categories": [
-        "chase"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/d/d1/IconPerks_hubris.png"
+      "name": "Overwhelming Presence",
+      "character": "The Doctor",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_033",
+      "name": "Monitor & Abuse",
+      "character": "The Doctor",
+      "iconUrl": null
     },
     {
       "id": "kp_034",
-      "name": "Whispers",
-      "character": "General",
-      "categories": [
-        "awareness"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/c/c5/IconPerks_whispers.png"
+      "name": "Overcharge",
+      "character": "The Doctor",
+      "iconUrl": null
     },
     {
       "id": "kp_035",
-      "name": "Predator",
-      "character": "General",
-      "categories": [
-        "chase"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/b/b6/IconPerks_predator.png"
+      "name": "Knock Out",
+      "character": "The Cannibal",
+      "iconUrl": null
     },
     {
       "id": "kp_036",
-      "name": "Bitter Murmur",
-      "character": "General",
-      "categories": [
-        "awareness"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/c/c1/IconPerks_bitterMurmur.png"
+      "name": "Barbecue & Chilli",
+      "character": "The Cannibal",
+      "iconUrl": null
     },
     {
       "id": "kp_037",
-      "name": "Coup de Grâce",
-      "character": "The Legion",
-      "categories": [
-        "chase"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/1/13/IconPerks_coupDeGrace.png"
+      "name": "Franklin's Demise",
+      "character": "The Cannibal",
+      "iconUrl": null
     },
     {
       "id": "kp_038",
-      "name": "Iron Maiden",
-      "character": "The Legion",
-      "categories": [
-        "chase"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/2/23/IconPerks_ironMaiden.png"
+      "name": "Beast of Prey",
+      "character": "The Huntress",
+      "iconUrl": null
     },
     {
       "id": "kp_039",
-      "name": "Hex: Face the Darkness",
-      "character": "The Cenobite",
-      "categories": [
-        "hex"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/7/7e/IconPerks_hexFaceTheDarkness.png"
+      "name": "Territorial Imperative",
+      "character": "The Huntress",
+      "iconUrl": null
     },
     {
       "id": "kp_040",
-      "name": "Territorial Imperative",
-      "character": "The Trapper",
-      "categories": [
-        "awareness"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/f/f6/IconPerks_territorialImperative.png"
+      "name": "Hex: Huntress Lullaby",
+      "character": "The Huntress",
+      "iconUrl": null
     },
     {
       "id": "kp_041",
-      "name": "Monstrous Shrine",
-      "character": "General",
-      "categories": [
-        "utility"
-      ],
-      "iconUrl": "https://static.wikia.nocookie.net/deadbydaylight_gamepedia/images/e/e1/IconPerks_monstrousShrine.png"
+      "name": "Fire Up",
+      "character": "The Nightmare",
+      "iconUrl": null
     },
     {
       "id": "kp_042",
-      "name": "Spies from the Shadows",
-      "character": "General",
-      "categories": [
-        "awareness"
-      ],
+      "name": "Remember Me",
+      "character": "The Nightmare",
       "iconUrl": null
     },
     {
       "id": "kp_043",
-      "name": "Unrelenting",
-      "character": "General",
-      "categories": [
-        "chase"
-      ],
+      "name": "Blood Warden",
+      "character": "The Nightmare",
       "iconUrl": null
     },
     {
       "id": "kp_044",
-      "name": "Deathbound",
-      "character": "The Executioner",
-      "categories": [
-        "awareness"
-      ],
+      "name": "Hangman's Trick",
+      "character": "The Pig",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_045",
+      "name": "Surveillance",
+      "character": "The Pig",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_046",
+      "name": "Make Your Choice",
+      "character": "The Pig",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_047",
+      "name": "Bamboozle",
+      "character": "The Clown",
       "iconUrl": null
     },
     {
       "id": "kp_048",
-      "name": "Dissolution",
-      "character": "The Xenomorph",
-      "categories": [
-        "chase"
-      ],
+      "name": "Coulrophobia",
+      "character": "The Clown",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_049",
+      "name": "Pop Goes the Weasel",
+      "character": "The Clown",
       "iconUrl": null
     },
     {
       "id": "kp_050",
-      "name": "Darkness Revealed",
-      "character": "The Dredge",
-      "categories": [
-        "awareness"
-      ],
+      "name": "Spirit Fury",
+      "character": "The Spirit",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_051",
+      "name": "Hex: Haunted Ground",
+      "character": "The Spirit",
       "iconUrl": null
     },
     {
       "id": "kp_052",
-      "name": "Septic Touch",
-      "character": "The Dredge",
-      "categories": [
-        "anti-healing"
-      ],
+      "name": "Rancor",
+      "character": "The Spirit",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_053",
+      "name": "Discordance",
+      "character": "The Legion",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_054",
+      "name": "Mad Grit",
+      "character": "The Legion",
       "iconUrl": null
     },
     {
       "id": "kp_055",
-      "name": "Forced Hesitation",
-      "character": "The Singularity",
-      "categories": [
-        "chase"
-      ],
+      "name": "Iron Maiden",
+      "character": "The Legion",
       "iconUrl": null
     },
     {
       "id": "kp_056",
-      "name": "Surge",
-      "character": "The Singularity",
-      "categories": [
-        "generator"
-      ],
+      "name": "Corrupt Intervention",
+      "character": "The Plague",
       "iconUrl": null
     },
     {
       "id": "kp_057",
-      "name": "Genetic Limits",
-      "character": "The Singularity",
-      "categories": [
-        "anti-healing"
-      ],
+      "name": "Infectious Fright",
+      "character": "The Plague",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_058",
+      "name": "Dark Devotion",
+      "character": "The Plague",
       "iconUrl": null
     },
     {
       "id": "kp_059",
-      "name": "Hex: Retribution",
-      "character": "The Deathslinger",
-      "categories": [
-        "hex"
-      ],
+      "name": "I'm All Ears",
+      "character": "Ghost Face",
       "iconUrl": null
     },
     {
       "id": "kp_060",
-      "name": "Dead Man's Switch",
-      "character": "The Deathslinger",
-      "categories": [
-        "generator"
-      ],
+      "name": "Thrilling Tremors",
+      "character": "Ghost Face",
       "iconUrl": null
     },
     {
       "id": "kp_061",
-      "name": "Hex: Blood Favor",
-      "character": "The Blight",
-      "categories": [
-        "hex"
-      ],
+      "name": "Furtive Chase",
+      "character": "Ghost Face",
       "iconUrl": null
     },
     {
       "id": "kp_062",
-      "name": "Scourge Hook: Gift of Pain",
-      "character": "The Nemesis",
-      "categories": [
-        "anti-healing"
-      ],
+      "name": "Surge",
+      "character": "The Demogorgon",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_063",
+      "name": "Cruel Limits",
+      "character": "The Demogorgon",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_064",
+      "name": "Mindbreaker",
+      "character": "The Demogorgon",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_065",
+      "name": "Zanshin Tactics",
+      "character": "The Oni",
       "iconUrl": null
     },
     {
       "id": "kp_066",
-      "name": "Friends 'til the End",
-      "character": "The Good Guy",
-      "categories": [
-        "awareness"
-      ],
+      "name": "Blood Echo",
+      "character": "The Oni",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_067",
+      "name": "Nemesis",
+      "character": "The Oni",
       "iconUrl": null
     },
     {
       "id": "kp_068",
-      "name": "Hangman's Trick",
-      "character": "The Good Guy",
-      "categories": [
-        "awareness"
-      ],
+      "name": "Gearhead",
+      "character": "The Deathslinger",
       "iconUrl": null
     },
     {
       "id": "kp_069",
-      "name": "Hex: Two Can Play",
-      "character": "The Houndmaster",
-      "categories": [
-        "hex"
-      ],
+      "name": "Dead Man's Switch",
+      "character": "The Deathslinger",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_070",
+      "name": "Hex: Retribution",
+      "character": "The Deathslinger",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_071",
+      "name": "Forced Penance",
+      "character": "The Executioner",
       "iconUrl": null
     },
     {
       "id": "kp_072",
-      "name": "Eruption",
-      "character": "The Nemesis",
-      "categories": [
-        "generator"
-      ],
+      "name": "Trail of Torment",
+      "character": "The Executioner",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_073",
+      "name": "Deathbound",
+      "character": "The Executioner",
       "iconUrl": null
     },
     {
       "id": "kp_074",
-      "name": "No Way Out",
-      "character": "The Trickster",
-      "categories": [
-        "endgame"
-      ],
+      "name": "Dragon's Grip",
+      "character": "The Blight",
       "iconUrl": null
     },
     {
       "id": "kp_075",
-      "name": "Hex: Plaything",
-      "character": "The Cenobite",
-      "categories": [
-        "hex"
-      ],
+      "name": "Hex: Blood Favour",
+      "character": "The Blight",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_076",
+      "name": "Hex: Undying",
+      "character": "The Blight",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_077",
+      "name": "Hoarder",
+      "character": "The Twins",
       "iconUrl": null
     },
     {
       "id": "kp_078",
-      "name": "Zanshin Tactics",
-      "character": "The Oni",
-      "categories": [
-        "awareness"
-      ],
+      "name": "Oppression",
+      "character": "The Twins",
       "iconUrl": null
     },
     {
       "id": "kp_079",
-      "name": "Blood Echo",
-      "character": "The Oni",
-      "categories": [
-        "anti-healing"
-      ],
+      "name": "Coup de Grâce",
+      "character": "The Twins",
       "iconUrl": null
     },
     {
       "id": "kp_080",
-      "name": "Nemesis",
-      "character": "The Oni",
-      "categories": [
-        "chase"
-      ],
+      "name": "Starstruck",
+      "character": "The Trickster",
       "iconUrl": null
     },
     {
       "id": "kp_081",
-      "name": "A Nurse's Calling",
-      "character": "The Nurse",
-      "categories": [
-        "awareness"
-      ],
+      "name": "Hex: Crowd Control",
+      "character": "The Trickster",
       "iconUrl": null
     },
     {
       "id": "kp_082",
-      "name": "Awakened Awareness",
-      "character": "The Knight",
-      "categories": [
-        "awareness"
-      ],
+      "name": "No Way Out",
+      "character": "The Trickster",
       "iconUrl": null
     },
     {
       "id": "kp_083",
-      "name": "Beast of Prey",
-      "character": "The Huntress",
-      "categories": [
-        "stealth"
-      ],
+      "name": "Lethal Pursuer",
+      "character": "The Nemesis",
       "iconUrl": null
     },
     {
       "id": "kp_084",
-      "name": "Blood Warden",
-      "character": "The Executioner",
-      "categories": [
-        "endgame"
-      ],
+      "name": "Hysteria",
+      "character": "The Nemesis",
       "iconUrl": null
     },
     {
       "id": "kp_085",
-      "name": "Bloodhound",
-      "character": "The Trapper",
-      "categories": [
-        "tracking"
-      ],
+      "name": "Eruption",
+      "character": "The Nemesis",
       "iconUrl": null
     },
     {
       "id": "kp_086",
-      "name": "Coulrophobia",
-      "character": "The Clown",
-      "categories": [
-        "debuff"
-      ],
+      "name": "Deadlock",
+      "character": "The Cenobite",
       "iconUrl": null
     },
     {
       "id": "kp_087",
-      "name": "Cruel Limits",
-      "character": "The Wraith",
-      "categories": [
-        "utility"
-      ],
+      "name": "Hex: Plaything",
+      "character": "The Cenobite",
       "iconUrl": null
     },
     {
       "id": "kp_088",
-      "name": "Dark Devotion",
-      "character": "The Plague",
-      "categories": [
-        "stealth"
-      ],
+      "name": "Scourge Hook: Gift of Pain",
+      "character": "The Cenobite",
       "iconUrl": null
     },
     {
       "id": "kp_089",
-      "name": "Deerstalker",
-      "character": "The Trapper",
-      "categories": [
-        "tracking"
-      ],
+      "name": "Grim Embrace",
+      "character": "The Artist",
       "iconUrl": null
     },
     {
       "id": "kp_090",
-      "name": "Distressing",
-      "character": "General",
-      "categories": [
-        "debuff"
-      ],
+      "name": "Scourge Hook: Pain Resonance",
+      "character": "The Artist",
       "iconUrl": null
     },
     {
       "id": "kp_091",
-      "name": "Dying Light",
-      "character": "The Shape",
-      "categories": [
-        "debuff"
-      ],
+      "name": "Hex: Pentimento",
+      "character": "The Artist",
       "iconUrl": null
     },
     {
       "id": "kp_092",
-      "name": "Enduring",
-      "character": "The Spirit",
-      "categories": [
-        "chase"
-      ],
+      "name": "Call of Brine",
+      "character": "The Onryō",
       "iconUrl": null
     },
     {
       "id": "kp_093",
-      "name": "Exhausting Touch",
-      "character": "General",
-      "categories": [
-        "debuff"
-      ],
+      "name": "Scourge Hook: Floods of Rage",
+      "character": "The Onryō",
       "iconUrl": null
     },
     {
       "id": "kp_094",
-      "name": "Fearmonger",
-      "character": "The Nemesis",
-      "categories": [
-        "debuff"
-      ],
+      "name": "Merciless Storm",
+      "character": "The Onryō",
       "iconUrl": null
     },
     {
       "id": "kp_095",
-      "name": "Fire Up",
-      "character": "The Shape",
-      "categories": [
-        "chase"
-      ],
+      "name": "Dissolution",
+      "character": "The Dredge",
       "iconUrl": null
     },
     {
       "id": "kp_096",
-      "name": "Franklin's Demise",
-      "character": "The Cannibal",
-      "categories": [
-        "utility"
-      ],
+      "name": "Darkness Revealed",
+      "character": "The Dredge",
       "iconUrl": null
     },
     {
       "id": "kp_097",
-      "name": "Furtive Chase",
-      "character": "The Ghost Face",
-      "categories": [
-        "stealth"
-      ],
+      "name": "Septic Touch",
+      "character": "The Dredge",
       "iconUrl": null
     },
     {
       "id": "kp_098",
-      "name": "Gearhead",
-      "character": "The Executioner",
-      "categories": [
-        "tracking"
-      ],
+      "name": "Superior Anatomy",
+      "character": "The Mastermind",
       "iconUrl": null
     },
     {
       "id": "kp_099",
-      "name": "Genetic Anomalies",
-      "character": "General",
-      "categories": [
-        "debuff"
-      ],
+      "name": "Awakened Awareness",
+      "character": "The Mastermind",
       "iconUrl": null
     },
     {
       "id": "kp_100",
-      "name": "Hex: Haunted Ground",
-      "character": "General",
-      "categories": [
-        "hex"
-      ],
+      "name": "Terminus",
+      "character": "The Mastermind",
       "iconUrl": null
     },
     {
       "id": "kp_101",
-      "name": "Hex: Huntress Lullaby",
-      "character": "The Huntress",
-      "categories": [
-        "hex"
-      ],
+      "name": "Nowhere to Hide",
+      "character": "The Knight",
       "iconUrl": null
     },
     {
       "id": "kp_102",
-      "name": "Hex: Third Seal",
-      "character": "The Hag",
-      "categories": [
-        "hex"
-      ],
+      "name": "Hex: Face the Darkness",
+      "character": "The Knight",
       "iconUrl": null
     },
     {
       "id": "kp_103",
-      "name": "Hex: Thrill of the Hunt",
-      "character": "General",
-      "categories": [
-        "hex"
-      ],
+      "name": "Hubris",
+      "character": "The Knight",
       "iconUrl": null
     },
     {
       "id": "kp_104",
-      "name": "Hoarder",
-      "character": "The Deathslinger",
-      "categories": [
-        "utility"
-      ],
+      "name": "Thwack!",
+      "character": "The Skull Merchant",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_105",
+      "name": "Leverage",
+      "character": "The Skull Merchant",
       "iconUrl": null
     },
     {
       "id": "kp_106",
-      "name": "Hysteria",
-      "character": "The Executioner",
-      "categories": [
-        "debuff"
-      ],
+      "name": "Game Afoot",
+      "character": "The Skull Merchant",
       "iconUrl": null
     },
     {
       "id": "kp_107",
-      "name": "I'm All Ears",
-      "character": "The Ghost Face",
-      "categories": [
-        "awareness"
-      ],
+      "name": "Genetic Limits",
+      "character": "The Singularity",
       "iconUrl": null
     },
     {
       "id": "kp_108",
-      "name": "Insidious",
-      "character": "The Trapper",
-      "categories": [
-        "stealth"
-      ],
+      "name": "Forced Hesitation",
+      "character": "The Singularity",
       "iconUrl": null
     },
     {
       "id": "kp_109",
-      "name": "Iron Clutch",
-      "character": "General",
-      "categories": [
-        "chase"
-      ],
+      "name": "Machine Learning",
+      "character": "The Singularity",
       "iconUrl": null
     },
     {
       "id": "kp_110",
-      "name": "Knock Out",
-      "character": "The Cannibal",
-      "categories": [
-        "chase"
-      ],
+      "name": "Ultimate Weapon",
+      "character": "The Xenomorph",
       "iconUrl": null
     },
     {
       "id": "kp_111",
-      "name": "Lethal Pursuer",
-      "character": "The Nemesis",
-      "categories": [
-        "tracking"
-      ],
+      "name": "Rapid Brutality",
+      "character": "The Xenomorph",
       "iconUrl": null
     },
     {
       "id": "kp_112",
-      "name": "Mad Grit",
-      "character": "The Shape",
-      "categories": [
-        "chase"
-      ],
+      "name": "Alien Instinct",
+      "character": "The Xenomorph",
       "iconUrl": null
     },
     {
       "id": "kp_113",
-      "name": "Make Your Choice",
-      "character": "The Executioner",
-      "categories": [
-        "utility"
-      ],
+      "name": "Batteries Included",
+      "character": "The Good Guy",
       "iconUrl": null
     },
     {
       "id": "kp_114",
-      "name": "Mindbreaker",
-      "character": "The Engineer",
-      "categories": [
-        "debuff"
-      ],
+      "name": "Friends 'til the End",
+      "character": "The Good Guy",
       "iconUrl": null
     },
     {
       "id": "kp_115",
-      "name": "Oppression",
-      "character": "The Twins",
-      "categories": [
-        "generator"
-      ],
+      "name": "Hex: Two Can Play",
+      "character": "The Good Guy",
       "iconUrl": null
     },
     {
       "id": "kp_116",
-      "name": "Overcharge",
-      "character": "The Doctor",
-      "categories": [
-        "generator"
-      ],
+      "name": "Unbound",
+      "character": "The Unknown",
       "iconUrl": null
     },
     {
       "id": "kp_117",
-      "name": "Overwhelming Presence",
-      "character": "The Doctor",
-      "categories": [
-        "debuff"
-      ],
+      "name": "Undone",
+      "character": "The Unknown",
       "iconUrl": null
     },
     {
       "id": "kp_118",
-      "name": "Rancor",
-      "character": "The Shape",
-      "categories": [
-        "endgame"
-      ],
+      "name": "Unforeseen",
+      "character": "The Unknown",
       "iconUrl": null
     },
     {
       "id": "kp_119",
-      "name": "Remember Me",
-      "character": "The Shape",
-      "categories": [
-        "endgame"
-      ],
+      "name": "Languid Touch",
+      "character": "The Lich",
       "iconUrl": null
     },
     {
       "id": "kp_120",
-      "name": "Scourge Hook: Monstrous Shrine",
-      "character": "General",
-      "categories": [
-        "scourge"
-      ],
+      "name": "Weave Attunement",
+      "character": "The Lich",
       "iconUrl": null
     },
     {
       "id": "kp_121",
-      "name": "Shadowborn",
-      "character": "The Wraith",
-      "categories": [
-        "utility"
-      ],
+      "name": "Dark Arrogance",
+      "character": "The Lich",
       "iconUrl": null
     },
     {
       "id": "kp_122",
-      "name": "Shattered Hope",
-      "character": "The Hag",
-      "categories": [
-        "utility"
-      ],
+      "name": "Hex: Wretched Fate",
+      "character": "The Dark Lord",
       "iconUrl": null
     },
     {
       "id": "kp_123",
-      "name": "Spirit Fury",
-      "character": "The Spirit",
-      "categories": [
-        "chase"
-      ],
+      "name": "Human Greed",
+      "character": "The Dark Lord",
       "iconUrl": null
     },
     {
       "id": "kp_124",
-      "name": "Stridor",
-      "character": "The Nurse",
-      "categories": [
-        "tracking"
-      ],
+      "name": "Dominance",
+      "character": "The Dark Lord",
       "iconUrl": null
     },
     {
       "id": "kp_125",
-      "name": "Superior Anatomy",
-      "character": "The Unknown",
-      "categories": [
-        "chase"
-      ],
+      "name": "All-Shaking Thunder",
+      "character": "The Houndmaster",
       "iconUrl": null
     },
     {
       "id": "kp_126",
-      "name": "Thanatophobia",
-      "character": "The Nurse",
-      "categories": [
-        "debuff"
-      ],
+      "name": "Scourge Hook: Jagged Compass",
+      "character": "The Houndmaster",
       "iconUrl": null
     },
     {
       "id": "kp_127",
-      "name": "Unbound",
-      "character": "The Dredge",
-      "categories": [
-        "mobility"
-      ],
+      "name": "No Quarter",
+      "character": "The Houndmaster",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_128",
+      "name": "Hex: Nothing but Misery",
+      "character": "The Ghoul",
       "iconUrl": null
     },
     {
       "id": "kp_129",
-      "name": "Unnerving Presence",
-      "character": "The Trapper",
-      "categories": [
-        "debuff"
-      ],
+      "name": "Forever Entwined",
+      "character": "The Ghoul",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_130",
+      "name": "None are Free",
+      "character": "The Ghoul",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_131",
+      "name": "Help Wanted",
+      "character": "The Animatronic",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_132",
+      "name": "Phantom Fear",
+      "character": "The Animatronic",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_133",
+      "name": "Haywire",
+      "character": "The Animatronic",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_134",
+      "name": "Ravenous",
+      "character": "The Krasue",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_135",
+      "name": "Wandering Eye",
+      "character": "The Krasue",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_136",
+      "name": "Hex: Overture of Doom",
+      "character": "The Krasue",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_137",
+      "name": "Turn Back the Clock",
+      "character": "The First",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_138",
+      "name": "Secret Project",
+      "character": "The First",
+      "iconUrl": null
+    },
+    {
+      "id": "kp_139",
+      "name": "Hex: Hive Mind",
+      "character": "The First",
       "iconUrl": null
     }
   ]

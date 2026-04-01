@@ -73,7 +73,6 @@ class _KillersScreenState extends ConsumerState<KillersScreen> {
             filtered = filtered
                 .where((k) =>
                     k.name.toLowerCase().contains(q) ||
-                    k.alias.toLowerCase().contains(q) ||
                     k.power.toLowerCase().contains(q))
                 .toList();
           }

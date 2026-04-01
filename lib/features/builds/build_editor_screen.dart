@@ -34,7 +34,6 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
   late List<String?> _perkSlots;
   final List<String> _tags = [];
   String _searchQuery = '';
-  String? _pickerCategory;
   int? _editingSlot;
   Build? _existingBuild;
   String? _selectedItemId;
@@ -160,10 +159,10 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
 
   Widget _buildBody(List<Perk> allPerks) {
     final filtered = allPerks.where((p) {
-      if (_pickerCategory != null && !p.categories.contains(_pickerCategory)) return false;
       if (_searchQuery.isEmpty) return true;
-      return p.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-          p.character.toLowerCase().contains(_searchQuery.toLowerCase());
+      final q = _searchQuery.toLowerCase();
+      return p.name.toLowerCase().contains(q) ||
+          p.character.toLowerCase().contains(q);
     }).toList();
 
     return LayoutBuilder(
@@ -361,10 +360,6 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
               ),
             ),
           ),
-          _CategoryChips(
-            selected: _pickerCategory,
-            onSelect: (c) => setState(() => _pickerCategory = c),
-          ),
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -399,79 +394,6 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
   }
 }
 
-// ─── Category Filter Chips ────────────────────────────────────────────────────
-
-class _CategoryChips extends StatelessWidget {
-  final String? selected;
-  final ValueChanged<String?> onSelect;
-
-  static const _categories = [
-    ('healing',      'Healing'),
-    ('chase',        'Chase'),
-    ('stealth',      'Stealth'),
-    ('generator',    'Generator'),
-    ('support',      'Support'),
-    ('awareness',    'Awareness'),
-    ('endgame',      'Endgame'),
-    ('hex',          'Hex'),
-    ('anti-healing', 'Anti-Heal'),
-    ('utility',      'Utility'),
-  ];
-
-  const _CategoryChips({required this.selected, required this.onSelect});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 36,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        children: [
-          _chip(null, 'All'),
-          ...(_categories.map((e) => _chip(e.$1, e.$2))),
-        ],
-      ),
-    );
-  }
-
-  Widget _chip(String? value, String label) {
-    final isActive = selected == value;
-    final color = value != null
-        ? AppTheme.perkCategoryColor(value)
-        : AppTheme.primary;
-    return Padding(
-      padding: const EdgeInsets.only(right: 6),
-      child: GestureDetector(
-        onTap: () => onSelect(isActive && value != null ? null : value),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 160),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: isActive
-                ? color.withValues(alpha: 0.2)
-                : AppTheme.surfaceElevated,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: isActive ? color : AppTheme.border,
-              width: isActive ? 1.5 : 1,
-            ),
-          ),
-          child: Text(
-            label,
-            style: TextStyle(
-              color: isActive ? color : AppTheme.textSecondary,
-              fontSize: 12,
-              fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
-              letterSpacing: 0.3,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 // ─── Mobile perk picker sheet ────────────────────────────────────────────────
 
 class _PerkPickerSheet extends ConsumerStatefulWidget {
@@ -491,7 +413,6 @@ class _PerkPickerSheet extends ConsumerStatefulWidget {
 
 class _PerkPickerSheetState extends ConsumerState<_PerkPickerSheet> {
   String _search = '';
-  String? _category;
 
   @override
   Widget build(BuildContext context) {
@@ -525,21 +446,16 @@ class _PerkPickerSheetState extends ConsumerState<_PerkPickerSheet> {
             ),
           ),
           const SizedBox(height: 8),
-          _CategoryChips(
-            selected: _category,
-            onSelect: (c) => setState(() => _category = c),
-          ),
-          const SizedBox(height: 4),
           Expanded(
             child: perksAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (e, _) => Center(child: Text('$e')),
               data: (perks) {
                 final filtered = perks.where((p) {
-                  if (_category != null && !p.categories.contains(_category)) return false;
                   if (_search.isEmpty) return true;
-                  return p.name.toLowerCase().contains(_search.toLowerCase()) ||
-                      p.character.toLowerCase().contains(_search.toLowerCase());
+                  final q = _search.toLowerCase();
+                  return p.name.toLowerCase().contains(q) ||
+                      p.character.toLowerCase().contains(q);
                 }).toList();
                 return ListView.builder(
                   controller: controller,

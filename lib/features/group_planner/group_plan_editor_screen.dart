@@ -545,51 +545,10 @@ class _PerkPickerSheet extends StatefulWidget {
 
 class _PerkPickerSheetState extends State<_PerkPickerSheet> {
   String _search = '';
-  String? _category;
-
-  static const _categories = [
-    ('healing',   'Healing'),
-    ('chase',     'Chase'),
-    ('stealth',   'Stealth'),
-    ('generator', 'Generator'),
-    ('support',   'Support'),
-    ('awareness', 'Awareness'),
-    ('endgame',   'Endgame'),
-    ('utility',   'Utility'),
-  ];
-
-  Widget _buildChip(String? value, String label) {
-    final isActive = _category == value;
-    final color = value != null ? AppTheme.perkCategoryColor(value) : AppTheme.primary;
-    return Padding(
-      padding: const EdgeInsets.only(right: 6),
-      child: GestureDetector(
-        onTap: () => setState(() => _category = isActive && value != null ? null : value),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 160),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(
-            color: isActive ? color.withValues(alpha: 0.2) : AppTheme.surfaceElevated,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: isActive ? color : AppTheme.border, width: isActive ? 1.5 : 1),
-          ),
-          child: Text(
-            label,
-            style: TextStyle(
-              color: isActive ? color : AppTheme.textSecondary,
-              fontSize: 12,
-              fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     final filtered = widget.perks.where((p) {
-      if (_category != null && !p.categories.contains(_category)) return false;
       if (_search.isEmpty) return true;
       return p.name.toLowerCase().contains(_search.toLowerCase()) ||
           p.character.toLowerCase().contains(_search.toLowerCase());
@@ -641,19 +600,6 @@ class _PerkPickerSheetState extends State<_PerkPickerSheet> {
             ),
           ),
           const SizedBox(height: 8),
-          // Category filter chips
-          SizedBox(
-            height: 36,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              children: [
-                _buildChip(null, 'All'),
-                ...(_categories.map((e) => _buildChip(e.$1, e.$2))),
-              ],
-            ),
-          ),
-          const SizedBox(height: 4),
           Expanded(
             child: ListView.builder(
               controller: controller,

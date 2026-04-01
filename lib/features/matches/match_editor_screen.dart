@@ -495,7 +495,7 @@ class _KillerPickerSheetState extends State<_KillerPickerSheet> {
                         color: AppTheme.textPrimary, fontSize: 14),
                   ),
                   subtitle: Text(
-                    killer.alias,
+                    killer.power,
                     style: const TextStyle(
                         color: AppTheme.textDim, fontSize: 12),
                   ),

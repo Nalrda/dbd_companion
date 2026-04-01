@@ -18,23 +18,8 @@ class PerksScreen extends ConsumerStatefulWidget {
 class _PerksScreenState extends ConsumerState<PerksScreen> {
   bool _isSurvivor = true;
   String _search = '';
-  String? _selectedCategory;
   final _searchController = TextEditingController();
   bool _searchVisible = false;
-
-  static const _categories = [
-    'healing',
-    'chase',
-    'stealth',
-    'generator',
-    'support',
-    'awareness',
-    'endgame',
-    'utility',
-    'hex',
-    'anti-healing',
-    'anti-grab',
-  ];
 
   @override
   void dispose() {
@@ -46,12 +31,10 @@ class _PerksScreenState extends ConsumerState<PerksScreen> {
     final q = _search.toLowerCase().trim();
     return all.where((p) {
       final matchRole = p.isSurvivor == _isSurvivor;
-      final matchCat = _selectedCategory == null || p.categories.contains(_selectedCategory);
       final matchSearch = q.isEmpty ||
           p.name.toLowerCase().contains(q) ||
-          p.character.toLowerCase().contains(q) ||
-          p.categories.any((c) => c.toLowerCase().contains(q));
-      return matchRole && matchCat && matchSearch;
+          p.character.toLowerCase().contains(q);
+      return matchRole && matchSearch;
     }).toList();
   }
 
@@ -69,7 +52,7 @@ class _PerksScreenState extends ConsumerState<PerksScreen> {
                     autofocus: true,
                     style: const TextStyle(color: AppTheme.textPrimary, fontSize: 16),
                     decoration: const InputDecoration(
-                      hintText: 'Szukaj po nazwie, postaci, kategorii...',
+                      hintText: 'Szukaj po nazwie, postaci...',
                       hintStyle: TextStyle(color: AppTheme.textDim, fontSize: 14),
                       border: InputBorder.none,
                       isDense: true,
@@ -108,19 +91,8 @@ class _PerksScreenState extends ConsumerState<PerksScreen> {
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
                 child: RoleToggle(
                   isSurvivor: _isSurvivor,
-                  onChanged: (v) => setState(() {
-                    _isSurvivor = v;
-                    _selectedCategory = null;
-                  }),
+                  onChanged: (v) => setState(() => _isSurvivor = v),
                 ),
-              ),
-              // Category filter chips
-              _CategoryFilterBar(
-                selected: _selectedCategory,
-                categories: _categories,
-                onSelect: (cat) => setState(() {
-                  _selectedCategory = _selectedCategory == cat ? null : cat;
-                }),
               ),
               // Results count
               Padding(
@@ -136,17 +108,13 @@ class _PerksScreenState extends ConsumerState<PerksScreen> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    if (_selectedCategory != null) ...[
-                      const SizedBox(width: 8),
-                      _CategoryBadge(category: _selectedCategory!),
-                    ],
                   ],
                 ),
               ),
               // Perk list
               Expanded(
                 child: filtered.isEmpty
-                    ? _EmptyState(search: _search, category: _selectedCategory)
+                    ? _EmptyState(search: _search)
                     : LayoutBuilder(
                         builder: (context, constraints) {
                           // 2 columns on wide screens
@@ -184,102 +152,11 @@ class _PerksScreenState extends ConsumerState<PerksScreen> {
   }
 }
 
-// ─── Category Filter Bar ──────────────────────────────────────────────────────
-
-class _CategoryFilterBar extends StatelessWidget {
-  final String? selected;
-  final List<String> categories;
-  final ValueChanged<String> onSelect;
-
-  const _CategoryFilterBar({
-    required this.selected,
-    required this.categories,
-    required this.onSelect,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final visible = categories;
-    return SizedBox(
-      height: 40,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        itemCount: visible.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 8),
-        itemBuilder: (context, i) {
-          final cat = visible[i];
-          final isActive = cat == selected;
-          final color = AppTheme.perkCategoryColor(cat);
-          return GestureDetector(
-            onTap: () => onSelect(cat),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 160),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: isActive ? color.withValues(alpha: 0.18) : AppTheme.surfaceElevated,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: isActive ? color.withValues(alpha: 0.7) : AppTheme.border,
-                  width: isActive ? 1.5 : 1.0,
-                ),
-              ),
-              child: Text(
-                _label(cat),
-                style: GoogleFonts.rajdhani(
-                  color: isActive ? color : AppTheme.textSecondary,
-                  fontSize: 12,
-                  fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
-                  letterSpacing: 0.6,
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  String _label(String cat) {
-    switch (cat) {
-      case 'anti-healing': return 'Anti-Healing';
-      case 'anti-grab':    return 'Anti-Grab';
-      default:             return cat[0].toUpperCase() + cat.substring(1);
-    }
-  }
-}
-
-// ─── Category Badge ───────────────────────────────────────────────────────────
-
-class _CategoryBadge extends StatelessWidget {
-  final String category;
-  const _CategoryBadge({required this.category});
-
-  @override
-  Widget build(BuildContext context) {
-    final color = AppTheme.perkCategoryColor(category);
-    final label = category[0].toUpperCase() + category.substring(1);
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withValues(alpha: 0.4)),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.w600),
-      ),
-    );
-  }
-}
-
 // ─── Empty State ──────────────────────────────────────────────────────────────
 
 class _EmptyState extends StatelessWidget {
   final String search;
-  final String? category;
-  const _EmptyState({required this.search, required this.category});
+  const _EmptyState({required this.search});
 
   @override
   Widget build(BuildContext context) {
@@ -300,12 +177,10 @@ class _EmptyState extends StatelessWidget {
                 letterSpacing: 1.2,
               ),
             ),
-            if (search.isNotEmpty || category != null) ...[
+            if (search.isNotEmpty) ...[
               const SizedBox(height: 8),
               Text(
-                search.isNotEmpty
-                    ? 'Nie znaleziono perku dla "$search"'
-                    : 'Brak perków w tej kategorii',
+                'Nie znaleziono perku dla "$search"',
                 style: const TextStyle(color: AppTheme.textDim, fontSize: 13),
                 textAlign: TextAlign.center,
               ),

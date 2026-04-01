@@ -102,13 +102,6 @@ class _KillerDetailView extends StatelessWidget {
                                 letterSpacing: 0.8,
                               ),
                             ),
-                            Text(
-                              killer.alias,
-                              style: const TextStyle(
-                                fontSize: 13,
-                                color: AppTheme.textSecondary,
-                              ),
-                            ),
                           ],
                         ),
                       ),
@@ -179,38 +172,6 @@ class _KillerDetailView extends StatelessWidget {
                     ],
                   ),
                 ).animate().fadeIn(delay: 120.ms),
-
-                const SizedBox(height: 20),
-                const SectionHeader(title: 'TIP'),
-                const SizedBox(height: 8),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(14),
-                  decoration: BoxDecoration(
-                    color: AppTheme.primaryDim.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                        color: AppTheme.primary.withValues(alpha: 0.25)),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Icon(Icons.lightbulb_outline,
-                          color: AppTheme.primary, size: 18),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          killer.tip,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: AppTheme.textSecondary,
-                            height: 1.6,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ).animate().fadeIn(delay: 160.ms),
 
                 const SizedBox(height: 24),
               ],
