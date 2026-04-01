@@ -9,8 +9,11 @@ class AppTheme {
   static const Color hoverSurface    = Color(0xFF222222); // hover highlight
   static const Color border          = Color(0xFF2A2A2A); // neutral dark gray border
 
-  static const Color primary         = Color(0xFFCC2828); // blood red
-  static const Color primaryDim      = Color(0xFF7A1515); // dark red
+  // ─── Dynamic primary (updated by ThemeColorNotifier) ────────────────────────
+  static Color primary    = const Color(0xFFCC2828); // blood red (default)
+  static Color primaryDim = const Color(0xFF7A1515); // dark red (default)
+  static Color primaryGlow = const Color(0x44CC2828); // glow (default)
+
   static const Color accent          = Color(0xFFE05828); // orange-red secondary
 
   static const Color textPrimary     = Color(0xFFF0EEEC); // warm white
@@ -18,7 +21,6 @@ class AppTheme {
   static const Color textDim         = Color(0xFF444444); // dark neutral gray
 
   // ─── Glow / Atmosphere ──────────────────────────────────────────────────────
-  static const Color primaryGlow    = Color(0x44CC2828); // 27% red — BoxShadows, overlays
   static const Color hexPurple      = Color(0xFF8B35D6); // Entity purple (hex perk category)
   static const Color hexPurpleDim   = Color(0xFF3D1270);
 
@@ -29,11 +31,39 @@ class AppTheme {
     colors: [Color(0xFF1A1A1A), Color(0xFF111111)],
   );
 
-  static const LinearGradient primaryGradient = LinearGradient(
+  static LinearGradient get primaryGradient => LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFFCC2828), Color(0xFF7A1515)],
+    colors: [primary, primaryDim],
   );
+
+  // ─── Theme color palette ─────────────────────────────────────────────────────
+  static const List<({String name, Color color})> themeColors = [
+    (name: 'Krew',       color: Color(0xFFCC2828)),
+    (name: 'Purpura',    color: Color(0xFF8B35D6)),
+    (name: 'Niebieski',  color: Color(0xFF2196F3)),
+    (name: 'Zieleń',     color: Color(0xFF4CAF50)),
+    (name: 'Pomarańcz',  color: Color(0xFFE05828)),
+    (name: 'Złoto',      color: Color(0xFFFFB300)),
+    (name: 'Turkus',     color: Color(0xFF26A69A)),
+    (name: 'Srebro',     color: Color(0xFF9E9E9E)),
+  ];
+
+  /// Updates the dynamic primary color and its derived variants.
+  static void updatePrimaryColor(Color color) {
+    primary = color;
+    primaryDim = Color.fromARGB(
+      (color.a * 255).round(),
+      (color.r * 255 * 0.47).round(),
+      (color.g * 255 * 0.47).round(),
+      (color.b * 255 * 0.47).round(),
+    );
+    primaryGlow = Color.fromARGB(0x44,
+      (color.r * 255).round(),
+      (color.g * 255).round(),
+      (color.b * 255).round(),
+    );
+  }
 
   // ─── Rarity Colors (offerings/items) ────────────────────────────────────────
   static const Color common    = Color(0xFF9E9E9E);
@@ -75,7 +105,7 @@ class AppTheme {
       useMaterial3: true,
       brightness: Brightness.dark,
       scaffoldBackgroundColor: background,
-      colorScheme: const ColorScheme.dark(
+      colorScheme: ColorScheme.dark(
         surface: surface,
         primary: primary,
         secondary: accent,
@@ -119,14 +149,14 @@ class AppTheme {
         indicatorColor: primaryDim,
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
-            return const TextStyle(
+            return TextStyle(
                 color: primary, fontSize: 12, fontWeight: FontWeight.w600);
           }
           return const TextStyle(color: textSecondary, fontSize: 12);
         }),
         iconTheme: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
-            return const IconThemeData(color: primary);
+            return IconThemeData(color: primary);
           }
           return const IconThemeData(color: textSecondary);
         }),
@@ -152,7 +182,7 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: primary, width: 1.5),
+          borderSide: BorderSide(color: primary, width: 1.5),
         ),
         hintStyle: const TextStyle(color: textDim),
         contentPadding:

@@ -214,7 +214,7 @@ class _BuildsScreenState extends ConsumerState<BuildsScreen> {
               Navigator.pop(ctx);
               ref.read(buildsProvider.notifier).delete(build.id);
             },
-            child: const Text('Delete',
+            child: Text('Delete',
                 style: TextStyle(color: AppTheme.primary)),
           ),
         ],
@@ -337,7 +337,7 @@ class _BuildListItem extends StatelessWidget {
                 if (v == 'delete') onDelete();
               },
               itemBuilder: (_) => [
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: 'delete',
                   child: Text('Delete',
                       style: TextStyle(color: AppTheme.primary)),

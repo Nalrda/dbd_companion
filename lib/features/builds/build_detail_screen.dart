@@ -102,7 +102,7 @@ class _BuildDetailViewState extends State<_BuildDetailView> {
                       const SizedBox(width: 6),
                       Text(
                         widget.build.isSurvivor ? 'Survivor' : 'Killer',
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: AppTheme.primary,
                           fontWeight: FontWeight.w600,
                           fontSize: 13,

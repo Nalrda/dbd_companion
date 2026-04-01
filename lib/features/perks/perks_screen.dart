@@ -80,7 +80,7 @@ class _PerksScreenState extends ConsumerState<PerksScreen> {
             ],
           ),
           Expanded(child: allPerksAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator(color: AppTheme.primary)),
+        loading: () => Center(child: CircularProgressIndicator(color: AppTheme.primary)),
         error: (e, _) => Center(child: Text('Błąd: $e', style: const TextStyle(color: AppTheme.textSecondary))),
         data: (allPerks) {
           final filtered = _filter(allPerks);

@@ -268,20 +268,20 @@ class _PerkCardState extends State<PerkCard> {
                 ),
                 boxShadow: widget.isSelected
                     ? [
-                        const BoxShadow(
+                        BoxShadow(
                           color: AppTheme.primaryGlow,
                           blurRadius: 14,
                           spreadRadius: 0,
-                          offset: Offset(0, 2),
+                          offset: const Offset(0, 2),
                         )
                       ]
                     : _hovered
                         ? [
-                            const BoxShadow(
+                            BoxShadow(
                               color: AppTheme.primaryGlow,
                               blurRadius: 12,
                               spreadRadius: 0,
-                              offset: Offset(0, 2),
+                              offset: const Offset(0, 2),
                             )
                           ]
                         : null,
@@ -1399,7 +1399,7 @@ class _OfferingPickerSheetState extends ConsumerState<OfferingPickerSheet> {
                                 ),
                               ),
                               if (isSelected)
-                                const Icon(Icons.check_circle,
+                                Icon(Icons.check_circle,
                                     color: AppTheme.primary, size: 18),
                             ],
                           ),

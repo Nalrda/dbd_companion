@@ -109,7 +109,7 @@ class GroupPlannerScreen extends ConsumerWidget {
                 context.push('/group/${plan.id}');
               }
             },
-            child: const Text('Create', style: TextStyle(color: AppTheme.primary)),
+            child: Text('Create', style: TextStyle(color: AppTheme.primary)),
           ),
         ],
       ),
@@ -145,7 +145,7 @@ class _GroupPlanCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(color: AppTheme.border),
               ),
-              child: const Icon(Icons.groups, color: AppTheme.primary, size: 22),
+              child: Icon(Icons.groups, color: AppTheme.primary, size: 22),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -195,7 +195,7 @@ class _GroupPlanCard extends StatelessWidget {
               icon: const Icon(Icons.more_vert, color: AppTheme.textDim, size: 20),
               onSelected: (v) { if (v == 'delete') onDelete(); },
               itemBuilder: (_) => [
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: 'delete',
                   child: Text('Delete', style: TextStyle(color: AppTheme.primary)),
                 ),

@@ -57,11 +57,11 @@ class _KillerDetailView extends StatelessWidget {
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(
                         color: AppTheme.primary.withValues(alpha: 0.3)),
-                    boxShadow: const [
+                    boxShadow: [
                       BoxShadow(
                           color: AppTheme.primaryGlow,
                           blurRadius: 16,
-                          offset: Offset(0, 2))
+                          offset: const Offset(0, 2))
                     ],
                   ),
                   child: Row(

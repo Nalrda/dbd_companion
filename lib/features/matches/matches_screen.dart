@@ -127,7 +127,7 @@ class _MatchesScreenState extends ConsumerState<MatchesScreen> {
               Navigator.pop(ctx);
               ref.read(matchesProvider.notifier).delete(record.id);
             },
-            child: const Text('Delete',
+            child: Text('Delete',
                 style: TextStyle(color: AppTheme.primary)),
           ),
         ],
@@ -164,8 +164,8 @@ class _StatsHeader extends StatelessWidget {
         color: AppTheme.surface,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: AppTheme.border),
-        boxShadow: const [
-          BoxShadow(color: AppTheme.primaryGlow, blurRadius: 16, offset: Offset(0, 2)),
+        boxShadow: [
+          BoxShadow(color: AppTheme.primaryGlow, blurRadius: 16, offset: const Offset(0, 2)),
         ],
       ),
       child: Column(
@@ -217,7 +217,7 @@ class _StatsHeader extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             '${(winRate * 100).toStringAsFixed(1)}%',
-            style: const TextStyle(
+            style: TextStyle(
               color: AppTheme.primary,
               fontSize: 13,
               fontWeight: FontWeight.w600,
@@ -392,7 +392,7 @@ class _MatchTile extends StatelessWidget {
               if (v == 'delete') onDelete();
             },
             itemBuilder: (_) => [
-              const PopupMenuItem(
+              PopupMenuItem(
                 value: 'delete',
                 child: Text('Delete', style: TextStyle(color: AppTheme.primary)),
               ),

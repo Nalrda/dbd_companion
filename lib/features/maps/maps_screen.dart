@@ -51,11 +51,11 @@ class _RealmCard extends StatelessWidget {
         color: AppTheme.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: AppTheme.border),
-        boxShadow: const [
+        boxShadow: [
           BoxShadow(
             color: AppTheme.primaryGlow,
             blurRadius: 8,
-            offset: Offset(0, 2),
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -72,9 +72,9 @@ class _RealmCard extends StatelessWidget {
                 Container(
                   width: 4,
                   height: 48,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     color: AppTheme.primary,
-                    borderRadius: BorderRadius.only(
+                    borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(12),
                       bottomLeft: Radius.circular(0),
                     ),

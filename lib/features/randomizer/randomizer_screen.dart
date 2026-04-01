@@ -282,7 +282,7 @@ class _SaveButton extends StatelessWidget {
                 );
               }
             },
-            child: const Text('Save',
+            child: Text('Save',
                 style: TextStyle(color: AppTheme.primary)),
           ),
         ],

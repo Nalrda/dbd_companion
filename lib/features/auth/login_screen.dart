@@ -121,7 +121,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   width: double.infinity,
                   height: 52,
                   child: _loading
-                      ? const Center(
+                      ? Center(
                           child: SizedBox(
                             width: 24,
                             height: 24,
@@ -188,73 +188,30 @@ class _GoogleLogoPainter extends CustomPainter {
     final cx = size.width / 2;
     final cy = size.height / 2;
     final r = size.width / 2;
+    final arcR = r * 0.74;
+    final sw = size.width * 0.185;
+    final rect = Rect.fromCircle(center: Offset(cx, cy), radius: arcR);
 
-    // Blue arc (top-right)
-    final blue = Paint()
-      ..color = const Color(0xFF4285F4)
+    Paint arc(Color color) => Paint()
+      ..color = color
       ..style = PaintingStyle.stroke
-      ..strokeWidth = size.width * 0.16
+      ..strokeWidth = sw
       ..strokeCap = StrokeCap.butt;
-    canvas.drawArc(
-      Rect.fromCircle(center: Offset(cx, cy), radius: r * 0.72),
-      -1.57,
-      3.14,
-      false,
-      blue,
-    );
 
-    // Red arc (top-left)
-    final red = Paint()
-      ..color = const Color(0xFFEA4335)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = size.width * 0.16
-      ..strokeCap = StrokeCap.butt;
-    canvas.drawArc(
-      Rect.fromCircle(center: Offset(cx, cy), radius: r * 0.72),
-      -1.57,
-      -1.75,
-      false,
-      red,
-    );
+    // Blue:   top (270°) → clockwise 135° → ends at ~45°  (upper-right + right)
+    canvas.drawArc(rect, -1.5708, 2.3562, false, arc(const Color(0xFF4285F4)));
+    // Green:  45° → clockwise 75° → ends at 120°         (lower-right + bottom)
+    canvas.drawArc(rect, 0.7854, 1.3090, false, arc(const Color(0xFF34A853)));
+    // Yellow: 120° → clockwise 60° → ends at 180°        (bottom → lower-left)
+    canvas.drawArc(rect, 2.0944, 1.0472, false, arc(const Color(0xFFFBBC05)));
+    // Red:    180° → clockwise 90° → ends at 270°        (left → top)
+    canvas.drawArc(rect, 3.1416, 1.5708, false, arc(const Color(0xFFEA4335)));
 
-    // Yellow arc (bottom-left)
-    final yellow = Paint()
-      ..color = const Color(0xFFFBBC05)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = size.width * 0.16
-      ..strokeCap = StrokeCap.butt;
-    canvas.drawArc(
-      Rect.fromCircle(center: Offset(cx, cy), radius: r * 0.72),
-      1.57,
-      1.05,
-      false,
-      yellow,
-    );
-
-    // Green arc (bottom-right)
-    final green = Paint()
-      ..color = const Color(0xFF34A853)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = size.width * 0.16
-      ..strokeCap = StrokeCap.butt;
-    canvas.drawArc(
-      Rect.fromCircle(center: Offset(cx, cy), radius: r * 0.72),
-      2.62,
-      0.88,
-      false,
-      green,
-    );
-
-    // Horizontal bar for "G"
-    final barPaint = Paint()
-      ..color = const Color(0xFF4285F4)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = size.width * 0.16
-      ..strokeCap = StrokeCap.butt;
+    // Blue horizontal bar: center → right edge (the "G" cutout shelf)
     canvas.drawLine(
       Offset(cx, cy),
-      Offset(cx + r * 0.72, cy),
-      barPaint,
+      Offset(cx + arcR, cy),
+      arc(const Color(0xFF4285F4)),
     );
   }
 

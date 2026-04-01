@@ -15,6 +15,7 @@ import '../features/matches/matches_screen.dart';
 import '../features/randomizer/randomizer_screen.dart';
 import '../features/group_planner/group_planner_screen.dart';
 import '../features/group_planner/group_plan_editor_screen.dart';
+import '../features/settings/settings_screen.dart';
 import 'shell_screen.dart';
 
 Page<void> _fadeSlidePage(Widget child, GoRouterState state) {
@@ -122,6 +123,10 @@ final routerProvider = Provider<GoRouter>((ref) {
           KillerDetailScreen(killerId: state.pathParameters['id']!),
           state,
         ),
+      ),
+      GoRoute(
+        path: '/settings',
+        pageBuilder: (_, state) => _fadeSlidePage(const SettingsScreen(), state),
       ),
       GoRoute(
         path: '/matches/add',

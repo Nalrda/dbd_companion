@@ -59,6 +59,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/data/
+    - assets/images/perks/
     - assets/data/maps/MacMillan Estate/
     - assets/data/maps/Autohaven Wreckers/
     - assets/data/maps/Coldwind Farm/
