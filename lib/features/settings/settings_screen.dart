@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/providers/theme_provider.dart';
+import '../../core/providers/auth_provider.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -67,6 +68,37 @@ class SettingsScreen extends ConsumerWidget {
                   );
                 }).toList(),
               ),
+              if (MediaQuery.of(context).size.width < 600) ...[
+                const SizedBox(height: 32),
+                Container(height: 1, color: AppTheme.border),
+                const SizedBox(height: 24),
+                GestureDetector(
+                  onTap: () => ref.read(authNotifierProvider).signOut(),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: AppTheme.surfaceElevated,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: AppTheme.border),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.logout, color: AppTheme.textSecondary, size: 18),
+                        const SizedBox(width: 12),
+                        Text(
+                          'WYLOGUJ',
+                          style: GoogleFonts.rajdhani(
+                            color: AppTheme.textSecondary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 1.5,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ],
           ),
         ),

@@ -383,7 +383,7 @@ class _BottomNavBar extends StatelessWidget {
                 onTap: () => onTap(i),
               ),
             ),
-            _BottomSignOutItem(onSignOut: onSignOut),
+            _BottomSettingsItem(onSignOut: onSignOut),
           ],
         ),
       ),
@@ -485,15 +485,15 @@ class _BottomNavItemState extends State<_BottomNavItem> {
   }
 }
 
-class _BottomSignOutItem extends StatelessWidget {
+class _BottomSettingsItem extends StatelessWidget {
   final VoidCallback onSignOut;
 
-  const _BottomSignOutItem({required this.onSignOut});
+  const _BottomSettingsItem({required this.onSignOut});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onSignOut,
+      onTap: () => context.push('/settings'),
       behavior: HitTestBehavior.opaque,
       child: SizedBox(
         width: 44,
@@ -501,10 +501,10 @@ class _BottomSignOutItem extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(height: 2),
-            const Icon(Icons.logout, color: AppTheme.textSecondary, size: 20),
+            const Icon(Icons.settings_outlined, color: AppTheme.textSecondary, size: 20),
             const SizedBox(height: 2),
             Text(
-              'WYLOGUJ',
+              'WIĘCEJ',
               style: GoogleFonts.rajdhani(
                 fontSize: 8,
                 fontWeight: FontWeight.w500,
