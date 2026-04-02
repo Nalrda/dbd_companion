@@ -464,41 +464,43 @@ class PerkSlot extends StatelessWidget {
       contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       onTap: onTap,
       animate: true,
-      filledContent: Row(
-        children: [
-          PerkIcon(perk: perk!, size: 62),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
+      filledContent: perk == null
+          ? const SizedBox()
+          : Row(
               children: [
-                Text(
-                  perk!.name,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: AppTheme.textPrimary,
+                PerkIcon(perk: perk!, size: 62),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        perk!.name,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: AppTheme.textPrimary,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        perk!.character,
+                        style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 2),
-                Text(
-                  perk!.character,
-                  style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary),
-                ),
+                if (onRemove != null)
+                  GestureDetector(
+                    onTap: onRemove,
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      child: const Icon(Icons.close, size: 16, color: AppTheme.textDim),
+                    ),
+                  ),
               ],
             ),
-          ),
-          if (onRemove != null)
-            GestureDetector(
-              onTap: onRemove,
-              child: Container(
-                padding: const EdgeInsets.all(4),
-                child: const Icon(Icons.close, size: 16, color: AppTheme.textDim),
-              ),
-            ),
-        ],
-      ),
     );
   }
 }
@@ -1404,7 +1406,7 @@ class _OfferingPickerSheetState extends ConsumerState<OfferingPickerSheet> {
                           ),
                         ),
                         if (isSelected)
-                          const Icon(Icons.check_circle, color: AppTheme.primary, size: 18),
+                          Icon(Icons.check_circle, color: AppTheme.primary, size: 18),
                       ],
                     ),
                   ),

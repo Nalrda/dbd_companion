@@ -525,7 +525,7 @@ class _GuestBanner extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              'Guest mode — your data is saved online',
+              'Guest mode — your data is not saved online',
               style: GoogleFonts.inter(
                 fontSize: 12,
                 color: AppTheme.textSecondary,

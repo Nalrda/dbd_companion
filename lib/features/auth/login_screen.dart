@@ -212,7 +212,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   width: double.infinity,
                   height: 52,
                   child: _guestLoading
-                      ? Center(
+                      ? const Center(
                           child: SizedBox(
                             width: 24,
                             height: 24,
@@ -226,7 +226,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           onPressed: _signInAsGuest,
                           style: OutlinedButton.styleFrom(
                             backgroundColor: Colors.transparent,
-                            side: BorderSide(
+                            side: const BorderSide(
                               color: AppTheme.border,
                               width: 1,
                             ),
