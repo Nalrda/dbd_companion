@@ -488,16 +488,18 @@ class _PerkPickerSheetState extends ConsumerState<_PerkPickerSheet> {
                   itemBuilder: (ctx, i) {
                     final perk = filtered[i];
                     final isUsed = widget.selectedIds.contains(perk.id);
-                    return Opacity(
-                      opacity: isUsed ? 0.4 : 1,
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: PerkCard(
-                          perk: perk,
-                          compact: true,
-                          onTap: isUsed ? null : () => widget.onSelect(perk),
-                        ),
+                    final card = Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: PerkCard(
+                        perk: perk,
+                        compact: true,
+                        onTap: isUsed ? null : () => widget.onSelect(perk),
                       ),
+                    );
+                    return RepaintBoundary(
+                      child: isUsed
+                          ? Opacity(opacity: 0.4, child: card)
+                          : card,
                     );
                   },
                 );

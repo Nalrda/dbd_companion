@@ -10,7 +10,8 @@
       "Read(//c/flutter/bin/**)",
       "Bash(/c/flutter/bin/flutter pub:*)",
       "WebSearch",
-      "WebFetch(domain:deadbydaylight.fandom.com)"
+      "WebFetch(domain:deadbydaylight.fandom.com)",
+      "Bash(keytool -list -v -keystore \"C:/Users/adria/.android/debug.keystore\" -alias androiddebugkey -storepass android -keypass android)"
     ]
   }
 }

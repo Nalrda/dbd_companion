@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 import '../models/group_plan.dart';
+import '../services/guest_mode.dart';
 
 class GroupPlanRepository {
   static const _uuid = Uuid();
@@ -10,6 +13,10 @@ class GroupPlanRepository {
   static GroupPlanRepository get instance =>
       _instance ??= GroupPlanRepository._();
   GroupPlanRepository._();
+
+  bool get _isGuest => GuestMode.isGuest;
+
+  Future<Box<String>> _localBox() => Hive.openBox<String>('guest_group_plans');
 
   CollectionReference<Map<String, dynamic>> _col() {
     final uid = FirebaseAuth.instance.currentUser!.uid;
@@ -20,6 +27,14 @@ class GroupPlanRepository {
   }
 
   Future<List<GroupPlan>> getAll() async {
+    if (_isGuest) {
+      final box = await _localBox();
+      final plans = box.values
+          .map((s) => GroupPlan.fromJson(jsonDecode(s) as Map<String, dynamic>))
+          .toList()
+        ..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+      return plans;
+    }
     try {
       final snap = await _col().orderBy('updatedAt', descending: true).get();
       return snap.docs.map((d) => GroupPlan.fromJson(d.data())).toList();
@@ -30,6 +45,11 @@ class GroupPlanRepository {
 
   Future<GroupPlan> create({required String name, String? notes}) async {
     final plan = GroupPlan(id: _uuid.v4(), name: name, notes: notes);
+    if (_isGuest) {
+      final box = await _localBox();
+      await box.put(plan.id, jsonEncode(plan.toJson()));
+      return plan;
+    }
     try {
       await _col().doc(plan.id).set(plan.toJson());
     } on FirebaseException catch (e) {
@@ -40,6 +60,11 @@ class GroupPlanRepository {
 
   Future<void> save(GroupPlan plan) async {
     plan.updatedAt = DateTime.now();
+    if (_isGuest) {
+      final box = await _localBox();
+      await box.put(plan.id, jsonEncode(plan.toJson()));
+      return;
+    }
     try {
       await _col().doc(plan.id).set(plan.toJson());
     } on FirebaseException catch (e) {
@@ -48,6 +73,11 @@ class GroupPlanRepository {
   }
 
   Future<void> delete(String id) async {
+    if (_isGuest) {
+      final box = await _localBox();
+      await box.delete(id);
+      return;
+    }
     try {
       await _col().doc(id).delete();
     } on FirebaseException catch (e) {
@@ -56,6 +86,12 @@ class GroupPlanRepository {
   }
 
   Future<GroupPlan?> getById(String id) async {
+    if (_isGuest) {
+      final box = await _localBox();
+      final s = box.get(id);
+      if (s == null) return null;
+      return GroupPlan.fromJson(jsonDecode(s) as Map<String, dynamic>);
+    }
     try {
       final doc = await _col().doc(id).get();
       if (!doc.exists) return null;
@@ -84,6 +120,11 @@ class GroupPlanRepository {
       survivor3OfferingId: template.survivor3OfferingId,
       survivor4OfferingId: template.survivor4OfferingId,
     );
+    if (_isGuest) {
+      final box = await _localBox();
+      await box.put(plan.id, jsonEncode(plan.toJson()));
+      return plan;
+    }
     try {
       await _col().doc(plan.id).set(plan.toJson());
     } on FirebaseException catch (e) {

@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
 import '../models/build.dart';
+import '../services/guest_mode.dart';
 
 class BuildRepository {
   static const _uuid = Uuid();
@@ -9,6 +12,10 @@ class BuildRepository {
   static BuildRepository? _instance;
   static BuildRepository get instance => _instance ??= BuildRepository._();
   BuildRepository._();
+
+  bool get _isGuest => GuestMode.isGuest;
+
+  Future<Box<String>> _localBox() => Hive.openBox<String>('guest_builds');
 
   CollectionReference<Map<String, dynamic>> _col() {
     final uid = FirebaseAuth.instance.currentUser!.uid;
@@ -19,6 +26,14 @@ class BuildRepository {
   }
 
   Future<List<Build>> getAllBuilds() async {
+    if (_isGuest) {
+      final box = await _localBox();
+      final builds = box.values
+          .map((s) => Build.fromJson(jsonDecode(s) as Map<String, dynamic>))
+          .toList()
+        ..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+      return builds;
+    }
     try {
       final snap = await _col().orderBy('updatedAt', descending: true).get();
       return snap.docs.map((d) => Build.fromJson(d.data())).toList();
@@ -60,6 +75,11 @@ class BuildRepository {
       addon2: addon2,
       offeringId: offeringId,
     );
+    if (_isGuest) {
+      final box = await _localBox();
+      await box.put(build.id, jsonEncode(build.toJson()));
+      return build;
+    }
     try {
       await _col().doc(build.id).set(build.toJson());
     } on FirebaseException catch (e) {
@@ -69,6 +89,11 @@ class BuildRepository {
   }
 
   Future<void> saveBuild(Build build) async {
+    if (_isGuest) {
+      final box = await _localBox();
+      await box.put(build.id, jsonEncode(build.toJson()));
+      return;
+    }
     try {
       await _col().doc(build.id).set(build.toJson());
     } on FirebaseException catch (e) {
@@ -77,6 +102,11 @@ class BuildRepository {
   }
 
   Future<void> deleteBuild(String id) async {
+    if (_isGuest) {
+      final box = await _localBox();
+      await box.delete(id);
+      return;
+    }
     try {
       await _col().doc(id).delete();
     } on FirebaseException catch (e) {
@@ -85,6 +115,12 @@ class BuildRepository {
   }
 
   Future<Build?> getBuildById(String id) async {
+    if (_isGuest) {
+      final box = await _localBox();
+      final s = box.get(id);
+      if (s == null) return null;
+      return Build.fromJson(jsonDecode(s) as Map<String, dynamic>);
+    }
     try {
       final doc = await _col().doc(id).get();
       if (!doc.exists) return null;

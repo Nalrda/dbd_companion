@@ -47,7 +47,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     initialLocation: '/builds',
     refreshListenable: authNotifier,
     redirect: (context, state) {
-      final isLoggedIn = authNotifier.user != null;
+      final isLoggedIn = authNotifier.user != null || authNotifier.isGuest;
       final isOnLogin = state.matchedLocation == '/login';
 
       if (!isLoggedIn && !isOnLogin) return '/login';

@@ -130,14 +130,14 @@ class _PerkImage extends StatelessWidget {
         .replaceAll(RegExp(r'^_|_$'), '');
   }
 
-  Widget _networkFallback() {
+  Widget _networkFallback(int cacheSize) {
     if (perk.iconUrl != null) {
       return Image.network(
         perk.iconUrl!,
         width: size,
         height: size,
         fit: BoxFit.cover,
-        filterQuality: FilterQuality.medium,
+        filterQuality: FilterQuality.low,
         errorBuilder: (_, __, ___) => fallback,
         loadingBuilder: (_, child, progress) =>
             progress == null ? child : fallback,
@@ -150,20 +150,25 @@ class _PerkImage extends StatelessWidget {
   Widget build(BuildContext context) {
     final nameFile = 'assets/images/perks/${_nameToFilename(perk.name)}.png';
     final idFile   = 'assets/images/perks/${perk.id}.png';
+    final cacheSize = (size * MediaQuery.of(context).devicePixelRatio).ceil();
 
     return Image.asset(
       nameFile,
       width: size,
       height: size,
       fit: BoxFit.cover,
-      filterQuality: FilterQuality.medium,
+      filterQuality: FilterQuality.low,
+      cacheWidth: cacheSize,
+      cacheHeight: cacheSize,
       errorBuilder: (_, __, ___) => Image.asset(
         idFile,
         width: size,
         height: size,
         fit: BoxFit.cover,
-        filterQuality: FilterQuality.medium,
-        errorBuilder: (_, __, ___) => _networkFallback(),
+        filterQuality: FilterQuality.low,
+        cacheWidth: cacheSize,
+        cacheHeight: cacheSize,
+        errorBuilder: (_, __, ___) => _networkFallback(cacheSize),
       ),
     );
   }

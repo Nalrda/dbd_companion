@@ -6,12 +6,41 @@ import '../../core/theme/app_theme.dart';
 import '../../core/providers/theme_provider.dart';
 import '../../core/providers/auth_provider.dart';
 
-class SettingsScreen extends ConsumerWidget {
+class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+  bool _signingIn = false;
+
+  Future<void> _signInWithGoogle() async {
+    setState(() => _signingIn = true);
+    try {
+      await ref.read(authNotifierProvider).signInWithGoogle();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Sign in failed: $e',
+                style: const TextStyle(color: AppTheme.textPrimary)),
+            backgroundColor: AppTheme.surfaceElevated,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _signingIn = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final selectedColor = ref.watch(themeColorProvider);
+    final authNotifier = ref.watch(authNotifierProvider);
+    final isGuest = authNotifier.isGuest;
 
     return Scaffold(
       backgroundColor: AppTheme.background,
@@ -71,32 +100,71 @@ class SettingsScreen extends ConsumerWidget {
               const SizedBox(height: 32),
               Container(height: 1, color: AppTheme.border),
               const SizedBox(height: 24),
-              GestureDetector(
-                onTap: () => ref.read(authNotifierProvider).signOut(),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-                  decoration: BoxDecoration(
-                    color: AppTheme.surfaceElevated,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: AppTheme.border),
+              if (isGuest)
+                GestureDetector(
+                  onTap: _signingIn ? null : _signInWithGoogle,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: AppTheme.primaryDim.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: AppTheme.primary.withValues(alpha: 0.4)),
+                    ),
+                    child: _signingIn
+                        ? Center(
+                            child: SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                color: AppTheme.primary,
+                                strokeWidth: 2,
+                              ),
+                            ),
+                          )
+                        : Row(
+                            children: [
+                              Icon(Icons.login, color: AppTheme.primary, size: 18),
+                              const SizedBox(width: 12),
+                              Text(
+                                'SIGN IN WITH GOOGLE',
+                                style: GoogleFonts.rajdhani(
+                                  color: AppTheme.primary,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 1.5,
+                                ),
+                              ),
+                            ],
+                          ),
                   ),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.logout, color: AppTheme.textSecondary, size: 18),
-                      const SizedBox(width: 12),
-                      Text(
-                        'SIGN OUT',
-                        style: GoogleFonts.rajdhani(
-                          color: AppTheme.textSecondary,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 1.5,
+                )
+              else
+                GestureDetector(
+                  onTap: () => ref.read(authNotifierProvider).signOut(),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: AppTheme.surfaceElevated,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: AppTheme.border),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.logout, color: AppTheme.textSecondary, size: 18),
+                        const SizedBox(width: 12),
+                        Text(
+                          'SIGN OUT',
+                          style: GoogleFonts.rajdhani(
+                            color: AppTheme.textSecondary,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 1.5,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
             ],
           ),
         ),

@@ -92,11 +92,14 @@ class ShellScreen extends ConsumerWidget {
 
     // ── Narrow / mobile: bottom navigation bar ──────────────────────────────
     return Scaffold(
-      body: Column(
-        children: [
-          if (isGuest) _GuestBanner(onSignIn: signInWithGoogle),
-          Expanded(child: child),
-        ],
+      body: SafeArea(
+        bottom: false,
+        child: Column(
+          children: [
+            if (isGuest) _GuestBanner(onSignIn: signInWithGoogle),
+            Expanded(child: child),
+          ],
+        ),
       ),
       bottomNavigationBar: _BottomNavBar(
         selectedIndex: idx,

@@ -9,6 +9,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import '../services/guest_mode.dart';
 
 // Desktop OAuth 2.0 client ID (type: Desktop app) from Google Cloud Console.
 // https://console.cloud.google.com/apis/credentials
@@ -26,20 +28,35 @@ class AuthNotifier extends ChangeNotifier {
   StreamSubscription<User?>? _sub;
 
   AuthNotifier() {
+    _loadGuestMode();
     _sub = FirebaseAuth.instance.authStateChanges().listen((user) {
       _user = user;
       notifyListeners();
     });
   }
 
+  Future<void> _loadGuestMode() async {
+    final prefs = await SharedPreferences.getInstance();
+    GuestMode.isGuest = prefs.getBool('guest_mode') ?? false;
+    if (GuestMode.isGuest) notifyListeners();
+  }
+
   User? get user => _user;
-  bool get isGuest => _user?.isAnonymous ?? false;
+  bool get isGuest => GuestMode.isGuest;
 
   Future<void> signInAsGuest() async {
-    await FirebaseAuth.instance.signInAnonymously();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('guest_mode', true);
+    GuestMode.isGuest = true;
+    notifyListeners();
   }
 
   Future<void> signInWithGoogle() async {
+    // Clear guest mode when signing in properly
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('guest_mode');
+    GuestMode.isGuest = false;
+
     if (kIsWeb) {
       await FirebaseAuth.instance.signInWithPopup(GoogleAuthProvider());
     } else if (_isDesktop) {
@@ -104,6 +121,9 @@ class AuthNotifier extends ChangeNotifier {
   }
 
   Future<void> signOut() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('guest_mode');
+    GuestMode.isGuest = false;
     await FirebaseAuth.instance.signOut();
     if (!kIsWeb && !_isDesktop) await GoogleSignIn().signOut();
   }
