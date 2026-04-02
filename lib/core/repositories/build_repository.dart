@@ -19,8 +19,12 @@ class BuildRepository {
   }
 
   Future<List<Build>> getAllBuilds() async {
-    final snap = await _col().orderBy('updatedAt', descending: true).get();
-    return snap.docs.map((d) => Build.fromJson(d.data())).toList();
+    try {
+      final snap = await _col().orderBy('updatedAt', descending: true).get();
+      return snap.docs.map((d) => Build.fromJson(d.data())).toList();
+    } on FirebaseException catch (e) {
+      throw Exception('Failed to load builds: ${e.message}');
+    }
   }
 
   Future<List<Build>> getSurvivorBuilds() async {
@@ -48,21 +52,37 @@ class BuildRepository {
       notes: notes,
       tags: tags,
     );
-    await _col().doc(build.id).set(build.toJson());
+    try {
+      await _col().doc(build.id).set(build.toJson());
+    } on FirebaseException catch (e) {
+      throw Exception('Failed to create build: ${e.message}');
+    }
     return build;
   }
 
   Future<void> saveBuild(Build build) async {
-    await _col().doc(build.id).set(build.toJson());
+    try {
+      await _col().doc(build.id).set(build.toJson());
+    } on FirebaseException catch (e) {
+      throw Exception('Failed to save build: ${e.message}');
+    }
   }
 
   Future<void> deleteBuild(String id) async {
-    await _col().doc(id).delete();
+    try {
+      await _col().doc(id).delete();
+    } on FirebaseException catch (e) {
+      throw Exception('Failed to delete build: ${e.message}');
+    }
   }
 
   Future<Build?> getBuildById(String id) async {
-    final doc = await _col().doc(id).get();
-    if (!doc.exists) return null;
-    return Build.fromJson(doc.data()!);
+    try {
+      final doc = await _col().doc(id).get();
+      if (!doc.exists) return null;
+      return Build.fromJson(doc.data()!);
+    } on FirebaseException catch (e) {
+      throw Exception('Failed to fetch build: ${e.message}');
+    }
   }
 }

@@ -366,6 +366,78 @@ class _PerkCardState extends State<PerkCard> {
 
 // ─── Perk Slot ────────────────────────────────────────────────────────────────
 
+// ─── Base Slot ────────────────────────────────────────────────────────────────
+// Shared slot container used by PerkSlot, ItemSlot and OfferingSlot.
+// Handles the empty/filled visual state (border, background, empty label).
+// The caller provides [filledContent] — the full Row shown when non-empty.
+
+class _BaseSlot extends StatelessWidget {
+  final bool isEmpty;
+  final double height;
+  final Color filledBorderColor;
+  final IconData emptyIcon;
+  final double emptyIconSize;
+  final String emptyLabel;
+  final Widget filledContent;
+  final EdgeInsets contentPadding;
+  final VoidCallback? onTap;
+  final bool animate;
+
+  const _BaseSlot({
+    required this.isEmpty,
+    required this.height,
+    required this.filledBorderColor,
+    required this.emptyIcon,
+    required this.emptyLabel,
+    required this.filledContent,
+    this.emptyIconSize = 16,
+    this.contentPadding = const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+    this.onTap,
+    this.animate = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    Widget slot = GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        height: height,
+        decoration: BoxDecoration(
+          color: isEmpty ? AppTheme.surface : AppTheme.surfaceElevated,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isEmpty ? AppTheme.border : filledBorderColor,
+            width: 1,
+          ),
+        ),
+        child: isEmpty
+            ? Center(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(emptyIcon, color: AppTheme.textDim, size: emptyIconSize),
+                    const SizedBox(width: 6),
+                    Text(
+                      emptyLabel,
+                      style: const TextStyle(fontSize: 12, color: AppTheme.textDim),
+                    ),
+                  ],
+                ),
+              )
+            : Padding(
+                padding: contentPadding,
+                child: filledContent,
+              ),
+      ),
+    );
+    if (animate) {
+      return slot.animate().fadeIn(duration: 200.ms).slideY(begin: 0.05, end: 0);
+    }
+    return slot;
+  }
+}
+
 class PerkSlot extends StatelessWidget {
   final Perk? perk;
   final int index;
@@ -382,78 +454,54 @@ class PerkSlot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isEmpty = perk == null;
-
-    return GestureDetector(
+    return _BaseSlot(
+      isEmpty: perk == null,
+      height: 88,
+      filledBorderColor: AppTheme.primary.withValues(alpha: 0.4),
+      emptyIcon: Icons.add,
+      emptyIconSize: 18,
+      emptyLabel: 'Perk ${index + 1}',
+      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        height: 88,
-        decoration: BoxDecoration(
-          color: isEmpty ? AppTheme.surface : AppTheme.surfaceElevated,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isEmpty ? AppTheme.border : AppTheme.primary.withValues(alpha: 0.4),
-            width: 1,
-          ),
-        ),
-        child: isEmpty
-            ? Center(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.add, color: AppTheme.textDim, size: 18),
-                    const SizedBox(width: 6),
-                    Text(
-                      'Perk ${index + 1}',
-                      style: const TextStyle(fontSize: 13, color: AppTheme.textDim),
-                    ),
-                  ],
-                ),
-              )
-            : Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                child: Row(
-                  children: [
-                    PerkIcon(perk: perk!, size: 62),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            perk!.name,
-                            style: const TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                              color: AppTheme.textPrimary,
-                            ),
-                          ),
-                          const SizedBox(height: 2),
-                          Text(
-                            perk!.character,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: AppTheme.textSecondary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    if (onRemove != null)
-                      GestureDetector(
-                        onTap: onRemove,
-                        child: Container(
-                          padding: const EdgeInsets.all(4),
-                          child: const Icon(Icons.close, size: 16, color: AppTheme.textDim),
+      animate: true,
+      filledContent: perk == null
+          ? const SizedBox()
+          : Row(
+              children: [
+                PerkIcon(perk: perk!, size: 62),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        perk!.name,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: AppTheme.textPrimary,
                         ),
                       ),
-                  ],
+                      const SizedBox(height: 2),
+                      Text(
+                        perk!.character,
+                        style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-      ),
-    ).animate().fadeIn(duration: 200.ms).slideY(begin: 0.05, end: 0);
+                if (onRemove != null)
+                  GestureDetector(
+                    onTap: onRemove,
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      child: const Icon(Icons.close, size: 16, color: AppTheme.textDim),
+                    ),
+                  ),
+              ],
+            ),
+    );
   }
 }
 
@@ -807,66 +855,167 @@ class ItemSlot extends ConsumerWidget {
   }
 
   Widget _buildSlot(Item? item) {
-    return GestureDetector(
+    return _BaseSlot(
+      isEmpty: item == null,
+      height: 64,
+      filledBorderColor: item != null
+          ? itemCategoryColor(item.category).withValues(alpha: 0.5)
+          : AppTheme.border,
+      emptyIcon: Icons.backpack_outlined,
+      emptyLabel: 'Choose Item',
       onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        height: 64,
-        decoration: BoxDecoration(
-          color: item != null ? AppTheme.surfaceElevated : AppTheme.surface,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: item != null
-                ? itemCategoryColor(item.category).withValues(alpha: 0.5)
-                : AppTheme.border,
+      filledContent: item == null
+          ? const SizedBox()
+          : Row(
+              children: [
+                ItemIcon(item: item, size: 40),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        item.name,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: AppTheme.textPrimary,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        itemCategoryLabel(item.category),
+                        style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary),
+                      ),
+                    ],
+                  ),
+                ),
+                if (onRemove != null)
+                  GestureDetector(
+                    onTap: onRemove,
+                    child: const Padding(
+                      padding: EdgeInsets.all(4),
+                      child: Icon(Icons.close, size: 14, color: AppTheme.textDim),
+                    ),
+                  ),
+              ],
+            ),
+    );
+  }
+}
+
+// ─── Picker Sheet Layout ──────────────────────────────────────────────────────
+// Shared DraggableScrollableSheet layout used by ItemPickerSheet and
+// OfferingPickerSheet. Provides handle, optional title, search field,
+// category chips and an Expanded area for the item list.
+
+class _PickerSheetLayout extends StatelessWidget {
+  final String? title;
+  final String searchHint;
+  final String searchValue;
+  final ValueChanged<String> onSearch;
+  final List<(String, String)> categories;
+  final String selectedCategory;
+  final ValueChanged<String> onCategoryChanged;
+  final Widget Function(ScrollController controller) listBuilder;
+
+  const _PickerSheetLayout({
+    this.title,
+    required this.searchHint,
+    required this.searchValue,
+    required this.onSearch,
+    required this.categories,
+    required this.selectedCategory,
+    required this.onCategoryChanged,
+    required this.listBuilder,
+  });
+
+  Widget _chip(String id, String label) {
+    final isActive = selectedCategory == id;
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: GestureDetector(
+        onTap: () => onCategoryChanged(id),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+          decoration: BoxDecoration(
+            color: isActive ? AppTheme.primary : AppTheme.surfaceElevated,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: isActive ? AppTheme.primary : AppTheme.border),
+          ),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: isActive ? Colors.white : AppTheme.textSecondary,
+            ),
           ),
         ),
-        child: item == null
-            ? const Center(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.backpack_outlined, color: AppTheme.textDim, size: 16),
-                    SizedBox(width: 6),
-                    Text('Choose Item',
-                        style: TextStyle(fontSize: 12, color: AppTheme.textDim)),
-                  ],
-                ),
-              )
-            : Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                child: Row(
-                  children: [
-                    ItemIcon(item: item, size: 40),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(item.name,
-                              style: const TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppTheme.textPrimary),
-                              overflow: TextOverflow.ellipsis),
-                          Text(itemCategoryLabel(item.category),
-                              style: const TextStyle(
-                                  fontSize: 11, color: AppTheme.textSecondary)),
-                        ],
-                      ),
-                    ),
-                    if (onRemove != null)
-                      GestureDetector(
-                        onTap: onRemove,
-                        child: const Padding(
-                          padding: EdgeInsets.all(4),
-                          child: Icon(Icons.close, size: 14, color: AppTheme.textDim),
-                        ),
-                      ),
-                  ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DraggableScrollableSheet(
+      expand: false,
+      initialChildSize: 0.85,
+      maxChildSize: 0.95,
+      builder: (ctx, controller) => Column(
+        children: [
+          const SizedBox(height: 8),
+          Center(
+            child: Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: AppTheme.border,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          if (title != null)
+            Padding(
+              padding: const EdgeInsets.only(left: 16, right: 16, bottom: 10),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  title!,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: AppTheme.textPrimary,
+                  ),
                 ),
               ),
+            ),
+          SizedBox(
+            height: 36,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              children: categories.map((c) => _chip(c.$1, c.$2)).toList(),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: TextField(
+              onChanged: onSearch,
+              style: const TextStyle(color: AppTheme.textPrimary),
+              decoration: InputDecoration(
+                hintText: searchHint,
+                prefixIcon: const Icon(Icons.search, color: AppTheme.textDim, size: 18),
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Expanded(child: listBuilder(controller)),
+        ],
       ),
     );
   }
@@ -905,148 +1054,86 @@ class _ItemPickerSheetState extends ConsumerState<ItemPickerSheet> {
   Widget build(BuildContext context) {
     final itemsAsync = ref.watch(survivorItemsProvider);
 
-    return DraggableScrollableSheet(
-      expand: false,
-      initialChildSize: 0.85,
-      maxChildSize: 0.95,
-      builder: (ctx, controller) => Column(
-        children: [
-          const SizedBox(height: 8),
-          Container(
-            width: 40, height: 4,
-            decoration: BoxDecoration(
-                color: AppTheme.border, borderRadius: BorderRadius.circular(2)),
-          ),
-          const SizedBox(height: 12),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text('Choose Item',
-                  style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: AppTheme.textPrimary)),
-            ),
-          ),
-          const SizedBox(height: 10),
-          SizedBox(
-            height: 36,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              children: _categories.map((cat) {
-                final isActive = _filter == cat.$1;
-                return Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: GestureDetector(
-                    onTap: () => setState(() => _filter = cat.$1),
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 150),
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                      decoration: BoxDecoration(
-                        color: isActive ? AppTheme.primary : AppTheme.surfaceElevated,
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                            color: isActive ? AppTheme.primary : AppTheme.border),
-                      ),
-                      child: Text(cat.$2,
-                          style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: isActive ? Colors.white : AppTheme.textSecondary)),
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
-          ),
-          const SizedBox(height: 10),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: TextField(
-              onChanged: (v) => setState(() => _search = v),
-              style: const TextStyle(color: AppTheme.textPrimary),
-              decoration: const InputDecoration(
-                hintText: 'Search items...',
-                prefixIcon: Icon(Icons.search, color: AppTheme.textDim, size: 18),
-              ),
-            ),
-          ),
-          const SizedBox(height: 10),
-          Expanded(
-            child: itemsAsync.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Center(child: Text('$e')),
-              data: (items) {
-                final filtered = items.where((i) {
-                  final matchSearch = _search.isEmpty ||
-                      i.name.toLowerCase().contains(_search.toLowerCase());
-                  final matchCat = _filter == 'all' || i.category == _filter;
-                  return matchSearch && matchCat;
-                }).toList();
+    return _PickerSheetLayout(
+      title: 'Choose Item',
+      searchHint: 'Search items...',
+      searchValue: _search,
+      onSearch: (v) => setState(() => _search = v),
+      categories: _categories,
+      selectedCategory: _filter,
+      onCategoryChanged: (v) => setState(() => _filter = v),
+      listBuilder: (controller) => itemsAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (e, _) => Center(child: Text('$e')),
+        data: (items) {
+          final filtered = items.where((i) {
+            final matchSearch = _search.isEmpty ||
+                i.name.toLowerCase().contains(_search.toLowerCase());
+            final matchCat = _filter == 'all' || i.category == _filter;
+            return matchSearch && matchCat;
+          }).toList();
 
-                return ListView.builder(
-                  controller: controller,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: filtered.length,
-                  itemBuilder: (ctx, i) {
-                    final item = filtered[i];
-                    final isSelected = item.id == widget.selectedId;
-                    final rarityColor = AppTheme.rarityColor(item.rarity);
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: GestureDetector(
-                        onTap: () => widget.onSelect(item),
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 150),
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: isSelected
-                                ? AppTheme.primaryDim.withValues(alpha: 0.3)
-                                : AppTheme.surfaceElevated,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: isSelected ? AppTheme.primary : AppTheme.border,
-                              width: isSelected ? 1.5 : 1,
-                            ),
-                          ),
-                          child: Row(
+          return ListView.builder(
+            controller: controller,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            itemCount: filtered.length,
+            itemBuilder: (ctx, i) {
+              final item = filtered[i];
+              final isSelected = item.id == widget.selectedId;
+              final rarityColor = AppTheme.rarityColor(item.rarity);
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: GestureDetector(
+                  onTap: () => widget.onSelect(item),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 150),
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? AppTheme.primaryDim.withValues(alpha: 0.3)
+                          : AppTheme.surfaceElevated,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: isSelected ? AppTheme.primary : AppTheme.border,
+                        width: isSelected ? 1.5 : 1,
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        ItemIcon(item: item, size: 40),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              ItemIcon(item: item, size: 40),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(item.name,
-                                        style: const TextStyle(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600,
-                                            color: AppTheme.textPrimary)),
-                                    Text(
-                                      item.rarity.replaceAll('_', ' ').toUpperCase(),
-                                      style: TextStyle(fontSize: 10, color: rarityColor),
-                                    ),
-                                  ],
+                              Text(
+                                item.name,
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppTheme.textPrimary,
                                 ),
                               ),
-                              Container(
-                                width: 6, height: 6,
-                                decoration: BoxDecoration(
-                                    color: rarityColor, shape: BoxShape.circle),
+                              Text(
+                                item.rarity.replaceAll('_', ' ').toUpperCase(),
+                                style: TextStyle(fontSize: 10, color: rarityColor),
                               ),
                             ],
                           ),
                         ),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
-        ],
+                        Container(
+                          width: 6,
+                          height: 6,
+                          decoration: BoxDecoration(color: rarityColor, shape: BoxShape.circle),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }
@@ -1118,86 +1205,71 @@ class OfferingSlot extends ConsumerWidget {
           : null,
     );
 
-    return GestureDetector(
+    return _BaseSlot(
+      isEmpty: offering == null,
+      height: 64,
+      filledBorderColor: offering != null
+          ? offeringRarityColor(offering.rarity).withValues(alpha: 0.5)
+          : AppTheme.border,
+      emptyIcon: Icons.card_giftcard_outlined,
+      emptyLabel: 'Choose Offering',
       onTap: onTap,
-      child: Container(
-        height: 64,
-        decoration: BoxDecoration(
-          color: offering != null ? AppTheme.surfaceElevated : AppTheme.surface,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: offering != null
-                ? offeringRarityColor(offering.rarity).withValues(alpha: 0.5)
-                : AppTheme.border,
-          ),
-        ),
-        child: offering == null
-            ? const Center(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.card_giftcard_outlined, color: AppTheme.textDim, size: 16),
-                    SizedBox(width: 6),
-                    Text('Choose Offering',
-                        style: TextStyle(fontSize: 12, color: AppTheme.textDim)),
-                  ],
+      filledContent: offering == null
+          ? const SizedBox()
+          : Row(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: offeringRarityColor(offering.rarity).withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: offeringRarityColor(offering.rarity).withValues(alpha: 0.5),
+                    ),
+                  ),
+                  child: Icon(
+                    offeringCategoryIcon(offering.category),
+                    color: offeringRarityColor(offering.rarity),
+                    size: 20,
+                  ),
                 ),
-              )
-            : Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: offeringRarityColor(offering.rarity).withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: offeringRarityColor(offering.rarity).withValues(alpha: 0.5),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        offering.name,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: AppTheme.textPrimary,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        offeringRarityLabel(offering.rarity),
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: offeringRarityColor(offering.rarity),
                         ),
                       ),
-                      child: Icon(
-                        offeringCategoryIcon(offering.category),
-                        color: offeringRarityColor(offering.rarity),
-                        size: 20,
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            offering.name,
-                            style: const TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: AppTheme.textPrimary,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            offeringRarityLabel(offering.rarity),
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: offeringRarityColor(offering.rarity),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    if (onRemove != null)
-                      GestureDetector(
-                        onTap: onRemove,
-                        child: const Icon(Icons.close, size: 16, color: AppTheme.textDim),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-      ),
+                if (onRemove != null)
+                  GestureDetector(
+                    onTap: onRemove,
+                    child: const Padding(
+                      padding: EdgeInsets.all(4),
+                      child: Icon(Icons.close, size: 14, color: AppTheme.textDim),
+                    ),
+                  ),
+              ],
+            ),
     );
   }
 }
@@ -1242,179 +1314,107 @@ class _OfferingPickerSheetState extends ConsumerState<OfferingPickerSheet> {
         ? ref.watch(survivorOfferingsProvider)
         : ref.watch(killerOfferingsProvider);
 
-    return DraggableScrollableSheet(
-      expand: false,
-      initialChildSize: 0.85,
-      maxChildSize: 0.95,
-      builder: (ctx, controller) => Column(
-        children: [
-          const SizedBox(height: 8),
-          Container(
-            width: 40,
-            height: 4,
-            decoration: BoxDecoration(
-                color: AppTheme.border,
-                borderRadius: BorderRadius.circular(2)),
-          ),
-          const SizedBox(height: 16),
-          Padding(
+    return _PickerSheetLayout(
+      searchHint: 'Search offerings...',
+      searchValue: _search,
+      onSearch: (v) => setState(() => _search = v),
+      categories: _categories,
+      selectedCategory: _selectedCategory,
+      onCategoryChanged: (v) => setState(() => _selectedCategory = v),
+      listBuilder: (controller) => offeringsAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (e, _) => Center(child: Text('$e')),
+        data: (offerings) {
+          final filtered = offerings.where((o) {
+            if (_selectedCategory != 'all' && o.category != _selectedCategory) {
+              return false;
+            }
+            if (_search.isNotEmpty &&
+                !o.name.toLowerCase().contains(_search.toLowerCase())) {
+              return false;
+            }
+            return true;
+          }).toList();
+
+          // no_offering first
+          final noOff = offerings.where((o) => o.id == 'no_offering').firstOrNull;
+          final list = [
+            if (noOff != null && _selectedCategory == 'all' && _search.isEmpty) noOff,
+            ...filtered.where((o) => o.id != 'no_offering'),
+          ];
+
+          return ListView.builder(
+            controller: controller,
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: TextField(
-              onChanged: (v) => setState(() => _search = v),
-              autofocus: false,
-              style: const TextStyle(color: AppTheme.textPrimary),
-              decoration: const InputDecoration(
-                hintText: 'Search offerings...',
-                prefixIcon:
-                    Icon(Icons.search, color: AppTheme.textDim, size: 18),
-              ),
-            ),
-          ),
-          const SizedBox(height: 10),
-          SizedBox(
-            height: 36,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              children: _categories.map((cat) {
-                final isSelected = _selectedCategory == cat.$1;
-                return Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: FilterChip(
-                    label: Text(cat.$2,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: isSelected
-                              ? Colors.white
-                              : AppTheme.textSecondary,
-                        )),
-                    selected: isSelected,
-                    onSelected: (_) =>
-                        setState(() => _selectedCategory = cat.$1),
-                    backgroundColor: AppTheme.surfaceElevated,
-                    selectedColor: AppTheme.primary,
-                    checkmarkColor: Colors.white,
-                    side: BorderSide(
+            itemCount: list.length,
+            itemBuilder: (ctx, i) {
+              final o = list[i];
+              final isSelected = widget.selectedId == o.id;
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(10),
+                  onTap: () => widget.onSelect(o),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: isSelected ? AppTheme.primaryDim : AppTheme.surfaceElevated,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
                         color: isSelected
                             ? AppTheme.primary
-                            : AppTheme.border),
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    visualDensity: VisualDensity.compact,
-                  ),
-                );
-              }).toList(),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Expanded(
-            child: offeringsAsync.when(
-              loading: () =>
-                  const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Center(child: Text('$e')),
-              data: (offerings) {
-                final filtered = offerings.where((o) {
-                  if (_selectedCategory != 'all' &&
-                      o.category != _selectedCategory) { return false; }
-                  if (_search.isNotEmpty &&
-                      !o.name
-                          .toLowerCase()
-                          .contains(_search.toLowerCase())) { return false; }
-                  return true;
-                }).toList();
-
-                // no_offering first
-                final noOff = offerings
-                    .where((o) => o.id == 'no_offering')
-                    .firstOrNull;
-                final list = [
-                  if (noOff != null && _selectedCategory == 'all' && _search.isEmpty)
-                    noOff,
-                  ...filtered.where((o) => o.id != 'no_offering'),
-                ];
-
-                return ListView.builder(
-                  controller: controller,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: list.length,
-                  itemBuilder: (ctx, i) {
-                    final o = list[i];
-                    final isSelected = widget.selectedId == o.id;
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(10),
-                        onTap: () => widget.onSelect(o),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 10),
+                            : offeringRarityColor(o.rarity).withValues(alpha: 0.3),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 36,
+                          height: 36,
                           decoration: BoxDecoration(
-                            color: isSelected
-                                ? AppTheme.primaryDim
-                                : AppTheme.surfaceElevated,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                              color: isSelected
-                                  ? AppTheme.primary
-                                  : offeringRarityColor(o.rarity)
-                                      .withValues(alpha: 0.3),
-                            ),
+                            color: offeringRarityColor(o.rarity).withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                          child: Row(
+                          child: Icon(
+                            offeringCategoryIcon(o.category),
+                            color: offeringRarityColor(o.rarity),
+                            size: 18,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                width: 36,
-                                height: 36,
-                                decoration: BoxDecoration(
-                                  color: offeringRarityColor(o.rarity)
-                                      .withValues(alpha: 0.15),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Icon(
-                                  offeringCategoryIcon(o.category),
-                                  color: offeringRarityColor(o.rarity),
-                                  size: 18,
+                              Text(
+                                o.name,
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: AppTheme.textPrimary,
                                 ),
                               ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      o.name,
-                                      style: const TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w600,
-                                        color: AppTheme.textPrimary,
-                                      ),
-                                    ),
-                                    if (o.rarity != 'none')
-                                      Text(
-                                        offeringRarityLabel(o.rarity),
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          color:
-                                              offeringRarityColor(o.rarity),
-                                        ),
-                                      ),
-                                  ],
+                              if (o.rarity != 'none')
+                                Text(
+                                  offeringRarityLabel(o.rarity),
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: offeringRarityColor(o.rarity),
+                                  ),
                                 ),
-                              ),
-                              if (isSelected)
-                                Icon(Icons.check_circle,
-                                    color: AppTheme.primary, size: 18),
                             ],
                           ),
                         ),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
-        ],
+                        if (isSelected)
+                          Icon(Icons.check_circle, color: AppTheme.primary, size: 18),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }
