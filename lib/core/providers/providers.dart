@@ -47,6 +47,10 @@ class BuildsNotifier extends AsyncNotifier<List<Build>> {
     List<String>? perkIds,
     String? notes,
     List<String>? tags,
+    String? itemId,
+    String? addon1,
+    String? addon2,
+    String? offeringId,
   }) async {
     final newBuild = await BuildRepository.instance.createBuild(
       name: name,
@@ -54,6 +58,10 @@ class BuildsNotifier extends AsyncNotifier<List<Build>> {
       perkIds: perkIds,
       notes: notes,
       tags: tags,
+      itemId: itemId,
+      addon1: addon1,
+      addon2: addon2,
+      offeringId: offeringId,
     );
     ref.invalidateSelf();
     return newBuild;

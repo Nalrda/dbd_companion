@@ -139,6 +139,10 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
         perkIds: perkIds,
         notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
         tags: _tags,
+        itemId: _selectedItemId,
+        addon1: addon1,
+        addon2: addon2,
+        offeringId: _selectedOfferingId,
       );
     }
     if (mounted) context.pop();
