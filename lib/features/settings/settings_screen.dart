@@ -22,7 +22,7 @@ class SettingsScreen extends ConsumerWidget {
           onPressed: () => context.pop(),
         ),
         title: Text(
-          'USTAWIENIA',
+          'SETTINGS',
           style: GoogleFonts.rajdhani(
             color: AppTheme.textPrimary,
             fontSize: 20,
@@ -43,7 +43,7 @@ class SettingsScreen extends ConsumerWidget {
             children: [
               // Section header
               Text(
-                'MOTYW KOLORYSTYCZNY',
+                'COLOR THEME',
                 style: GoogleFonts.rajdhani(
                   color: AppTheme.textSecondary,
                   fontSize: 11,
@@ -68,37 +68,35 @@ class SettingsScreen extends ConsumerWidget {
                   );
                 }).toList(),
               ),
-              if (MediaQuery.of(context).size.width < 600) ...[
-                const SizedBox(height: 32),
-                Container(height: 1, color: AppTheme.border),
-                const SizedBox(height: 24),
-                GestureDetector(
-                  onTap: () => ref.read(authNotifierProvider).signOut(),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-                    decoration: BoxDecoration(
-                      color: AppTheme.surfaceElevated,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: AppTheme.border),
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.logout, color: AppTheme.textSecondary, size: 18),
-                        const SizedBox(width: 12),
-                        Text(
-                          'WYLOGUJ',
-                          style: GoogleFonts.rajdhani(
-                            color: AppTheme.textSecondary,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 1.5,
-                          ),
+              const SizedBox(height: 32),
+              Container(height: 1, color: AppTheme.border),
+              const SizedBox(height: 24),
+              GestureDetector(
+                onTap: () => ref.read(authNotifierProvider).signOut(),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: AppTheme.surfaceElevated,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: AppTheme.border),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.logout, color: AppTheme.textSecondary, size: 18),
+                      const SizedBox(width: 12),
+                      Text(
+                        'SIGN OUT',
+                        style: GoogleFonts.rajdhani(
+                          color: AppTheme.textSecondary,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 1.5,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ],
           ),
         ),

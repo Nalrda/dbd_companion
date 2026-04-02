@@ -39,14 +39,14 @@ class AppTheme {
 
   // ─── Theme color palette ─────────────────────────────────────────────────────
   static const List<({String name, Color color})> themeColors = [
-    (name: 'Krew',       color: Color(0xFFCC2828)),
-    (name: 'Purpura',    color: Color(0xFF8B35D6)),
-    (name: 'Niebieski',  color: Color(0xFF2196F3)),
-    (name: 'Zieleń',     color: Color(0xFF4CAF50)),
-    (name: 'Pomarańcz',  color: Color(0xFFE05828)),
-    (name: 'Złoto',      color: Color(0xFFFFB300)),
-    (name: 'Turkus',     color: Color(0xFF26A69A)),
-    (name: 'Srebro',     color: Color(0xFF9E9E9E)),
+    (name: 'Blood',   color: Color(0xFFCC2828)),
+    (name: 'Purple',  color: Color(0xFF8B35D6)),
+    (name: 'Blue',    color: Color(0xFF2196F3)),
+    (name: 'Green',   color: Color(0xFF4CAF50)),
+    (name: 'Orange',  color: Color(0xFFE05828)),
+    (name: 'Gold',    color: Color(0xFFFFB300)),
+    (name: 'Teal',    color: Color(0xFF26A69A)),
+    (name: 'Silver',  color: Color(0xFF9E9E9E)),
   ];
 
   /// Updates the dynamic primary color and its derived variants.

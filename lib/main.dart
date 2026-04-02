@@ -44,8 +44,9 @@ class DBDCompanionApp extends ConsumerWidget {
     final router = ref.watch(routerProvider);
     // Watching themeColorProvider triggers a full rebuild when the color changes,
     // causing AppTheme.dark to re-evaluate with the updated static primary color.
-    ref.watch(themeColorProvider);
+    final themeColor = ref.watch(themeColorProvider);
     return MaterialApp.router(
+      key: ValueKey(themeColor.toARGB32()),
       title: 'DBD Companion',
       theme: AppTheme.dark,
       routerConfig: router,

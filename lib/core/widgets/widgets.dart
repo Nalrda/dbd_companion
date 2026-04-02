@@ -137,6 +137,7 @@ class _PerkImage extends StatelessWidget {
         width: size,
         height: size,
         fit: BoxFit.cover,
+        filterQuality: FilterQuality.medium,
         errorBuilder: (_, __, ___) => fallback,
         loadingBuilder: (_, child, progress) =>
             progress == null ? child : fallback,
@@ -155,11 +156,13 @@ class _PerkImage extends StatelessWidget {
       width: size,
       height: size,
       fit: BoxFit.cover,
+      filterQuality: FilterQuality.medium,
       errorBuilder: (_, __, ___) => Image.asset(
         idFile,
         width: size,
         height: size,
         fit: BoxFit.cover,
+        filterQuality: FilterQuality.medium,
         errorBuilder: (_, __, ___) => _networkFallback(),
       ),
     );
@@ -299,7 +302,7 @@ class _PerkCardState extends State<PerkCard> {
       padding: const EdgeInsets.all(10),
       child: Row(
         children: [
-          PerkIcon(perk: widget.perk, size: 40, showCategoryGlow: widget.isSelected),
+          PerkIcon(perk: widget.perk, size: 52, showCategoryGlow: widget.isSelected),
           const SizedBox(width: 10),
           Expanded(
             child: Column(
@@ -308,7 +311,7 @@ class _PerkCardState extends State<PerkCard> {
                 Text(
                   widget.perk.name,
                   style: const TextStyle(
-                    fontSize: 13,
+                    fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color: AppTheme.textPrimary,
                   ),
@@ -317,7 +320,7 @@ class _PerkCardState extends State<PerkCard> {
                 const SizedBox(height: 2),
                 Text(
                   widget.perk.character,
-                  style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary),
+                  style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary),
                 ),
               ],
             ),
@@ -333,7 +336,7 @@ class _PerkCardState extends State<PerkCard> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          PerkIcon(perk: widget.perk, size: 56, showCategoryGlow: widget.isSelected),
+          PerkIcon(perk: widget.perk, size: 70, showCategoryGlow: widget.isSelected),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
@@ -342,7 +345,7 @@ class _PerkCardState extends State<PerkCard> {
                 Text(
                   widget.perk.name,
                   style: const TextStyle(
-                    fontSize: 15,
+                    fontSize: 17,
                     fontWeight: FontWeight.w700,
                     color: AppTheme.textPrimary,
                   ),
@@ -350,7 +353,7 @@ class _PerkCardState extends State<PerkCard> {
                 const SizedBox(height: 2),
                 Text(
                   widget.perk.character,
-                  style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary),
+                  style: const TextStyle(fontSize: 13, color: AppTheme.textSecondary),
                 ),
               ],
             ),
@@ -385,7 +388,7 @@ class PerkSlot extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        height: 72,
+        height: 88,
         decoration: BoxDecoration(
           color: isEmpty ? AppTheme.surface : AppTheme.surfaceElevated,
           borderRadius: BorderRadius.circular(12),
@@ -412,7 +415,7 @@ class PerkSlot extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 child: Row(
                   children: [
-                    PerkIcon(perk: perk!, size: 48),
+                    PerkIcon(perk: perk!, size: 62),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
@@ -422,7 +425,7 @@ class PerkSlot extends StatelessWidget {
                           Text(
                             perk!.name,
                             style: const TextStyle(
-                              fontSize: 14,
+                              fontSize: 15,
                               fontWeight: FontWeight.w600,
                               color: AppTheme.textPrimary,
                             ),
@@ -431,7 +434,7 @@ class PerkSlot extends StatelessWidget {
                           Text(
                             perk!.character,
                             style: const TextStyle(
-                              fontSize: 11,
+                              fontSize: 12,
                               color: AppTheme.textSecondary,
                             ),
                           ),
