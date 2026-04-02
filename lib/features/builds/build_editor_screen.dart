@@ -12,6 +12,8 @@ class BuildEditorScreen extends ConsumerStatefulWidget {
   final bool isSurvivor;
   final List<String>? sharedPerkIds;
   final String? sharedName;
+  /// When set, pre-fills all fields from an imported build (ignores other shared* params).
+  final Build? sharedBuild;
 
   const BuildEditorScreen({
     super.key,
@@ -19,6 +21,7 @@ class BuildEditorScreen extends ConsumerStatefulWidget {
     this.isSurvivor = true,
     this.sharedPerkIds,
     this.sharedName,
+    this.sharedBuild,
   });
 
   @override
@@ -42,17 +45,34 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
   @override
   void initState() {
     super.initState();
-    _isSurvivor = widget.isSurvivor;
     _perkSlots = List.filled(4, null);
-    _nameController = TextEditingController(text: widget.sharedName ?? '');
-    _notesController = TextEditingController();
-    _addon1Controller = TextEditingController();
-    _addon2Controller = TextEditingController();
-    if (widget.sharedPerkIds != null) {
-      for (int i = 0; i < widget.sharedPerkIds!.length && i < 4; i++) {
-        _perkSlots[i] = widget.sharedPerkIds![i];
+
+    final imported = widget.sharedBuild;
+    if (imported != null) {
+      _isSurvivor = imported.isSurvivor;
+      _nameController = TextEditingController(text: imported.name);
+      _notesController = TextEditingController(text: imported.notes ?? '');
+      _addon1Controller = TextEditingController(text: imported.addon1 ?? '');
+      _addon2Controller = TextEditingController(text: imported.addon2 ?? '');
+      _selectedItemId = imported.itemId;
+      _selectedOfferingId = imported.offeringId;
+      for (int i = 0; i < imported.perkIds.length && i < 4; i++) {
+        _perkSlots[i] = imported.perkIds[i];
+      }
+      _tags.addAll(imported.tags);
+    } else {
+      _isSurvivor = widget.isSurvivor;
+      _nameController = TextEditingController(text: widget.sharedName ?? '');
+      _notesController = TextEditingController();
+      _addon1Controller = TextEditingController();
+      _addon2Controller = TextEditingController();
+      if (widget.sharedPerkIds != null) {
+        for (int i = 0; i < widget.sharedPerkIds!.length && i < 4; i++) {
+          _perkSlots[i] = widget.sharedPerkIds![i];
+        }
       }
     }
+
     _loadExistingBuild();
   }
 
