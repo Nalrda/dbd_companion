@@ -33,6 +33,11 @@ class AuthNotifier extends ChangeNotifier {
   }
 
   User? get user => _user;
+  bool get isGuest => _user?.isAnonymous ?? false;
+
+  Future<void> signInAsGuest() async {
+    await FirebaseAuth.instance.signInAnonymously();
+  }
 
   Future<void> signInWithGoogle() async {
     if (kIsWeb) {

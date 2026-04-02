@@ -19,8 +19,12 @@ class MatchRepository {
   }
 
   Future<List<MatchRecord>> getAll() async {
-    final snap = await _col().orderBy('createdAt', descending: true).get();
-    return snap.docs.map((d) => MatchRecord.fromJson(d.data())).toList();
+    try {
+      final snap = await _col().orderBy('createdAt', descending: true).get();
+      return snap.docs.map((d) => MatchRecord.fromJson(d.data())).toList();
+    } on FirebaseException catch (e) {
+      throw Exception('Failed to load matches: ${e.message}');
+    }
   }
 
   Future<MatchRecord> create({
@@ -42,11 +46,19 @@ class MatchRepository {
       notes: notes,
       gensRemaining: gensRemaining,
     );
-    await _col().doc(record.id).set(record.toJson());
+    try {
+      await _col().doc(record.id).set(record.toJson());
+    } on FirebaseException catch (e) {
+      throw Exception('Failed to save match: ${e.message}');
+    }
     return record;
   }
 
   Future<void> delete(String id) async {
-    await _col().doc(id).delete();
+    try {
+      await _col().doc(id).delete();
+    } on FirebaseException catch (e) {
+      throw Exception('Failed to delete match: ${e.message}');
+    }
   }
 }

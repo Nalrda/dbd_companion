@@ -14,6 +14,7 @@ class LoginScreen extends ConsumerStatefulWidget {
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool _loading = false;
+  bool _guestLoading = false;
 
   Future<void> _signIn() async {
     setState(() => _loading = true);
@@ -34,6 +35,28 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       }
     } finally {
       if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  Future<void> _signInAsGuest() async {
+    setState(() => _guestLoading = true);
+    try {
+      await ref.read(authNotifierProvider).signInAsGuest();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Guest sign in failed: $e',
+              style: const TextStyle(color: AppTheme.textPrimary),
+            ),
+            backgroundColor: AppTheme.surfaceElevated,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _guestLoading = false);
     }
   }
 
@@ -154,6 +177,76 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 'Sign in with Google',
                                 style: GoogleFonts.rajdhani(
                                   color: AppTheme.textPrimary,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                  letterSpacing: 0.8,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                ),
+                const SizedBox(height: 12),
+
+                // Divider "or"
+                Row(
+                  children: [
+                    const Expanded(child: Divider(color: AppTheme.border)),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Text(
+                        'or',
+                        style: GoogleFonts.inter(
+                          color: AppTheme.textDim,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                    const Expanded(child: Divider(color: AppTheme.border)),
+                  ],
+                ),
+                const SizedBox(height: 12),
+
+                // Guest button
+                SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: _guestLoading
+                      ? Center(
+                          child: SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              color: AppTheme.textSecondary,
+                              strokeWidth: 2,
+                            ),
+                          ),
+                        )
+                      : OutlinedButton(
+                          onPressed: _signInAsGuest,
+                          style: OutlinedButton.styleFrom(
+                            backgroundColor: Colors.transparent,
+                            side: BorderSide(
+                              color: AppTheme.border,
+                              width: 1,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.person_outline,
+                                color: AppTheme.textSecondary,
+                                size: 18,
+                              ),
+                              const SizedBox(width: 10),
+                              Text(
+                                'Continue as Guest',
+                                style: GoogleFonts.rajdhani(
+                                  color: AppTheme.textSecondary,
                                   fontSize: 15,
                                   fontWeight: FontWeight.w600,
                                   letterSpacing: 0.8,

@@ -54,9 +54,12 @@ class ShellScreen extends ConsumerWidget {
     final currentIndex = _tabs.indexWhere((t) => location.startsWith(t.path));
     final idx = currentIndex < 0 ? 0 : currentIndex;
     final isWide = MediaQuery.of(context).size.width >= 600;
-    final user = ref.watch(authNotifierProvider).user;
+    final authNotifier = ref.watch(authNotifierProvider);
+    final user = authNotifier.user;
+    final isGuest = authNotifier.isGuest;
 
     void signOut() => ref.read(authNotifierProvider).signOut();
+    void signInWithGoogle() => ref.read(authNotifierProvider).signInWithGoogle();
 
     // ── Wide / desktop: top horizontal nav bar ──────────────────────────────
     if (isWide) {
@@ -72,6 +75,7 @@ class ShellScreen extends ConsumerWidget {
               onSignOut: signOut,
             ),
             const Divider(height: 1, thickness: 1, color: AppTheme.border),
+            if (isGuest) _GuestBanner(onSignIn: signInWithGoogle),
             Expanded(
               child: Align(
                 alignment: Alignment.topCenter,
@@ -88,7 +92,12 @@ class ShellScreen extends ConsumerWidget {
 
     // ── Narrow / mobile: bottom navigation bar ──────────────────────────────
     return Scaffold(
-      body: child,
+      body: Column(
+        children: [
+          if (isGuest) _GuestBanner(onSignIn: signInWithGoogle),
+          Expanded(child: child),
+        ],
+      ),
       bottomNavigationBar: _BottomNavBar(
         selectedIndex: idx,
         tabs: _tabs,
@@ -493,6 +502,52 @@ class _BottomSettingsItem extends StatelessWidget {
             const SizedBox(height: 6),
           ],
         ),
+      ),
+    );
+  }
+}
+
+// ─── Guest Banner ─────────────────────────────────────────────────────────────
+
+class _GuestBanner extends StatelessWidget {
+  final VoidCallback onSignIn;
+  const _GuestBanner({required this.onSignIn});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      color: AppTheme.primaryDim.withValues(alpha: 0.15),
+      child: Row(
+        children: [
+          const Icon(Icons.person_outline, color: AppTheme.textSecondary, size: 15),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              'Guest mode — your data is saved online',
+              style: GoogleFonts.inter(
+                fontSize: 12,
+                color: AppTheme.textSecondary,
+              ),
+            ),
+          ),
+          MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
+              onTap: onSignIn,
+              child: Text(
+                'Sign In',
+                style: GoogleFonts.rajdhani(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w700,
+                  color: AppTheme.primary,
+                  letterSpacing: 0.5,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
