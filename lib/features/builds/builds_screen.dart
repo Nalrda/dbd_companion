@@ -4,6 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/models/build.dart';
 import '../../core/providers/providers.dart';
+import '../../core/services/build_share_service.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
 
@@ -54,6 +55,12 @@ class _BuildsScreenState extends ConsumerState<BuildsScreen> {
                   )
                 : PageHeader.text('My Builds'),
             actions: [
+              IconButton(
+                icon: const Icon(Icons.download_outlined),
+                color: AppTheme.textSecondary,
+                tooltip: 'Import build',
+                onPressed: _showImportDialog,
+              ),
               IconButton(
                 icon: Icon(
                   _searchVisible ? Icons.close : Icons.search,
@@ -185,6 +192,64 @@ class _BuildsScreenState extends ConsumerState<BuildsScreen> {
           );
         },
       ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showImportDialog() {
+    final controller = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppTheme.surfaceElevated,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        title: const Text(
+          'Import Build',
+          style: TextStyle(color: AppTheme.textPrimary),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Paste a build code shared by another player.',
+              style: TextStyle(color: AppTheme.textSecondary, fontSize: 13),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: controller,
+              style: const TextStyle(color: AppTheme.textPrimary, fontSize: 13),
+              maxLines: 3,
+              decoration: const InputDecoration(
+                hintText: 'DBD:...',
+                hintStyle: TextStyle(color: AppTheme.textDim),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: AppTheme.textSecondary),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              final imported = BuildShareService.decode(controller.text);
+              if (imported == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Invalid build code')),
+                );
+                return;
+              }
+              Navigator.pop(ctx);
+              context.push('/builds/create', extra: imported);
+            },
+            child: Text('Import', style: TextStyle(color: AppTheme.primary)),
           ),
         ],
       ),

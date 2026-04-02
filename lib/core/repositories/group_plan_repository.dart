@@ -64,4 +64,31 @@ class GroupPlanRepository {
       throw Exception('Failed to fetch group plan: ${e.message}');
     }
   }
+
+  /// Creates a new plan from [template], assigning a fresh UUID.
+  Future<GroupPlan> createFull(GroupPlan template) async {
+    final plan = GroupPlan(
+      id: _uuid.v4(),
+      name: template.name,
+      notes: template.notes,
+      survivor1PerkIds: List<String>.from(template.survivor1PerkIds),
+      survivor2PerkIds: List<String>.from(template.survivor2PerkIds),
+      survivor3PerkIds: List<String>.from(template.survivor3PerkIds),
+      survivor4PerkIds: List<String>.from(template.survivor4PerkIds),
+      survivor1ItemId: template.survivor1ItemId,
+      survivor2ItemId: template.survivor2ItemId,
+      survivor3ItemId: template.survivor3ItemId,
+      survivor4ItemId: template.survivor4ItemId,
+      survivor1OfferingId: template.survivor1OfferingId,
+      survivor2OfferingId: template.survivor2OfferingId,
+      survivor3OfferingId: template.survivor3OfferingId,
+      survivor4OfferingId: template.survivor4OfferingId,
+    );
+    try {
+      await _col().doc(plan.id).set(plan.toJson());
+    } on FirebaseException catch (e) {
+      throw Exception('Failed to import group plan: ${e.message}');
+    }
+    return plan;
+  }
 }

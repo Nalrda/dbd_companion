@@ -47,6 +47,10 @@ class BuildsNotifier extends AsyncNotifier<List<Build>> {
     List<String>? perkIds,
     String? notes,
     List<String>? tags,
+    String? itemId,
+    String? addon1,
+    String? addon2,
+    String? offeringId,
   }) async {
     final newBuild = await BuildRepository.instance.createBuild(
       name: name,
@@ -54,6 +58,10 @@ class BuildsNotifier extends AsyncNotifier<List<Build>> {
       perkIds: perkIds,
       notes: notes,
       tags: tags,
+      itemId: itemId,
+      addon1: addon1,
+      addon2: addon2,
+      offeringId: offeringId,
     );
     ref.invalidateSelf();
     return newBuild;
@@ -231,5 +239,11 @@ class GroupPlansNotifier extends AsyncNotifier<List<GroupPlan>> {
   Future<void> delete(String id) async {
     await GroupPlanRepository.instance.delete(id);
     ref.invalidateSelf();
+  }
+
+  Future<GroupPlan> importPlan(GroupPlan template) async {
+    final plan = await GroupPlanRepository.instance.createFull(template);
+    state = AsyncData([plan, ...state.value ?? []]);
+    return plan;
   }
 }

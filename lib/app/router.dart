@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../core/models/build.dart';
 import '../core/providers/auth_provider.dart';
 import '../features/auth/login_screen.dart';
 import '../features/builds/build_detail_screen.dart';
@@ -72,6 +73,17 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/builds/create',
         pageBuilder: (context, state) {
+          // When navigating with extra: Build, use the imported build directly.
+          final importedBuild = state.extra as Build?;
+          if (importedBuild != null) {
+            return _fadeSlidePage(
+              BuildEditorScreen(
+                isSurvivor: importedBuild.isSurvivor,
+                sharedBuild: importedBuild,
+              ),
+              state,
+            );
+          }
           final isSurvivor = state.uri.queryParameters['survivor'] != 'false';
           final perksParam = state.uri.queryParameters['perks'];
           final sharedPerks = perksParam?.split(',').where((s) => s.isNotEmpty).toList();

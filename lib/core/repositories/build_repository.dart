@@ -43,6 +43,10 @@ class BuildRepository {
     List<String>? perkIds,
     String? notes,
     List<String>? tags,
+    String? itemId,
+    String? addon1,
+    String? addon2,
+    String? offeringId,
   }) async {
     final build = Build(
       id: _uuid.v4(),
@@ -51,6 +55,10 @@ class BuildRepository {
       perkIds: perkIds ?? [],
       notes: notes,
       tags: tags,
+      itemId: itemId,
+      addon1: addon1,
+      addon2: addon2,
+      offeringId: offeringId,
     );
     try {
       await _col().doc(build.id).set(build.toJson());

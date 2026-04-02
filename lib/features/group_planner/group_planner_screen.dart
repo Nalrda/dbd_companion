@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/models/group_plan.dart';
 import '../../core/providers/providers.dart';
+import '../../core/services/build_share_service.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
 
@@ -22,7 +23,17 @@ class GroupPlannerScreen extends ConsumerWidget {
       ),
       body: Column(
         children: [
-          PageHeader(title: PageHeader.text('Group Planner')),
+          PageHeader(
+            title: PageHeader.text('Group Planner'),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.download_outlined),
+                color: AppTheme.textSecondary,
+                tooltip: 'Import group plan',
+                onPressed: () => _showImportDialog(context, ref),
+              ),
+            ],
+          ),
           Expanded(child: plansAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('$e')),
@@ -74,6 +85,63 @@ class GroupPlannerScreen extends ConsumerWidget {
           );
         },
       )),
+        ],
+      ),
+    );
+  }
+
+  void _showImportDialog(BuildContext context, WidgetRef ref) {
+    final controller = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: AppTheme.surfaceElevated,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        title: const Text(
+          'Import Group Plan',
+          style: TextStyle(color: AppTheme.textPrimary),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Paste a group plan code shared by a squad member.',
+              style: TextStyle(color: AppTheme.textSecondary, fontSize: 13),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: controller,
+              style: const TextStyle(color: AppTheme.textPrimary, fontSize: 13),
+              maxLines: 3,
+              decoration: const InputDecoration(
+                hintText: 'DBDG:...',
+                hintStyle: TextStyle(color: AppTheme.textDim),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Cancel', style: TextStyle(color: AppTheme.textSecondary)),
+          ),
+          TextButton(
+            onPressed: () async {
+              final imported = BuildShareService.decodeGroupPlan(controller.text);
+              if (imported == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Invalid group plan code')),
+                );
+                return;
+              }
+              Navigator.pop(ctx);
+              final plan = await ref.read(groupPlansProvider.notifier).importPlan(imported);
+              // ignore: use_build_context_synchronously
+              if (context.mounted) context.push('/group/${plan.id}');
+            },
+            child: Text('Import', style: TextStyle(color: AppTheme.primary)),
+          ),
         ],
       ),
     );
