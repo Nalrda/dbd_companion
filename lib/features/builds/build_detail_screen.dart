@@ -3,8 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/models/build.dart';
+import '../../core/models/item.dart';
+import '../../core/models/offering.dart';
 import '../../core/models/perk.dart';
 import '../../core/providers/providers.dart';
+import '../../core/repositories/item_repository.dart';
+import '../../core/repositories/offering_repository.dart';
 import '../../core/repositories/perk_repository.dart';
 import '../../core/services/build_share_service.dart';
 import '../../core/theme/app_theme.dart';
@@ -48,17 +52,31 @@ class _BuildDetailView extends StatefulWidget {
 
 class _BuildDetailViewState extends State<_BuildDetailView> {
   List<Perk> _perks = [];
+  Item? _item;
+  Offering? _offering;
 
   @override
   void initState() {
     super.initState();
-    _loadPerks();
+    _loadData();
   }
 
-  Future<void> _loadPerks() async {
+  Future<void> _loadData() async {
     final perks =
         await PerkRepository.instance.getPerksByIds(widget.build.perkIds);
-    if (mounted) setState(() => _perks = perks);
+    final item = widget.build.itemId != null
+        ? await ItemRepository.instance.getById(widget.build.itemId!)
+        : null;
+    final offering = widget.build.offeringId != null
+        ? await OfferingRepository.instance.getById(widget.build.offeringId!)
+        : null;
+    if (mounted) {
+      setState(() {
+        _perks = perks;
+        _item = item;
+        _offering = offering;
+      });
+    }
   }
 
   void _showShareSheet(BuildContext context) {
@@ -213,6 +231,52 @@ class _BuildDetailViewState extends State<_BuildDetailView> {
                         child: PerkCard(perk: perk),
                       )),
 
+                // Item (survivor only)
+                if (widget.build.isSurvivor && _item != null) ...[
+                  const SizedBox(height: 24),
+                  const SectionHeader(title: 'ITEM'),
+                  const SizedBox(height: 10),
+                  _InfoRow(
+                    icon: Icons.backpack_outlined,
+                    label: _item!.name,
+                    badge: _item!.rarity,
+                  ),
+                ],
+
+                // Add-ons (killer only)
+                if (!widget.build.isSurvivor &&
+                    ((widget.build.addon1?.isNotEmpty ?? false) ||
+                        (widget.build.addon2?.isNotEmpty ?? false))) ...[
+                  const SizedBox(height: 24),
+                  const SectionHeader(title: 'ADD-ONS'),
+                  const SizedBox(height: 10),
+                  if (widget.build.addon1?.isNotEmpty ?? false)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: _InfoRow(
+                        icon: Icons.extension_outlined,
+                        label: widget.build.addon1!,
+                      ),
+                    ),
+                  if (widget.build.addon2?.isNotEmpty ?? false)
+                    _InfoRow(
+                      icon: Icons.extension_outlined,
+                      label: widget.build.addon2!,
+                    ),
+                ],
+
+                // Offering
+                if (_offering != null) ...[
+                  const SizedBox(height: 24),
+                  const SectionHeader(title: 'OFFERING'),
+                  const SizedBox(height: 10),
+                  _InfoRow(
+                    icon: Icons.local_fire_department_outlined,
+                    label: _offering!.name,
+                    badge: _offering!.rarity,
+                  ),
+                ],
+
                 if (widget.build.notes != null &&
                     widget.build.notes!.isNotEmpty) ...[
                   const SizedBox(height: 24),
@@ -266,6 +330,72 @@ class _BuildDetailViewState extends State<_BuildDetailView> {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+// ─── Helper widget ────────────────────────────────────────────────────────────
+
+class _InfoRow extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String? badge;
+
+  const _InfoRow({required this.icon, required this.label, this.badge});
+
+  static Color _rarityColor(String rarity) {
+    switch (rarity) {
+      case 'uncommon':   return const Color(0xFFFFD700);
+      case 'rare':       return const Color(0xFF4CAF50);
+      case 'very_rare':  return const Color(0xFF9C27B0);
+      case 'ultra_rare': return const Color(0xFFE91E63);
+      default:           return AppTheme.textSecondary;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: AppTheme.surfaceElevated,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: AppTheme.border),
+      ),
+      child: Row(
+        children: [
+          Icon(icon, size: 18, color: AppTheme.textSecondary),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              label,
+              style: const TextStyle(
+                color: AppTheme.textPrimary,
+                fontSize: 14,
+              ),
+            ),
+          ),
+          if (badge != null && badge != 'none')
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+              decoration: BoxDecoration(
+                color: _rarityColor(badge!).withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(
+                  color: _rarityColor(badge!).withValues(alpha: 0.5),
+                ),
+              ),
+              child: Text(
+                badge!.replaceAll('_', ' '),
+                style: TextStyle(
+                  color: _rarityColor(badge!),
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
