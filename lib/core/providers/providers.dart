@@ -232,4 +232,10 @@ class GroupPlansNotifier extends AsyncNotifier<List<GroupPlan>> {
     await GroupPlanRepository.instance.delete(id);
     ref.invalidateSelf();
   }
+
+  Future<GroupPlan> importPlan(GroupPlan template) async {
+    final plan = await GroupPlanRepository.instance.createFull(template);
+    state = AsyncData([plan, ...state.value ?? []]);
+    return plan;
+  }
 }
