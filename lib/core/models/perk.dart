@@ -19,13 +19,16 @@ class Perk extends HiveObject {
   @HiveField(6)
   final String? iconUrl;
 
+  final List<String> tags;
+
   Perk({
     required this.id,
     required this.name,
     required this.character,
     required this.isSurvivor,
     this.iconUrl,
-  });
+    List<String>? tags,
+  }) : tags = tags ?? [];
 
   factory Perk.fromJson(Map<String, dynamic> json, {required bool isSurvivor}) {
     return Perk(
@@ -34,6 +37,7 @@ class Perk extends HiveObject {
       character: json['character'] as String,
       isSurvivor: isSurvivor,
       iconUrl: json['iconUrl'] as String?,
+      tags: List<String>.from(json['tags'] ?? []),
     );
   }
 
@@ -44,6 +48,7 @@ class Perk extends HiveObject {
       'character': character,
       'isSurvivor': isSurvivor,
       'iconUrl': iconUrl,
+      'tags': tags,
     };
   }
 }

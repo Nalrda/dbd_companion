@@ -11,7 +11,8 @@
       "Bash(/c/flutter/bin/flutter pub:*)",
       "WebSearch",
       "WebFetch(domain:deadbydaylight.fandom.com)",
-      "Bash(keytool -list -v -keystore \"C:/Users/adria/.android/debug.keystore\" -alias androiddebugkey -storepass android -keypass android)"
+      "Bash(keytool -list -v -keystore \"C:/Users/adria/.android/debug.keystore\" -alias androiddebugkey -storepass android -keypass android)",
+      "WebFetch(domain:deadbydaylight.wiki.gg)"
     ]
   }
 }

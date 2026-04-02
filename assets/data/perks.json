@@ -4,1021 +4,1191 @@
       "id": "sp_001",
       "name": "Dark Sense",
       "character": "General",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information","aura","generator", "repair"]
     },
     {
       "id": "sp_002",
       "name": "Deja Vu",
       "character": "General",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "generator", "aura", "repair"]
     },
     {
       "id": "sp_003",
       "name": "Hope",
       "character": "General",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["speed", "endgame", "haste"]
     },
     {
       "id": "sp_004",
       "name": "Kindred",
       "character": "General",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "hook", "aura"]
     },
     {
       "id": "sp_005",
       "name": "Lightweight",
       "character": "General",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["noise", "stealth", "scratch marks"]
     },
     {
       "id": "sp_006",
       "name": "No One Left Behind",
       "character": "General",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hook", "endgame", "healing", "unhook", "haste"]
     },
     {
       "id": "sp_007",
       "name": "Plunderer's Instinct",
       "character": "General",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["item", "aura", "unlock", "chest"]
     },
     {
       "id": "sp_008",
       "name": "Premonition",
       "character": "General",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information"]
     },
     {
       "id": "sp_009",
       "name": "Resilience",
       "character": "General",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["chase", "generator", "healing", "exit gate", "repair", "sabotage", "unhook", "chest", "vault"]
     },
     {
       "id": "sp_010",
       "name": "Slippery Meat",
       "character": "General",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hook", "unhook", "luck", "self unhook"]
     },
     {
       "id": "sp_011",
       "name": "Small Game",
       "character": "General",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "totem", "token", "tokens"]
     },
     {
       "id": "sp_012",
       "name": "Spine Chill",
       "character": "General",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "stealth", "bless", "cleanse", "healing", "exit gate", "repair", "sabotage", "unhook", "unlock"]
     },
     {
       "id": "sp_013",
       "name": "This Is Not Happening",
       "character": "General",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["skill check", "injured"]
     },
     {
       "id": "sp_014",
       "name": "We'll Make It",
       "character": "General",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["healing"]
     },
     {
       "id": "sp_015",
       "name": "Bond",
       "character": "Dwight Fairfield",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "aura"]
     },
     {
       "id": "sp_016",
       "name": "Leader",
       "character": "Dwight Fairfield",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["healing", "generator", "repair", "cleanse", "exit gates", "sabotage", "unhook", "unlock", "chest"]
     },
     {
       "id": "sp_017",
       "name": "Prove Thyself",
       "character": "Dwight Fairfield",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "repair"]
     },
     {
       "id": "sp_018",
       "name": "Adrenaline",
       "character": "Meg Thomas",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["speed", "healing", "endgame", "haste", "exhausted"]
     },
     {
       "id": "sp_019",
       "name": "Quick & Quiet",
       "character": "Meg Thomas",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["stealth", "noise", "chase"]
     },
     {
       "id": "sp_020",
       "name": "Sprint Burst",
       "character": "Meg Thomas",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["speed", "chase", "haste", "exhausted"]
     },
     {
       "id": "sp_021",
       "name": "Botany Knowledge",
       "character": "Claudette Morel",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["healing"]
     },
     {
       "id": "sp_022",
       "name": "Empathy",
       "character": "Claudette Morel",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "healing", "aura"]
     },
     {
       "id": "sp_023",
       "name": "Self-Care",
       "character": "Claudette Morel",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["healing"]
     },
     {
       "id": "sp_024",
       "name": "Calm Spirit",
       "character": "Jake Park",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["noise", "stealth", "scream", "cleanse", "unlock", "chest"]
     },
     {
       "id": "sp_025",
       "name": "Iron Will",
       "character": "Jake Park",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["noise", "stealth", "exhausted", "injured"]
     },
     {
       "id": "sp_026",
       "name": "Saboteur",
       "character": "Jake Park",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["sabotage", "hook"]
     },
     {
       "id": "sp_027",
       "name": "Balanced Landing",
       "character": "Nea Karlsson",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["chase", "speed", "exhausted"]
     },
     {
       "id": "sp_028",
       "name": "Urban Evasion",
       "character": "Nea Karlsson",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["stealth", "speed"]
     },
     {
       "id": "sp_029",
       "name": "Streetwise",
       "character": "Nea Karlsson",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["item", "aura", "chest"]
     },
     {
       "id": "sp_030",
       "name": "Borrowed Time",
       "character": "William Bill Overbeck",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hook", "endurance", "haste", "speed"]
     },
     {
       "id": "sp_031",
       "name": "Unbreakable",
       "character": "William Bill Overbeck",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["recover"]
     },
     {
       "id": "sp_032",
       "name": "Left Behind",
       "character": "William Bill Overbeck",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["endgame", "aura"]
     },
     {
       "id": "sp_033",
       "name": "Sole Survivor",
       "character": "Laurie Strode",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["endgame", "escape", "token"]
     },
     {
       "id": "sp_034",
       "name": "Decisive Strike",
       "character": "Laurie Strode",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["escape", "hook", "obsession"]
     },
     {
       "id": "sp_035",
       "name": "Object of Obsession",
       "character": "Laurie Strode",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "obsession", "aura"]
     },
     {
       "id": "sp_036",
       "name": "Ace in the Hole",
       "character": "Ace Visconti",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["item", "add-on"]
     },
     {
       "id": "sp_037",
       "name": "Open-Handed",
       "character": "Ace Visconti",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "aura"]
     },
     {
       "id": "sp_038",
       "name": "Up the Ante",
       "character": "Ace Visconti",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["luck"]
     },
     {
       "id": "sp_039",
       "name": "Technician",
       "character": "Feng Min",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "noise"]
     },
     {
       "id": "sp_040",
       "name": "Lithe",
       "character": "Feng Min",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["speed", "chase", "exhausted", "vault"]
     },
     {
       "id": "sp_041",
       "name": "Alert",
       "character": "Feng Min",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "aura"]
     },
     {
       "id": "sp_042",
       "name": "Dead Hard",
       "character": "David King",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["chase", "exhausted", "injured"]
     },
     {
       "id": "sp_043",
       "name": "No Mither",
       "character": "David King",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["injured", "noise"]
     },
     {
       "id": "sp_044",
       "name": "We're Gonna Live Forever",
       "character": "David King",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["healing", "endurance"]
     },
     {
       "id": "sp_045",
       "name": "Pharmacy",
       "character": "Quentin Smith",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["item", "healing"]
     },
     {
       "id": "sp_046",
       "name": "Vigil",
       "character": "Quentin Smith",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["exhausted", "blindness", "broken", "exposed", "hemorrhage", "hindered", "mangled", "oblivious"]
     },
     {
       "id": "sp_047",
       "name": "Wake Up!",
       "character": "Quentin Smith",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["endgame", "escape", "speed"]
     },
     {
       "id": "sp_048",
       "name": "Tenacity",
       "character": "Detective Tapp",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["slug"]
     },
     {
       "id": "sp_049",
       "name": "Detective's Hunch",
       "character": "Detective Tapp",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "generator", "aura", "chest", "totem"]
     },
     {
       "id": "sp_050",
       "name": "Stake Out",
       "character": "Detective Tapp",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "token", "terror"]
     },
     {
       "id": "sp_051",
       "name": "Windows of Opportunity",
       "character": "Kate Denson",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "chase", "aura"]
     },
     {
       "id": "sp_052",
       "name": "Boil Over",
       "character": "Kate Denson",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hook", "escape"]
     },
     {
       "id": "sp_053",
       "name": "Dance With Me",
       "character": "Kate Denson",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["stealth", "noise", "chase", "vault"]
     },
     {
       "id": "sp_054",
       "name": "Diversion",
       "character": "Adam Francis",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["stealth", "noise"]
     },
     {
       "id": "sp_055",
       "name": "Deliverance",
       "character": "Adam Francis",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hook", "escape", "unhook"]
     },
     {
       "id": "sp_056",
       "name": "Autodidact",
       "character": "Adam Francis",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["healing", "skill check"]
     },
     {
       "id": "sp_057",
       "name": "Breakdown",
       "character": "Jeff Johansen",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["sabotage", "hook"]
     },
     {
       "id": "sp_058",
       "name": "Aftercare",
       "character": "Jeff Johansen",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "healing"]
     },
     {
       "id": "sp_059",
       "name": "Distortion",
       "character": "Jeff Johansen",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["stealth", "information"]
     },
     {
       "id": "sp_060",
       "name": "Solidarity",
       "character": "Jane Romero",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["healing", "teamwork"]
     },
     {
       "id": "sp_061",
       "name": "Poised",
       "character": "Jane Romero",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["stealth", "generator", "aura"]
     },
     {
       "id": "sp_062",
       "name": "Head on",
       "character": "Jane Romero",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["exhausted", "chase"]
     },
     {
       "id": "sp_063",
       "name": "Flip-Flop",
       "character": "Ashley J.Williams",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["escape", "recover"]
     },
     {
       "id": "sp_064",
       "name": "Buckle Up",
       "character": "Ashley J.Williams",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["speed", "haste", "scratch marks"]
     },
     {
       "id": "sp_065",
       "name": "Mettle of Man",
       "character": "Ashley J.Williams",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["chase", "escape", "endurance"]
     },
     {
       "id": "sp_066",
       "name": "Better Together",
       "character": "Nancy Wheeler",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "generator"]
     },
     {
       "id": "sp_067",
       "name": "Fixated",
       "character": "Nancy Wheeler",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["speed", "stealth", "haste"]
     },
     {
       "id": "sp_068",
       "name": "Inner Strenght",
       "character": "Nancy Wheeler",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["healing", "totem"]
     },
     {
       "id": "sp_069",
       "name": "Babysitter",
       "character": "Steve Harrington",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hook", "stealth", "unhook", "haste", "aura"]
     },
     {
       "id": "sp_070",
       "name": "Camaraderie",
       "character": "Steve Harrington",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hook"]
     },
     {
       "id": "sp_071",
       "name": "Second Wind",
       "character": "Steve Harrington",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["healing", "hook"]
     },
     {
       "id": "sp_072",
       "name": "Lucky Break",
       "character": "Yui Kimura",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["chase", "stealth"]
     },
     {
       "id": "sp_073",
       "name": "Any Means Necessary",
       "character": "Yui Kimura",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["pallet"]
     },
     {
       "id": "sp_074",
       "name": "Breakout",
       "character": "Yui Kimura",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["sabotage", "hook"]
     },
     {
       "id": "sp_075",
       "name": "Off the Record",
       "character": "Zarina Kassir",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["stealth", "noise", "endurance"]
     },
     {
       "id": "sp_076",
       "name": "Red Herring",
       "character": "Zarina Kassir",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "stealth"]
     },
     {
       "id": "sp_077",
       "name": "For the People",
       "character": "Zarina Kassir",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["healing", "teamwork", "broken"]
     },
     {
       "id": "sp_078",
       "name": "Soul Guard",
       "character": "Cheryl Mason",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["endurance", "healing"]
     },
     {
       "id": "sp_079",
       "name": "Blood Pact",
       "character": "Cheryl Mason",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["healing", "haste", "chase", "obsession"]
     },
     {
       "id": "sp_080",
       "name": "Repressed Alliance",
       "character": "Cheryl Mason",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator"]
     },
     {
       "id": "sp_081",
       "name": "Visionary",
       "character": "Felix Richter",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "generator", "aura"]
     },
     {
       "id": "sp_082",
       "name": "Desperate Measures",
       "character": "Felix Richter",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["healing", "speed"]
     },
     {
       "id": "sp_083",
       "name": "Build to Last",
       "character": "Felix Richter",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["item", "locker"]
     },
     {
       "id": "sp_084",
       "name": "Appraisal",
       "character": "Elodie Rakoto",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["item", "chest", "rummage"]
     },
     {
       "id": "sp_085",
       "name": "Deception",
       "character": "Elodie Rakoto",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["stealth", "locker", "scratch marks"]
     },
     {
       "id": "sp_086",
       "name": "Power Struggle",
       "character": "Elodie Rakoto",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["wiggle", "escape"]
     },
     {
       "id": "sp_087",
       "name": "Fast Track",
       "character": "Lee Yun-Jin",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator"]
     },
     {
       "id": "sp_088",
       "name": "Smash Hit",
       "character": "Lee Yun-Jin",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["speed", "chase", "haste", "exhausted"]
     },
     {
       "id": "sp_089",
       "name": "Self-Preservation",
       "character": "Lee Yun-Jin",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["stealth", "information", "hook", "unhook"]
     },
     {
       "id": "sp_090",
       "name": "Counterforce",
       "character": "Jill Valentine",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["totem", "aura", "token"]
     },
     {
       "id": "sp_091",
       "name": "Resurgence",
       "character": "Jill Valentine",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["healing", "hook"]
     },
     {
       "id": "sp_092",
       "name": "Blast Mine",
       "character": "Jill Valentine",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator"]
     },
     {
       "id": "sp_093",
       "name": "Bite the Bullet",
       "character": "Leon S.Kennedy",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["healing", "noise", "stealth"]
     },
     {
       "id": "sp_094",
       "name": "FlashBang",
       "character": "Leon S.Kennedy",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "locker"]
     },
     {
       "id": "sp_095",
       "name": "Rookie Spirit",
       "character": "Leon S.Kennedy",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "generator", "skill check"]
     },
     {
       "id": "sp_096",
       "name": "Clairvoyance",
       "character": "Mikaela Reid",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "totem"]
     },
     {
       "id": "sp_097",
       "name": "Boon: Circle of Healing",
       "character": "Mikaela Reid",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["boon", "healing"]
     },
     {
       "id": "sp_098",
       "name": "Boon: Shadow Step",
       "character": "Mikaela Reid",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["boon", "stealth"]
     },
     {
       "id": "sp_099",
       "name": "Overcome",
       "character": "Jonah Vasquez",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["speed", "chase", "haste", "exhausted"]
     },
     {
       "id": "sp_100",
       "name": "Corrective Action",
       "character": "Jonah Vasquez",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "skill check"]
     },
     {
       "id": "sp_101",
       "name": "Boon: Exponential",
       "character": "Jonah Vasquez",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["boon"]
     },
     {
       "id": "sp_102",
       "name": "Parental Guidance",
       "character": "Yoichi Asakawa",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["stealth", "noise"]
     },
     {
       "id": "sp_103",
       "name": "Empathic Connection",
       "character": "Yoichi Asakawa",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "healing"]
     },
     {
       "id": "sp_104",
       "name": "Boon: Dark Theory",
       "character": "Yoichi Asakawa",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["boon", "speed", "haste"]
     },
     {
       "id": "sp_105",
       "name": "Inner Focus",
       "character": "Haddie Kaur",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "aura"]
     },
     {
       "id": "sp_106",
       "name": "Residual Manifest",
       "character": "Haddie Kaur",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["item", "chest", "rummage"]
     },
     {
       "id": "sp_107",
       "name": "Overzealous",
       "character": "Haddie Kaur",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "totem"]
     },
     {
       "id": "sp_108",
       "name": "Wiretap",
       "character": "Ada Wong",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "generator"]
     },
     {
       "id": "sp_109",
       "name": "Reactive Healing",
       "character": "Ada Wong",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["healing"]
     },
     {
       "id": "sp_110",
       "name": "Low Profile",
       "character": "Ada Wong",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["stealth", "endgame"]
     },
     {
       "id": "sp_111",
       "name": "Better Than New",
       "character": "Rebecca Chambers",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["healing", "bless", "cleanse", "chest", "unlock"]
     },
     {
       "id": "sp_112",
       "name": "Reassurance",
       "character": "Rebecca Chambers",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hook"]
     },
     {
       "id": "sp_113",
       "name": "Hyperfocus",
       "character": "Rebecca Chambers",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "skill check"]
     },
     {
       "id": "sp_114",
       "name": "Potential Energy",
       "character": "Vittorio Toscano",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator"]
     },
     {
       "id": "sp_115",
       "name": "Fogwise",
       "character": "Vittorio Toscano",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "aura", "skill check"]
     },
     {
       "id": "sp_116",
       "name": "Quick Gambit",
       "character": "Vittorio Toscano",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "chase"]
     },
     {
       "id": "sp_117",
       "name": "Cut Loose",
       "character": "Thalita Lyra",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["chase", "stealth"]
     },
     {
       "id": "sp_118",
       "name": "Friendly Competition",
       "character": "Thalita Lyra",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator"]
     },
     {
       "id": "sp_119",
       "name": "Teamwork: Power of Two",
       "character": "Thalita Lyra",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["teamwork", "speed"]
     },
     {
       "id": "sp_120",
       "name": "Background Player",
       "character": "Renato Lyra",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hook", "teamwork", "speed", "haste", "exhausted"]
     },
     {
       "id": "sp_121",
       "name": "Blood Rush",
       "character": "Renato Lyra",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["exhausted"]
     },
     {
       "id": "sp_122",
       "name": "Teamwork: Collcetive Stealth",
       "character": "Renato Lyra",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["teamwork", "stealth"]
     },
     {
       "id": "sp_123",
       "name": "Troubleshooter",
       "character": "Gabriel Soma",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "chase", "aura"]
     },
     {
       "id": "sp_124",
       "name": "Made for This",
       "character": "Gabriel Soma",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["speed", "endurance", "haste"]
     },
     {
       "id": "sp_125",
       "name": "Scavenger",
       "character": "Gabriel Soma",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["item", "generator"]
     },
     {
       "id": "sp_126",
       "name": "Dramaturgy",
       "character": "Nicolas Cage",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["chase", "speed", "haste", "exhausted"]
     },
     {
       "id": "sp_127",
       "name": "Scene Partner",
       "character": "Nicolas Cage",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "aura"]
     },
     {
       "id": "sp_128",
       "name": "Plot Twist",
       "character": "Nicolas Cage",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["stealth", "healing", "speed", "haste"]
     },
     {
       "id": "sp_129",
       "name": "Lucky Star",
       "character": "Ellen Ripley",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["aura", "locker", "stealth"]
     },
     {
       "id": "sp_130",
       "name": "Chemical Trap",
       "character": "Ellen Ripley",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "chase", "hindered"]
     },
     {
       "id": "sp_131",
       "name": "Light-Footed",
       "character": "Ellen Ripley",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["noise", "stealth", "chase"]
     },
     {
       "id": "sp_132",
       "name": "Champion of Light",
       "character": "Alan Wake",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["chase", "item"]
     },
     {
       "id": "sp_133",
       "name": "Boon: Illumination",
       "character": "Alan Wake",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["boon", "information"]
     },
     {
       "id": "sp_134",
       "name": "Deadline",
       "character": "Alan Wake",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "healing", "injured", "skill check"]
     },
     {
       "id": "sp_135",
       "name": "Wicked",
       "character": "Sable Ward",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["aura", "hook", "unhook", "basement"]
     },
     {
       "id": "sp_136",
       "name": "Strength in Shadows",
       "character": "Sable Ward",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["aura", "healing", "basement"]
     },
     {
       "id": "sp_137",
       "name": "Invocation: Weaving Spiders",
       "character": "Sable Ward",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["invocation", "generator", "basement"]
     },
     {
       "id": "sp_138",
       "name": "Mirrored Illusion",
       "character": "Aestri Yazar",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["stealth", "generator"]
     },
     {
       "id": "sp_139",
       "name": "Bardic Inspiration",
       "character": "Aestri Yazar",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "skill check"]
     },
     {
       "id": "sp_140",
       "name": "Still Sight",
       "character": "Aestri Yazar",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "aura"]
     },
     {
       "id": "sp_141",
       "name": "Finesse",
       "character": "Lara Croft",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["chase", "speed"]
     },
     {
       "id": "sp_142",
       "name": "Hardened",
       "character": "Lara Croft",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "aura", "totem", "chest"]
     },
     {
       "id": "sp_143",
       "name": "Specialist",
       "character": "Lara Croft",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "chest", "rummage", "skill check"]
     },
     {
       "id": "sp_144",
       "name": "Eyes of Belmont",
       "character": "Trevor Belmont",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "aura"]
     },
     {
       "id": "sp_145",
       "name": "Exultation",
       "character": "Trevor Belmont",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["item", "pallet"]
     },
     {
       "id": "sp_146",
       "name": "Moment of Glory",
       "character": "Trevor Belmont",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["broken", "rummage", "chest", "injured"]
     },
     {
       "id": "sp_147",
       "name": "Invocation: Treacherous Crows",
       "character": "Taurie Cain",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["invocation", "information", "aura"]
     },
     {
       "id": "sp_148",
       "name": "Clean Break",
       "character": "Taurie Cain",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["healing", "broken", "injured"]
     },
     {
       "id": "sp_149",
       "name": "Shoulder the Burden",
       "character": "Taurie Cain",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hook"]
     },
     {
       "id": "sp_150",
       "name": "Do No Harm",
       "character": "Orela Rose",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["healing", "skill check"]
     },
     {
       "id": "sp_151",
       "name": "Duty of Care",
       "character": "Orela Rose",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["haste", "speed"]
     },
     {
       "id": "sp_152",
       "name": "Rapid Response",
       "character": "Orela Rose",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["exhausted", "locker", "aura"]
     },
     {
       "id": "sp_153",
       "name": "Apocalyptic Ingenuity",
       "character": "Rick Grimes",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["chest", "rummage", "pallet", "aura"]
     },
     {
       "id": "sp_154",
       "name": "Come and Get Me!",
       "character": "Rick Grimes",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hook", "injured", "stealth", "scratch marks"]
     },
     {
       "id": "sp_155",
       "name": "Teamwork: Toughen Up",
       "character": "Rick Grimes",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["teamwork", "healing", "stealth", "scratch marks"]
     },
     {
       "id": "sp_156",
       "name": "Conviction",
       "character": "Michonne Grimes",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["broken"]
     },
     {
       "id": "sp_157",
       "name": "Last Stand",
       "character": "Michonne Grimes",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["vault"]
     },
     {
       "id": "sp_158",
       "name": "Teamwork: Throw Down",
       "character": "Michonne Grimes",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["teamwork", "endurance"]
     },
     {
       "id": "sp_159",
       "name": "Road Life",
       "character": "Vee Boonyasak",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["skill check", "healing"]
     },
     {
       "id": "sp_160",
       "name": "One-Two-Three-Four!",
       "character": "Vee Boonyasak",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "skill check"]
     },
     {
       "id": "sp_161",
       "name": "Ghost Notes",
       "character": "Vee Boonyasak",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["stealth", "exhausted", "scratch marks"]
     },
     {
       "id": "sp_162",
       "name": "Bada Bada Boom",
       "character": "Dustin Henderson",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hindered", "generator"]
     },
     {
       "id": "sp_163",
       "name": "Change of Plan",
       "character": "Dustin Henderson",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["tokens"]
     },
     {
       "id": "sp_164",
       "name": "Teamwork: Full Circuit",
       "character": "Dustin Henderson",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["teamwork", "generator"]
     },
     {
       "id": "sp_165",
       "name": "Extrasensory Perception",
       "character": "Eleven",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "aura", "elusive"]
     },
     {
       "id": "sp_166",
       "name": "We See You",
       "character": "Eleven",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "token", "aura"]
     },
     {
       "id": "sp_167",
       "name": "Teamwork: Soft-Spoken",
       "character": "Eleven",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["teamwork", "noise", "stealth", "generator"]
     },
     {
       "id": "sp_168",
       "name": "Flow State",
       "character": "Kwon Tae-Young",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "healing", "hook", "unhook", "bless", "cleanse"]
     },
     {
       "id": "sp_169",
       "name": "A Place for Us",
       "character": "Kwon Tae-Young",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["elusive", "healing", "obsession"]
     },
     {
       "id": "sp_170",
       "name": "Five Moves Ahead",
       "character": "Kwon Tae-Young",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["chase", "information", "aura", "pallet"]
     }
   ],
   "killer_perks": [
@@ -1026,835 +1196,974 @@
       "id": "kp_001",
       "name": "Bitter Murmur",
       "character": "General",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "aura", "generator"]
     },
     {
       "id": "kp_002",
       "name": "Deerstalker",
       "character": "General",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "aura"]
     },
     {
       "id": "kp_003",
       "name": "Distressing",
       "character": "General",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["noise"]
     },
     {
       "id": "kp_004",
       "name": "Hex: No One Escapes Death",
       "character": "General",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hex", "endgame", "speed", "exposed", "aura"]
     },
     {
       "id": "kp_005",
       "name": "Hex: Thrill of the Hunt",
       "character": "General",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hex", "totem", "slowdown"]
     },
     {
       "id": "kp_006",
       "name": "Insidious",
       "character": "General",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["stealth"]
     },
     {
       "id": "kp_007",
       "name": "Iron Grasp",
       "character": "General",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hook"]
     },
     {
       "id": "kp_008",
       "name": "Scourge Hook: monstrous Shrine",
       "character": "General",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["scourge", "hook"]
     },
     {
       "id": "kp_009",
       "name": "Shattered Hope",
       "character": "General",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["totem"]
     },
     {
       "id": "kp_010",
       "name": "Sloppy Butcher",
       "character": "General",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["healing", "slowdown"]
     },
     {
       "id": "kp_011",
       "name": "Spies from the Shadows",
       "character": "General",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information"]
     },
     {
       "id": "kp_012",
       "name": "Unrelenting",
       "character": "General",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["chase"]
     },
     {
       "id": "kp_013",
       "name": "Whispers",
       "character": "General",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "noise"]
     },
     {
       "id": "kp_014",
       "name": "Unnerving Presence",
       "character": "Trapper",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "slowdown"]
     },
     {
       "id": "kp_015",
       "name": "Brutal Strength",
       "character": "Trapper",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["chase"]
     },
     {
       "id": "kp_016",
       "name": "Agitation",
       "character": "Trapper",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hook", "speed"]
     },
     {
       "id": "kp_017",
       "name": "Predator",
       "character": "Wraith",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["chase", "information"]
     },
     {
       "id": "kp_018",
       "name": "Bloodhound",
       "character": "Wraith",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "chase"]
     },
     {
       "id": "kp_019",
       "name": "Shadowborn",
       "character": "Wraith",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["stealth"]
     },
     {
       "id": "kp_020",
       "name": "Enduring",
       "character": "Hillbilly",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["chase"]
     },
     {
       "id": "kp_021",
       "name": "Lightborn",
       "character": "Hillbilly",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["chase"]
     },
     {
       "id": "kp_022",
       "name": "Tinkerer",
       "character": "Hillbilly",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "stealth", "information"]
     },
     {
       "id": "kp_023",
       "name": "Stridor",
       "character": "Nurse",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["noise", "information"]
     },
     {
       "id": "kp_024",
       "name": "Thanatophobia",
       "character": "Nurse",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["slowdown", "healing"]
     },
     {
       "id": "kp_025",
       "name": "A Nurse's Calling",
       "character": "Nurse",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "healing", "aura"]
     },
     {
       "id": "kp_026",
       "name": "Save the Best for Last",
       "character": "The Shape",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["chase", "obsession"]
     },
     {
       "id": "kp_027",
       "name": "Play with Your Food",
       "character": "The Shape",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["speed", "obsession", "chase"]
     },
     {
       "id": "kp_028",
       "name": "Dying Light",
       "character": "The Shape",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["slowdown", "obsession", "hook"]
     },
     {
       "id": "kp_029",
       "name": "Hex: The Third Seal",
       "character": "The Hag",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hex", "information"]
     },
     {
       "id": "kp_030",
       "name": "Hex: Ruin",
       "character": "The Hag",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hex", "generator", "slowdown"]
     },
     {
       "id": "kp_031",
       "name": "Hex: Devour Hope",
       "character": "The Hag",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hex", "endgame", "exposed", "chase"]
     },
     {
       "id": "kp_032",
       "name": "Overwhelming Presence",
       "character": "The Doctor",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["slowdown", "item"]
     },
     {
       "id": "kp_033",
       "name": "Monitor & Abuse",
       "character": "The Doctor",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["stealth", "chase"]
     },
     {
       "id": "kp_034",
       "name": "Overcharge",
       "character": "The Doctor",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "slowdown"]
     },
     {
       "id": "kp_035",
       "name": "Knock Out",
       "character": "The Cannibal",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "hook"]
     },
     {
       "id": "kp_036",
       "name": "Barbecue & Chilli",
       "character": "The Cannibal",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "aura", "hook"]
     },
     {
       "id": "kp_037",
       "name": "Franklin's Demise",
       "character": "The Cannibal",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["item"]
     },
     {
       "id": "kp_038",
       "name": "Beast of Prey",
       "character": "The Huntress",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["chase"]
     },
     {
       "id": "kp_039",
       "name": "Territorial Imperative",
       "character": "The Huntress",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "aura"]
     },
     {
       "id": "kp_040",
       "name": "Hex: Huntress Lullaby",
       "character": "The Huntress",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hex", "generator", "slowdown"]
     },
     {
       "id": "kp_041",
       "name": "Fire Up",
       "character": "The Nightmare",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["speed", "endgame"]
     },
     {
       "id": "kp_042",
       "name": "Remember Me",
       "character": "The Nightmare",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["endgame", "obsession"]
     },
     {
       "id": "kp_043",
       "name": "Blood Warden",
       "character": "The Nightmare",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["endgame", "hook"]
     },
     {
       "id": "kp_044",
       "name": "Hangman's Trick",
       "character": "The Pig",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hook", "information", "sabotage"]
     },
     {
       "id": "kp_045",
       "name": "Surveillance",
       "character": "The Pig",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "generator"]
     },
     {
       "id": "kp_046",
       "name": "Make Your Choice",
       "character": "The Pig",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hook", "obsession"]
     },
     {
       "id": "kp_047",
       "name": "Bamboozle",
       "character": "The Clown",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["chase", "vault"]
     },
     {
       "id": "kp_048",
       "name": "Coulrophobia",
       "character": "The Clown",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["healing", "slowdown"]
     },
     {
       "id": "kp_049",
       "name": "Pop Goes the Weasel",
       "character": "The Clown",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "slowdown", "hook"]
     },
     {
       "id": "kp_050",
       "name": "Spirit Fury",
       "character": "The Spirit",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["chase"]
     },
     {
       "id": "kp_051",
       "name": "Hex: Haunted Ground",
       "character": "The Spirit",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hex", "totem", "exposed"]
     },
     {
       "id": "kp_052",
       "name": "Rancor",
       "character": "The Spirit",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "obsession", "endgame"]
     },
     {
       "id": "kp_053",
       "name": "Discordance",
       "character": "The Legion",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "generator", "noise"]
     },
     {
       "id": "kp_054",
       "name": "Mad Grit",
       "character": "The Legion",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hook", "chase"]
     },
     {
       "id": "kp_055",
       "name": "Iron Maiden",
       "character": "The Legion",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "stealth", "locker", "exposed"]
     },
     {
       "id": "kp_056",
       "name": "Corrupt Intervention",
       "character": "The Plague",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "slowdown"]
     },
     {
       "id": "kp_057",
       "name": "Infectious Fright",
       "character": "The Plague",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "noise"]
     },
     {
       "id": "kp_058",
       "name": "Dark Devotion",
       "character": "The Plague",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["stealth", "obsession"]
     },
     {
       "id": "kp_059",
       "name": "I'm All Ears",
       "character": "Ghost Face",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "chase"]
     },
     {
       "id": "kp_060",
       "name": "Thrilling Tremors",
       "character": "Ghost Face",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "slowdown", "information"]
     },
     {
       "id": "kp_061",
       "name": "Furtive Chase",
       "character": "Ghost Face",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["stealth", "obsession", "chase"]
     },
     {
       "id": "kp_062",
       "name": "Surge",
       "character": "The Demogorgon",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "slowdown"]
     },
     {
       "id": "kp_063",
       "name": "Cruel Limits",
       "character": "The Demogorgon",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "chase", "vault"]
     },
     {
       "id": "kp_064",
       "name": "Mindbreaker",
       "character": "The Demogorgon",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "slowdown", "exhausted"]
     },
     {
       "id": "kp_065",
       "name": "Zanshin Tactics",
       "character": "The Oni",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "chase"]
     },
     {
       "id": "kp_066",
       "name": "Blood Echo",
       "character": "The Oni",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["slowdown", "hook", "exhausted"]
     },
     {
       "id": "kp_067",
       "name": "Nemesis",
       "character": "The Oni",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["obsession", "information"]
     },
     {
       "id": "kp_068",
       "name": "Gearhead",
       "character": "The Deathslinger",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "information"]
     },
     {
       "id": "kp_069",
       "name": "Dead Man's Switch",
       "character": "The Deathslinger",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "slowdown", "hook"]
     },
     {
       "id": "kp_070",
       "name": "Hex: Retribution",
       "character": "The Deathslinger",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hex", "totem", "information", "exposed"]
     },
     {
       "id": "kp_071",
       "name": "Forced Penance",
       "character": "The Executioner",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hook"]
     },
     {
       "id": "kp_072",
       "name": "Trail of Torment",
       "character": "The Executioner",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "stealth"]
     },
     {
       "id": "kp_073",
       "name": "Deathbound",
       "character": "The Executioner",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "noise"]
     },
     {
       "id": "kp_074",
       "name": "Dragon's Grip",
       "character": "The Blight",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "exposed", "aura"]
     },
     {
       "id": "kp_075",
       "name": "Hex: Blood Favour",
       "character": "The Blight",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hex", "chase", "pallet"]
     },
     {
       "id": "kp_076",
       "name": "Hex: Undying",
       "character": "The Blight",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hex", "totem", "information"]
     },
     {
       "id": "kp_077",
       "name": "Hoarder",
       "character": "The Twins",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["item", "information"]
     },
     {
       "id": "kp_078",
       "name": "Oppression",
       "character": "The Twins",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "slowdown"]
     },
     {
       "id": "kp_079",
       "name": "Coup de Grâce",
       "character": "The Twins",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["chase", "generator"]
     },
     {
       "id": "kp_080",
       "name": "Starstruck",
       "character": "The Trickster",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hook", "chase", "exposed"]
     },
     {
       "id": "kp_081",
       "name": "Hex: Crowd Control",
       "character": "The Trickster",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hex", "chase", "vault"]
     },
     {
       "id": "kp_082",
       "name": "No Way Out",
       "character": "The Trickster",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["endgame", "hook"]
     },
     {
       "id": "kp_083",
       "name": "Lethal Pursuer",
       "character": "The Nemesis",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "aura", "chase"]
     },
     {
       "id": "kp_084",
       "name": "Hysteria",
       "character": "The Nemesis",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "oblivious", "injured"]
     },
     {
       "id": "kp_085",
       "name": "Eruption",
       "character": "The Nemesis",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "slowdown"]
     },
     {
       "id": "kp_086",
       "name": "Deadlock",
       "character": "The Cenobite",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "slowdown"]
     },
     {
       "id": "kp_087",
       "name": "Hex: Plaything",
       "character": "The Cenobite",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hex", "totem", "oblivious"]
     },
     {
       "id": "kp_088",
       "name": "Scourge Hook: Gift of Pain",
       "character": "The Cenobite",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["scourge", "hook", "slowdown"]
     },
     {
       "id": "kp_089",
       "name": "Grim Embrace",
       "character": "The Artist",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "slowdown", "hook"]
     },
     {
       "id": "kp_090",
       "name": "Scourge Hook: Pain Resonance",
       "character": "The Artist",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["scourge", "generator", "slowdown", "hook"]
     },
     {
       "id": "kp_091",
       "name": "Hex: Pentimento",
       "character": "The Artist",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hex", "totem", "slowdown"]
     },
     {
       "id": "kp_092",
       "name": "Call of Brine",
       "character": "The Onryō",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "information"]
     },
     {
       "id": "kp_093",
       "name": "Scourge Hook: Floods of Rage",
       "character": "The Onryō",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["scourge", "hook", "information"]
     },
     {
       "id": "kp_094",
       "name": "Merciless Storm",
       "character": "The Onryō",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "slowdown"]
     },
     {
       "id": "kp_095",
       "name": "Dissolution",
       "character": "The Dredge",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["chase", "pallet"]
     },
     {
       "id": "kp_096",
       "name": "Darkness Revealed",
       "character": "The Dredge",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "aura"]
     },
     {
       "id": "kp_097",
       "name": "Septic Touch",
       "character": "The Dredge",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["healing", "slowdown"]
     },
     {
       "id": "kp_098",
       "name": "Superior Anatomy",
       "character": "The Mastermind",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["chase", "vault"]
     },
     {
       "id": "kp_099",
       "name": "Awakened Awareness",
       "character": "The Mastermind",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "aura", "hook"]
     },
     {
       "id": "kp_100",
       "name": "Terminus",
       "character": "The Mastermind",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["endgame", "hook", "exposed"]
     },
     {
       "id": "kp_101",
       "name": "Nowhere to Hide",
       "character": "The Knight",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "aura", "generator"]
     },
     {
       "id": "kp_102",
       "name": "Hex: Face the Darkness",
       "character": "The Knight",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hex", "noise", "obsession"]
     },
     {
       "id": "kp_103",
       "name": "Hubris",
       "character": "The Knight",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["chase", "pallet"]
     },
     {
       "id": "kp_104",
       "name": "Thwack!",
       "character": "The Skull Merchant",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["chase", "information"]
     },
     {
       "id": "kp_105",
       "name": "Leverage",
       "character": "The Skull Merchant",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hook", "slowdown", "item"]
     },
     {
       "id": "kp_106",
       "name": "Game Afoot",
       "character": "The Skull Merchant",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["chase", "obsession"]
     },
     {
       "id": "kp_107",
       "name": "Genetic Limits",
       "character": "The Singularity",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["slowdown", "healing"]
     },
     {
       "id": "kp_108",
       "name": "Forced Hesitation",
       "character": "The Singularity",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["slowdown", "chase", "injured"]
     },
     {
       "id": "kp_109",
       "name": "Machine Learning",
       "character": "The Singularity",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "slowdown"]
     },
     {
       "id": "kp_110",
       "name": "Ultimate Weapon",
       "character": "The Xenomorph",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "stealth"]
     },
     {
       "id": "kp_111",
       "name": "Rapid Brutality",
       "character": "The Xenomorph",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["speed", "chase"]
     },
     {
       "id": "kp_112",
       "name": "Alien Instinct",
       "character": "The Xenomorph",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "hook"]
     },
     {
       "id": "kp_113",
       "name": "Batteries Included",
       "character": "The Good Guy",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["speed", "generator"]
     },
     {
       "id": "kp_114",
       "name": "Friends 'til the End",
       "character": "The Good Guy",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["obsession", "hook"]
     },
     {
       "id": "kp_115",
       "name": "Hex: Two Can Play",
       "character": "The Good Guy",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hex"]
     },
     {
       "id": "kp_116",
       "name": "Unbound",
       "character": "The Unknown",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["chase", "information"]
     },
     {
       "id": "kp_117",
       "name": "Undone",
       "character": "The Unknown",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "slowdown"]
     },
     {
       "id": "kp_118",
       "name": "Unforeseen",
       "character": "The Unknown",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["stealth", "chase"]
     },
     {
       "id": "kp_119",
       "name": "Languid Touch",
       "character": "The Lich",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["slowdown", "item"]
     },
     {
       "id": "kp_120",
       "name": "Weave Attunement",
       "character": "The Lich",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["item", "information", "aura"]
     },
     {
       "id": "kp_121",
       "name": "Dark Arrogance",
       "character": "The Lich",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["chase"]
     },
     {
       "id": "kp_122",
       "name": "Hex: Wretched Fate",
       "character": "The Dark Lord",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hex", "generator", "slowdown"]
     },
     {
       "id": "kp_123",
       "name": "Human Greed",
       "character": "The Dark Lord",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["item", "information"]
     },
     {
       "id": "kp_124",
       "name": "Dominance",
       "character": "The Dark Lord",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["obsession", "chase"]
     },
     {
       "id": "kp_125",
       "name": "All-Shaking Thunder",
       "character": "The Houndmaster",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["chase", "noise"]
     },
     {
       "id": "kp_126",
       "name": "Scourge Hook: Jagged Compass",
       "character": "The Houndmaster",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["scourge", "hook", "information"]
     },
     {
       "id": "kp_127",
       "name": "No Quarter",
       "character": "The Houndmaster",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["healing", "slowdown"]
     },
     {
       "id": "kp_128",
       "name": "Hex: Nothing but Misery",
       "character": "The Ghoul",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hex", "slowdown", "healing"]
     },
     {
       "id": "kp_129",
       "name": "Forever Entwined",
       "character": "The Ghoul",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hook", "slowdown"]
     },
     {
       "id": "kp_130",
       "name": "None are Free",
       "character": "The Ghoul",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hook", "endgame"]
     },
     {
       "id": "kp_131",
       "name": "Help Wanted",
       "character": "The Animatronic",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "generator"]
     },
     {
       "id": "kp_132",
       "name": "Phantom Fear",
       "character": "The Animatronic",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["noise", "information"]
     },
     {
       "id": "kp_133",
       "name": "Haywire",
       "character": "The Animatronic",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "slowdown"]
     },
     {
       "id": "kp_134",
       "name": "Ravenous",
       "character": "The Krasue",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["speed", "hook"]
     },
     {
       "id": "kp_135",
       "name": "Wandering Eye",
       "character": "The Krasue",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information", "aura"]
     },
     {
       "id": "kp_136",
       "name": "Hex: Overture of Doom",
       "character": "The Krasue",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hex", "slowdown"]
     },
     {
       "id": "kp_137",
       "name": "Turn Back the Clock",
       "character": "The First",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["generator", "slowdown"]
     },
     {
       "id": "kp_138",
       "name": "Secret Project",
       "character": "The First",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["information"]
     },
     {
       "id": "kp_139",
       "name": "Hex: Hive Mind",
       "character": "The First",
-      "iconUrl": null
+      "iconUrl": null,
+      "tags": ["hex", "generator"]
     }
   ]
 }

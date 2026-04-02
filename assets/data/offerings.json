@@ -1,46 +1,256 @@
 {
   "offerings": [
-    { "id": "no_offering",            "name": "No Offering",            "rarity": "none",       "type": "shared",   "category": "none" },
+    {
+      "id": "no_offering",
+      "name": "No Offering",
+      "rarity": "none",
+      "type": "shared",
+      "category": "none"
+    },
 
-    { "id": "survivor_pudding",       "name": "Survivor Pudding",       "rarity": "common",     "type": "shared",   "category": "bloodpoints" },
-    { "id": "party_streamers",        "name": "Party Streamers",        "rarity": "uncommon",   "type": "shared",   "category": "bloodpoints" },
-    { "id": "bloody_party_streamers", "name": "Bloody Party Streamers", "rarity": "rare",       "type": "shared",   "category": "bloodpoints" },
+    {
+      "id": "survivor_pudding",
+      "name": "Survivor Pudding",
+      "rarity": "common",
+      "type": "shared",
+      "category": "bloodpoints"
+    },
+    {
+      "id": "party_streamers",
+      "name": "Party Streamers",
+      "rarity": "uncommon",
+      "type": "shared",
+      "category": "bloodpoints"
+    },
+    {
+      "id": "bloody_party_streamers",
+      "name": "Bloody Party Streamers",
+      "rarity": "rare",
+      "type": "shared",
+      "category": "bloodpoints"
+    },
 
-    { "id": "annotated_blueprint",    "name": "Annotated Blueprint",    "rarity": "uncommon",   "type": "shared",   "category": "map" },
-    { "id": "decrepit_note",          "name": "Decrepit Note",          "rarity": "uncommon",   "type": "shared",   "category": "map" },
-    { "id": "cattle_tag",             "name": "Cattle Tag",             "rarity": "uncommon",   "type": "shared",   "category": "map" },
-    { "id": "funeral_casserole",      "name": "Funeral Casserole",      "rarity": "uncommon",   "type": "shared",   "category": "map" },
-    { "id": "susans_mixtape",         "name": "Susan's Mixtape",        "rarity": "uncommon",   "type": "shared",   "category": "map" },
-    { "id": "hacksaw",                "name": "Hacksaw",                "rarity": "uncommon",   "type": "shared",   "category": "map" },
-    { "id": "petrified_bark",         "name": "Petrified Bark",         "rarity": "uncommon",   "type": "shared",   "category": "map" },
-    { "id": "cold_snap",              "name": "Cold Snap",              "rarity": "uncommon",   "type": "shared",   "category": "map" },
-    { "id": "silk_tassels",           "name": "Silk Tassels",           "rarity": "uncommon",   "type": "shared",   "category": "map" },
-    { "id": "ash_covered_label",      "name": "Ash-Covered Label",      "rarity": "uncommon",   "type": "shared",   "category": "map" },
-    { "id": "mist_censer",            "name": "Mist Censer",            "rarity": "uncommon",   "type": "shared",   "category": "map" },
-    { "id": "dried_cicada_husk",      "name": "Dried Cicada Husk",      "rarity": "uncommon",   "type": "shared",   "category": "map" },
-    { "id": "feathers_of_crow",       "name": "Feathers of the Crow",   "rarity": "uncommon",   "type": "shared",   "category": "map" },
-    { "id": "bleached_bones",         "name": "Bleached Bones",         "rarity": "uncommon",   "type": "shared",   "category": "map" },
-    { "id": "cracked_mirror",         "name": "Cracked Mirror",         "rarity": "uncommon",   "type": "shared",   "category": "map" },
-    { "id": "metal_fragments",        "name": "Metal Fragments",        "rarity": "uncommon",   "type": "shared",   "category": "map" },
-    { "id": "floral_bouquet",         "name": "Floral Bouquet",         "rarity": "uncommon",   "type": "shared",   "category": "map" },
-    { "id": "dried_fern",             "name": "Dried Fern",             "rarity": "uncommon",   "type": "shared",   "category": "map" },
-    { "id": "police_report",          "name": "Police Report",          "rarity": "uncommon",   "type": "shared",   "category": "map" },
-    { "id": "tribal_mask",            "name": "Tribal Mask",            "rarity": "uncommon",   "type": "shared",   "category": "map" },
-    { "id": "rusty_anchor",           "name": "Rusty Anchor",           "rarity": "uncommon",   "type": "shared",   "category": "map" },
-    { "id": "chalk_pouch",            "name": "Chalk Pouch",            "rarity": "uncommon",   "type": "shared",   "category": "map" },
+    {
+      "id": "annotated_blueprint",
+      "name": "Annotated Blueprint",
+      "rarity": "uncommon",
+      "type": "shared",
+      "category": "map"
+    },
+    {
+      "id": "decrepit_note",
+      "name": "Decrepit Note",
+      "rarity": "uncommon",
+      "type": "shared",
+      "category": "map"
+    },
+    {
+      "id": "cattle_tag",
+      "name": "Cattle Tag",
+      "rarity": "uncommon",
+      "type": "shared",
+      "category": "map"
+    },
+    {
+      "id": "funeral_casserole",
+      "name": "Funeral Casserole",
+      "rarity": "uncommon",
+      "type": "shared",
+      "category": "map"
+    },
+    {
+      "id": "susans_mixtape",
+      "name": "Susan's Mixtape",
+      "rarity": "uncommon",
+      "type": "shared",
+      "category": "map"
+    },
+    {
+      "id": "hacksaw",
+      "name": "Hacksaw",
+      "rarity": "uncommon",
+      "type": "shared",
+      "category": "map"
+    },
+    {
+      "id": "petrified_bark",
+      "name": "Petrified Bark",
+      "rarity": "uncommon",
+      "type": "shared",
+      "category": "map"
+    },
+    {
+      "id": "cold_snap",
+      "name": "Cold Snap",
+      "rarity": "uncommon",
+      "type": "shared",
+      "category": "map"
+    },
+    {
+      "id": "silk_tassels",
+      "name": "Silk Tassels",
+      "rarity": "uncommon",
+      "type": "shared",
+      "category": "map"
+    },
+    {
+      "id": "ash_covered_label",
+      "name": "Ash-Covered Label",
+      "rarity": "uncommon",
+      "type": "shared",
+      "category": "map"
+    },
+    {
+      "id": "mist_censer",
+      "name": "Mist Censer",
+      "rarity": "uncommon",
+      "type": "shared",
+      "category": "map"
+    },
+    {
+      "id": "dried_cicada_husk",
+      "name": "Dried Cicada Husk",
+      "rarity": "uncommon",
+      "type": "shared",
+      "category": "map"
+    },
+    {
+      "id": "feathers_of_crow",
+      "name": "Feathers of the Crow",
+      "rarity": "uncommon",
+      "type": "shared",
+      "category": "map"
+    },
+    {
+      "id": "bleached_bones",
+      "name": "Bleached Bones",
+      "rarity": "uncommon",
+      "type": "shared",
+      "category": "map"
+    },
+    {
+      "id": "cracked_mirror",
+      "name": "Cracked Mirror",
+      "rarity": "uncommon",
+      "type": "shared",
+      "category": "map"
+    },
+    {
+      "id": "metal_fragments",
+      "name": "Metal Fragments",
+      "rarity": "uncommon",
+      "type": "shared",
+      "category": "map"
+    },
+    {
+      "id": "floral_bouquet",
+      "name": "Floral Bouquet",
+      "rarity": "uncommon",
+      "type": "shared",
+      "category": "map"
+    },
+    {
+      "id": "dried_fern",
+      "name": "Dried Fern",
+      "rarity": "uncommon",
+      "type": "shared",
+      "category": "map"
+    },
+    {
+      "id": "police_report",
+      "name": "Police Report",
+      "rarity": "uncommon",
+      "type": "shared",
+      "category": "map"
+    },
+    {
+      "id": "tribal_mask",
+      "name": "Tribal Mask",
+      "rarity": "uncommon",
+      "type": "shared",
+      "category": "map"
+    },
+    {
+      "id": "rusty_anchor",
+      "name": "Rusty Anchor",
+      "rarity": "uncommon",
+      "type": "shared",
+      "category": "map"
+    },
+    {
+      "id": "chalk_pouch",
+      "name": "Chalk Pouch",
+      "rarity": "uncommon",
+      "type": "shared",
+      "category": "map"
+    },
 
-    { "id": "hollow_shell",           "name": "Hollow Shell",           "rarity": "common",     "type": "shared",   "category": "hook" },
-    { "id": "petrified_oak",          "name": "Petrified Oak",          "rarity": "rare",       "type": "shared",   "category": "hook" },
+    {
+      "id": "hollow_shell",
+      "name": "Hollow Shell",
+      "rarity": "common",
+      "type": "shared",
+      "category": "hook"
+    },
+    {
+      "id": "petrified_oak",
+      "name": "Petrified Oak",
+      "rarity": "rare",
+      "type": "shared",
+      "category": "hook"
+    },
 
-    { "id": "shiny_coin",             "name": "Shiny Coin",             "rarity": "common",     "type": "shared",   "category": "chest" },
+    {
+      "id": "shiny_coin",
+      "name": "Shiny Coin",
+      "rarity": "common",
+      "type": "shared",
+      "category": "chest"
+    },
 
-    { "id": "cypress_memento_mori",   "name": "Cypress Memento Mori",   "rarity": "rare",       "type": "killer",   "category": "mori" },
-    { "id": "ivory_memento_mori",     "name": "Ivory Memento Mori",     "rarity": "very_rare",  "type": "killer",   "category": "mori" },
-    { "id": "ebony_memento_mori",     "name": "Ebony Memento Mori",     "rarity": "ultra_rare", "type": "killer",   "category": "mori" },
+    {
+      "id": "cypress_memento_mori",
+      "name": "Cypress Memento Mori",
+      "rarity": "rare",
+      "type": "killer",
+      "category": "mori"
+    },
+    {
+      "id": "ivory_memento_mori",
+      "name": "Ivory Memento Mori",
+      "rarity": "very_rare",
+      "type": "killer",
+      "category": "mori"
+    },
+    {
+      "id": "ebony_memento_mori",
+      "name": "Ebony Memento Mori",
+      "rarity": "ultra_rare",
+      "type": "killer",
+      "category": "mori"
+    },
 
-    { "id": "black_ward",             "name": "Black Ward",             "rarity": "very_rare",  "type": "killer",   "category": "other" },
+    {
+      "id": "black_ward",
+      "name": "Black Ward",
+      "rarity": "very_rare",
+      "type": "killer",
+      "category": "other"
+    },
 
-    { "id": "escape_cake",            "name": "Escape Cake",            "rarity": "very_rare",  "type": "survivor", "category": "escape" },
-    { "id": "vigojs_jar",             "name": "Vigo's Jar of Salty Lips","rarity": "very_rare", "type": "survivor", "category": "escape" }
+    {
+      "id": "escape_cake",
+      "name": "Escape Cake",
+      "rarity": "very_rare",
+      "type": "survivor",
+      "category": "escape"
+    },
+    {
+      "id": "vigojs_jar",
+      "name": "Vigo's Jar of Salty Lips",
+      "rarity": "very_rare",
+      "type": "survivor",
+      "category": "escape"
+    }
   ]
 }

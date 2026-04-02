@@ -186,7 +186,8 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
       if (_searchQuery.isEmpty) return true;
       final q = _searchQuery.toLowerCase();
       return p.name.toLowerCase().contains(q) ||
-          p.character.toLowerCase().contains(q);
+          p.character.toLowerCase().contains(q) ||
+          p.tags.any((t) => t.toLowerCase().contains(q));
     }).toList();
 
     return LayoutBuilder(
@@ -479,7 +480,8 @@ class _PerkPickerSheetState extends ConsumerState<_PerkPickerSheet> {
                   if (_search.isEmpty) return true;
                   final q = _search.toLowerCase();
                   return p.name.toLowerCase().contains(q) ||
-                      p.character.toLowerCase().contains(q);
+                      p.character.toLowerCase().contains(q) ||
+                      p.tags.any((t) => t.toLowerCase().contains(q));
                 }).toList();
                 return ListView.builder(
                   controller: controller,

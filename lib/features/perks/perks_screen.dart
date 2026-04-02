@@ -33,7 +33,8 @@ class _PerksScreenState extends ConsumerState<PerksScreen> {
       final matchRole = p.isSurvivor == _isSurvivor;
       final matchSearch = q.isEmpty ||
           p.name.toLowerCase().contains(q) ||
-          p.character.toLowerCase().contains(q);
+          p.character.toLowerCase().contains(q) ||
+          p.tags.any((t) => t.toLowerCase().contains(q));
       return matchRole && matchSearch;
     }).toList();
   }
@@ -52,7 +53,7 @@ class _PerksScreenState extends ConsumerState<PerksScreen> {
                     autofocus: true,
                     style: const TextStyle(color: AppTheme.textPrimary, fontSize: 16),
                     decoration: const InputDecoration(
-                      hintText: 'Szukaj po nazwie, postaci...',
+                      hintText: 'Search by name, character, tag...',
                       hintStyle: TextStyle(color: AppTheme.textDim, fontSize: 14),
                       border: InputBorder.none,
                       isDense: true,
@@ -81,7 +82,7 @@ class _PerksScreenState extends ConsumerState<PerksScreen> {
           ),
           Expanded(child: allPerksAsync.when(
         loading: () => Center(child: CircularProgressIndicator(color: AppTheme.primary)),
-        error: (e, _) => Center(child: Text('Błąd: $e', style: const TextStyle(color: AppTheme.textSecondary))),
+        error: (e, _) => Center(child: Text('Error: $e', style: const TextStyle(color: AppTheme.textSecondary))),
         data: (allPerks) {
           final filtered = _filter(allPerks);
           return Column(
@@ -100,7 +101,7 @@ class _PerksScreenState extends ConsumerState<PerksScreen> {
                 child: Row(
                   children: [
                     Text(
-                      '${filtered.length} perk${filtered.length == 1 ? '' : 'ów'}',
+                      '${filtered.length} perk${filtered.length == 1 ? '' : 's'}',
                       style: GoogleFonts.rajdhani(
                         color: AppTheme.textSecondary,
                         fontSize: 12,
@@ -169,7 +170,7 @@ class _EmptyState extends StatelessWidget {
             const Icon(Icons.search_off, color: AppTheme.textDim, size: 48),
             const SizedBox(height: 16),
             Text(
-              'Brak wyników',
+              'No results',
               style: GoogleFonts.rajdhani(
                 color: AppTheme.textSecondary,
                 fontSize: 18,
@@ -180,7 +181,7 @@ class _EmptyState extends StatelessWidget {
             if (search.isNotEmpty) ...[
               const SizedBox(height: 8),
               Text(
-                'Nie znaleziono perku dla "$search"',
+                'No perk found for "$search"',
                 style: const TextStyle(color: AppTheme.textDim, fontSize: 13),
                 textAlign: TextAlign.center,
               ),

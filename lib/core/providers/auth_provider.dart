@@ -92,7 +92,7 @@ class AuthNotifier extends ChangeNotifier {
     );
 
     final code = Uri.parse(result).queryParameters['code'];
-    if (code == null) throw Exception('Brak kodu autoryzacji od Google');
+    if (code == null) throw Exception('No authorization code from Google');
 
     final tokenResponse = await http.post(
       Uri.parse('https://oauth2.googleapis.com/token'),
@@ -110,7 +110,7 @@ class AuthNotifier extends ChangeNotifier {
     final accessToken = tokenData['access_token'] as String?;
 
     if (idToken == null) {
-      throw Exception('Nie udało się uzyskać tokenu: ${tokenResponse.body}');
+      throw Exception('Failed to obtain token: ${tokenResponse.body}');
     }
 
     final credential = GoogleAuthProvider.credential(
