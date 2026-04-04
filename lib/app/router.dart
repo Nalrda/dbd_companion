@@ -7,8 +7,6 @@ import '../features/auth/login_screen.dart';
 import '../features/builds/build_detail_screen.dart';
 import '../features/builds/build_editor_screen.dart';
 import '../features/builds/builds_screen.dart';
-import '../features/killers/killer_detail_screen.dart';
-import '../features/killers/killers_screen.dart';
 import '../features/maps/map_detail_screen.dart';
 import '../features/maps/maps_screen.dart';
 import '../features/matches/match_editor_screen.dart';
@@ -64,8 +62,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         routes: [
           GoRoute(path: '/builds', pageBuilder: (_, state) => _fadeSlidePage(const BuildsScreen(), state)),
           GoRoute(path: '/randomizer', pageBuilder: (_, state) => _fadeSlidePage(const RandomizerScreen(), state)),
-          GoRoute(path: '/killers', pageBuilder: (_, state) => _fadeSlidePage(const KillersScreen(), state)),
-          GoRoute(path: '/matches', pageBuilder: (_, state) => _fadeSlidePage(const MatchesScreen(), state)),
+GoRoute(path: '/matches', pageBuilder: (_, state) => _fadeSlidePage(const MatchesScreen(), state)),
           GoRoute(path: '/maps', pageBuilder: (_, state) => _fadeSlidePage(const MapsScreen(), state)),
           GoRoute(path: '/group', pageBuilder: (_, state) => _fadeSlidePage(const GroupPlannerScreen(), state)),
         ],
@@ -126,13 +123,6 @@ final routerProvider = Provider<GoRouter>((ref) {
             realmId: state.pathParameters['realmId']!,
             mapId: state.pathParameters['mapId']!,
           ),
-          state,
-        ),
-      ),
-      GoRoute(
-        path: '/killers/:id',
-        pageBuilder: (context, state) => _fadeSlidePage(
-          KillerDetailScreen(killerId: state.pathParameters['id']!),
           state,
         ),
       ),

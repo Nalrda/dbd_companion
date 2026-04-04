@@ -176,27 +176,32 @@ class _MatchEditorScreenState extends ConsumerState<MatchEditorScreen> {
                 final color = _outcomeColor(o);
                 return GestureDetector(
                   onTap: () => setState(() => _outcome = o),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 180),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 12),
-                    decoration: BoxDecoration(
-                      color: selected
-                          ? color.withValues(alpha: 0.15)
-                          : AppTheme.surfaceElevated,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: selected ? color : AppTheme.border,
-                        width: selected ? 1.5 : 1,
+                  child: AnimatedScale(
+                    scale: selected ? 1.04 : 1.0,
+                    duration: const Duration(milliseconds: 150),
+                    curve: Curves.easeOut,
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 180),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12),
+                      decoration: BoxDecoration(
+                        color: selected
+                            ? color.withValues(alpha: 0.15)
+                            : AppTheme.surfaceElevated,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: selected ? color : AppTheme.border,
+                          width: selected ? 1.5 : 1,
+                        ),
                       ),
-                    ),
-                    child: Text(
-                      _outcomeLabel(o),
-                      style: GoogleFonts.rajdhani(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        color: selected ? color : AppTheme.textSecondary,
-                        letterSpacing: 0.5,
+                      child: Text(
+                        _outcomeLabel(o),
+                        style: GoogleFonts.rajdhani(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                          color: selected ? color : AppTheme.textSecondary,
+                          letterSpacing: 0.5,
+                        ),
                       ),
                     ),
                   ),
@@ -280,7 +285,7 @@ class _MatchEditorScreenState extends ConsumerState<MatchEditorScreen> {
 
 // ─── Picker button ────────────────────────────────────────────────────────────
 
-class _PickerButton extends StatelessWidget {
+class _PickerButton extends StatefulWidget {
   final String? value;
   final String hint;
   final IconData icon;
@@ -296,41 +301,55 @@ class _PickerButton extends StatelessWidget {
   });
 
   @override
+  State<_PickerButton> createState() => _PickerButtonState();
+}
+
+class _PickerButtonState extends State<_PickerButton> {
+  bool _hovered = false;
+
+  @override
   Widget build(BuildContext context) {
-    final hasValue = value != null;
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-        decoration: BoxDecoration(
-          color: AppTheme.surfaceElevated,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: hasValue
-                ? AppTheme.primary.withValues(alpha: 0.5)
-                : AppTheme.border,
+    final hasValue = widget.value != null;
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 150),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+          decoration: BoxDecoration(
+            color: AppTheme.surfaceElevated,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: hasValue
+                  ? AppTheme.primary.withValues(alpha: 0.5)
+                  : _hovered
+                      ? AppTheme.primary.withValues(alpha: 0.4)
+                      : AppTheme.border,
+            ),
           ),
-        ),
         child: Row(
           children: [
             Icon(
-              icon,
+              widget.icon,
               size: 18,
               color: hasValue ? AppTheme.primary : AppTheme.textDim,
             ),
             const SizedBox(width: 10),
             Expanded(
               child: Text(
-                value ?? hint,
+                widget.value ?? widget.hint,
                 style: TextStyle(
                   color: hasValue ? AppTheme.textPrimary : AppTheme.textDim,
                   fontSize: 14,
                 ),
               ),
             ),
-            if (onClear != null)
+            if (widget.onClear != null)
               GestureDetector(
-                onTap: onClear,
+                onTap: widget.onClear,
                 child: const Icon(Icons.close, size: 16, color: AppTheme.textDim),
               )
             else
@@ -338,7 +357,8 @@ class _PickerButton extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ),
+  );
   }
 }
 
@@ -400,35 +420,49 @@ class _GensCounter extends StatelessWidget {
   }
 }
 
-class _CounterBtn extends StatelessWidget {
+class _CounterBtn extends StatefulWidget {
   final IconData icon;
   final VoidCallback? onTap;
 
   const _CounterBtn({required this.icon, this.onTap});
 
   @override
+  State<_CounterBtn> createState() => _CounterBtnState();
+}
+
+class _CounterBtnState extends State<_CounterBtn> {
+  bool _pressed = false;
+
+  @override
   Widget build(BuildContext context) {
-    final active = onTap != null;
+    final active = widget.onTap != null;
     return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 44,
-        height: 44,
-        decoration: BoxDecoration(
-          color: active
-              ? AppTheme.primary.withValues(alpha: 0.15)
-              : AppTheme.border.withValues(alpha: 0.4),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
+      onTap: widget.onTap,
+      onTapDown: active ? (_) => setState(() => _pressed = true) : null,
+      onTapUp: active ? (_) => setState(() => _pressed = false) : null,
+      onTapCancel: active ? () => setState(() => _pressed = false) : null,
+      child: AnimatedScale(
+        scale: _pressed && active ? 0.90 : 1.0,
+        duration: const Duration(milliseconds: 80),
+        child: Container(
+          width: 44,
+          height: 44,
+          decoration: BoxDecoration(
             color: active
-                ? AppTheme.primary.withValues(alpha: 0.4)
-                : AppTheme.border,
+                ? AppTheme.primary.withValues(alpha: 0.15)
+                : AppTheme.border.withValues(alpha: 0.4),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: active
+                  ? AppTheme.primary.withValues(alpha: 0.4)
+                  : AppTheme.border,
+            ),
           ),
-        ),
-        child: Icon(
-          icon,
-          size: 20,
-          color: active ? AppTheme.primary : AppTheme.textDim,
+          child: Icon(
+            widget.icon,
+            size: 20,
+            color: active ? AppTheme.primary : AppTheme.textDim,
+          ),
         ),
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/models/build.dart';
@@ -226,10 +227,10 @@ class _BuildDetailViewState extends State<_BuildDetailView> {
                     style: TextStyle(color: AppTheme.textSecondary),
                   )
                 else
-                  ..._perks.map((perk) => Padding(
+                  ..._perks.asMap().entries.map((e) => Padding(
                         padding: const EdgeInsets.only(bottom: 10),
-                        child: PerkCard(perk: perk),
-                      )),
+                        child: PerkCard(perk: e.value),
+                      ).animate().fadeIn(delay: (e.key * 50).ms).slideY(begin: 0.04, end: 0)),
 
                 // Item (survivor only)
                 if (widget.build.isSurvivor && _item != null) ...[

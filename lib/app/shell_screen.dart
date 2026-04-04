@@ -17,16 +17,16 @@ class ShellScreen extends ConsumerWidget {
       activeIcon: Icons.construction,
     ),
     _TabItem(
+      path: '/group',
+      label: 'GROUP',
+      icon: Icons.groups_outlined,
+      activeIcon: Icons.groups,
+    ),
+    _TabItem(
       path: '/randomizer',
       label: 'RANDOM',
       icon: Icons.casino_outlined,
       activeIcon: Icons.casino,
-    ),
-    _TabItem(
-      path: '/killers',
-      label: 'KILLERS',
-      icon: Icons.local_fire_department_outlined,
-      activeIcon: Icons.local_fire_department,
     ),
     _TabItem(
       path: '/matches',
@@ -39,12 +39,6 @@ class ShellScreen extends ConsumerWidget {
       label: 'MAPS',
       icon: Icons.map_outlined,
       activeIcon: Icons.map,
-    ),
-    _TabItem(
-      path: '/group',
-      label: 'GROUP',
-      icon: Icons.groups_outlined,
-      activeIcon: Icons.groups,
     ),
   ];
 
