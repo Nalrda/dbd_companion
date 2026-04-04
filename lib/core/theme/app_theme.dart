@@ -40,12 +40,20 @@ class AppTheme {
   // ─── Theme color palette ─────────────────────────────────────────────────────
   static const List<({String name, Color color})> themeColors = [
     (name: 'Blood',   color: Color(0xFFCC2828)),
+    (name: 'Crimson', color: Color(0xFFDC143C)),
+    (name: 'Pink',    color: Color(0xFFE91E63)),
     (name: 'Purple',  color: Color(0xFF8B35D6)),
+    (name: 'Indigo',  color: Color(0xFF3F51B5)),
     (name: 'Blue',    color: Color(0xFF2196F3)),
-    (name: 'Green',   color: Color(0xFF4CAF50)),
-    (name: 'Orange',  color: Color(0xFFE05828)),
-    (name: 'Gold',    color: Color(0xFFFFB300)),
+    (name: 'Cyan',    color: Color(0xFF00BCD4)),
     (name: 'Teal',    color: Color(0xFF26A69A)),
+    (name: 'Green',   color: Color(0xFF4CAF50)),
+    (name: 'Lime',    color: Color(0xFF8BC34A)),
+    (name: 'Amber',   color: Color(0xFFFF8F00)),
+    (name: 'Gold',    color: Color(0xFFFFB300)),
+    (name: 'Orange',  color: Color(0xFFE05828)),
+    (name: 'Coral',   color: Color(0xFFFF7043)),
+    (name: 'Bronze',  color: Color(0xFF8D6E63)),
     (name: 'Silver',  color: Color(0xFF9E9E9E)),
   ];
 
