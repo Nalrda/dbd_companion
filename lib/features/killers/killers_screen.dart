@@ -123,24 +123,50 @@ class _KillersScreenState extends ConsumerState<KillersScreen> {
 
 // ─── Killer tile ──────────────────────────────────────────────────────────────
 
-class _KillerTile extends StatelessWidget {
+class _KillerTile extends StatefulWidget {
   final Killer killer;
   final VoidCallback onTap;
 
   const _KillerTile({required this.killer, required this.onTap});
 
   @override
+  State<_KillerTile> createState() => _KillerTileState();
+}
+
+class _KillerTileState extends State<_KillerTile> {
+  bool _hovered = false;
+  bool _pressed = false;
+
+  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: AppTheme.surface,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppTheme.border),
-        ),
-        child: Row(
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        onTapDown: (_) => setState(() => _pressed = true),
+        onTapUp: (_) => setState(() => _pressed = false),
+        onTapCancel: () => setState(() => _pressed = false),
+        child: AnimatedScale(
+          scale: _pressed ? 0.98 : 1.0,
+          duration: const Duration(milliseconds: 80),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: AppTheme.surface,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: _hovered
+                    ? AppTheme.primary.withValues(alpha: 0.4)
+                    : AppTheme.border,
+              ),
+              boxShadow: _hovered
+                  ? [BoxShadow(color: AppTheme.primaryGlow, blurRadius: 10)]
+                  : null,
+            ),
+            child: Row(
           children: [
             Container(
               width: 48,
@@ -153,7 +179,7 @@ class _KillerTile extends StatelessWidget {
               ),
               child: Center(
                 child: Text(
-                  killer.name.replaceFirst('The ', '')[0],
+                  widget.killer.name.replaceFirst('The ', '')[0],
                   style: GoogleFonts.rajdhani(
                     fontSize: 22,
                     fontWeight: FontWeight.w800,
@@ -169,7 +195,7 @@ class _KillerTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    killer.name,
+                    widget.killer.name,
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
@@ -178,7 +204,7 @@ class _KillerTile extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    killer.power,
+                    widget.killer.power,
                     style: const TextStyle(
                       fontSize: 12,
                       color: AppTheme.textSecondary,
@@ -194,7 +220,9 @@ class _KillerTile extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ),
+  ),
+);
   }
 
 }
