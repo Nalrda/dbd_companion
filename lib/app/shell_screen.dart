@@ -160,7 +160,7 @@ class _TopNavBar extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(width: 32),
+            const Spacer(),
             // ── Nav items ─────────────────────────────────────────────────────
             ...List.generate(
               tabs.length,
