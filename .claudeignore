@@ -1,0 +1,82 @@
+# --- Miscellaneous & OS ---
+
+_.class
+_.log
+_.pyc
+_.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+.git/
+.vscode/
+\*.code-workspace
+
+# --- IntelliJ / Android Studio ---
+
+_.iml
+_.ipr
+\*.iws
+.idea/
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# --- Flutter / Dart Specific ---
+
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+/coverage/
+
+# --- TOKEN SAVERS (Pliki, które pożerają najwięcej tokenów) ---
+
+# Wykluczamy ogromne pliki lock (Claude ich nie potrzebuje do pisania kodu)
+
+pubspec.lock
+ios/Podfile.lock
+package-lock.json
+
+# Wykluczamy wygenerowany kod (Claude zrozumie logikę z plików źródłowych)
+
+_.g.dart
+_.freezed.dart
+\*.mocks.dart
+
+# Wykluczamy assety binarne i multimedia
+
+assets/
+images/
+fonts/
+_.svg
+_.png
+_.jpg
+_.jpeg
+_.gif
+_.ico
+_.mp4
+_.pdf
+
+# --- Obfuscation & Symbols ---
+
+app._.symbols
+app._.map.json
+
+# --- Sensitive Data & Config ---
+
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+macos/Runner/GoogleService-Info.plist
+_.jks
+_.keystore
+key.properties
+.env
+.env.\*
