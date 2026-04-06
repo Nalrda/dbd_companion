@@ -230,7 +230,7 @@ class _BuildDetailViewState extends State<_BuildDetailView> {
                   ..._perks.asMap().entries.map((e) => Padding(
                         padding: const EdgeInsets.only(bottom: 10),
                         child: PerkCard(perk: e.value),
-                      ).animate().fadeIn(delay: (e.key * 50).ms).slideY(begin: 0.04, end: 0)),
+                      ).animate().fadeIn(delay: (e.key * 50).ms).slideY(begin: 0.05, end: 0)),
 
                 // Item (survivor only)
                 if (widget.build.isSurvivor && _item != null) ...[

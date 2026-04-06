@@ -135,7 +135,7 @@ class _PerksScreenState extends ConsumerState<PerksScreen> {
                               itemBuilder: (context, i) => PerkCard(perk: filtered[i])
                                   .animate(delay: (i.clamp(0, 15) * 40).ms)
                                   .fadeIn(duration: 300.ms)
-                                  .slideX(begin: 0.05, end: 0, duration: 300.ms, curve: Curves.easeOut),
+                                  .slideY(begin: 0.05, end: 0, duration: 300.ms, curve: Curves.easeOut),
                             );
                           }
                           return ListView.builder(
@@ -146,7 +146,7 @@ class _PerksScreenState extends ConsumerState<PerksScreen> {
                               child: PerkCard(perk: filtered[i])
                                   .animate(delay: (i.clamp(0, 15) * 40).ms)
                                   .fadeIn(duration: 300.ms)
-                                  .slideX(begin: 0.05, end: 0, duration: 300.ms, curve: Curves.easeOut),
+                                  .slideY(begin: 0.05, end: 0, duration: 300.ms, curve: Curves.easeOut),
                             ),
                           );
                         },

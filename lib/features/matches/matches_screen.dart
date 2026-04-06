@@ -95,7 +95,7 @@ class _MatchesScreenState extends ConsumerState<MatchesScreen> {
                   itemBuilder: (ctx, i) => _MatchTile(
                     record: matches[i],
                     onDelete: () => _confirmDelete(matches[i]),
-                  ).animate().fadeIn(delay: (i * 30).ms).slideY(begin: 0.04, end: 0),
+                  ).animate().fadeIn(delay: (i * 30).ms).slideY(begin: 0.05, end: 0),
                 ),
               ),
             ],

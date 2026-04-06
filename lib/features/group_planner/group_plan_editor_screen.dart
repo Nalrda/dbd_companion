@@ -522,7 +522,7 @@ class _SurvivorColumn extends StatelessWidget {
           ),
         ],
       ),
-    ).animate().fadeIn(delay: (survivorIndex * 60).ms).slideY(begin: 0.03, end: 0);
+    ).animate().fadeIn(delay: (survivorIndex * 60).ms).slideY(begin: 0.05, end: 0);
   }
 }
 
