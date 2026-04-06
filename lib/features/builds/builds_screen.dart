@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
+import 'package:dbd_companion/l10n/generated/app_localizations.dart';
 import '../../core/models/build.dart';
 import '../../core/providers/providers.dart';
 import '../../core/services/build_share_service.dart';
@@ -53,7 +54,7 @@ class _BuildsScreenState extends ConsumerState<BuildsScreen> {
                     ),
                     onChanged: (v) => setState(() => _search = v),
                   )
-                : PageHeader.text('My Builds'),
+                : PageHeader.text(AppLocalizations.of(context)!.myBuilds),
             actions: [
               IconButton(
                 icon: const Icon(Icons.download_outlined),
@@ -129,18 +130,18 @@ class _BuildsScreenState extends ConsumerState<BuildsScreen> {
                   ? 'No favorites yet'
                   : _search.isNotEmpty
                       ? 'No results'
-                      : 'No builds yet',
+                      : AppLocalizations.of(context)!.noBuildsYet,
               subtitle: _showFavoritesOnly
                   ? 'Star a build to add it here'
                   : _search.isNotEmpty
                       ? 'Try a different search'
                       : _showSurvivor
-                          ? 'Create your first survivor build'
-                          : 'Create your first killer build',
+                          ? AppLocalizations.of(context)!.createFirstSurvivorBuild
+                          : AppLocalizations.of(context)!.createFirstKillerBuild,
               action: (_showFavoritesOnly || _search.isNotEmpty)
                   ? null
                   : DbdButton(
-                      label: 'Create Build',
+                      label: AppLocalizations.of(context)!.createBuild,
                       icon: Icons.add,
                       onPressed: () =>
                           context.push('/builds/create?survivor=$_showSurvivor'),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dbd_companion/l10n/generated/app_localizations.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -31,7 +32,7 @@ class _MatchesScreenState extends ConsumerState<MatchesScreen> {
       body: Column(
         children: [
           PageHeader(
-            title: PageHeader.text('Match Tracker'),
+            title: PageHeader.text(AppLocalizations.of(context)!.matchesTitle),
             actions: [
               Padding(
                 padding: const EdgeInsets.only(right: 4),
@@ -51,12 +52,12 @@ class _MatchesScreenState extends ConsumerState<MatchesScreen> {
           if (matches.isEmpty) {
             return EmptyState(
               icon: Icons.history_outlined,
-              title: 'No matches recorded',
+              title: AppLocalizations.of(context)!.noMatchesRecorded,
               subtitle: _showSurvivor
-                  ? 'Track your survivor games here'
-                  : 'Track your killer games here',
+                  ? AppLocalizations.of(context)!.trackSurvivorGames
+                  : AppLocalizations.of(context)!.trackKillerGames,
               action: DbdButton(
-                label: 'Add Match',
+                label: AppLocalizations.of(context)!.addMatch,
                 icon: Icons.add,
                 onPressed: () => context.push('/matches/add?survivor=$_showSurvivor'),
               ),

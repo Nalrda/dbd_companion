@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
+import 'package:dbd_companion/l10n/generated/app_localizations.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/providers/theme_provider.dart';
 import '../../core/providers/auth_provider.dart';
+import '../../core/providers/locale_provider.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -42,6 +44,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final authNotifier = ref.watch(authNotifierProvider);
     final isGuest = authNotifier.isGuest;
 
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -51,7 +54,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           onPressed: () => context.pop(),
         ),
         title: Text(
-          'SETTINGS',
+          l10n.settings,
           style: GoogleFonts.rajdhani(
             color: AppTheme.textPrimary,
             fontSize: 20,
@@ -72,7 +75,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             children: [
               // Section header
               Text(
-                'COLOR THEME',
+                l10n.colorTheme,
                 style: GoogleFonts.rajdhani(
                   color: AppTheme.textSecondary,
                   fontSize: 11,
@@ -97,6 +100,36 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   );
                 }).toList(),
               ),
+              const SizedBox(height: 32),
+              
+              // Language section header
+              Text(
+                l10n.language,
+                style: GoogleFonts.rajdhani(
+                  color: AppTheme.textSecondary,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 2.0,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 12,
+                runSpacing: 12,
+                children: [
+                  _LanguageTile(
+                    name: l10n.english,
+                    isSelected: ref.watch(localeProvider)?.languageCode == 'en' || (ref.watch(localeProvider) == null && Localizations.localeOf(context).languageCode != 'pl'),
+                    onTap: () => ref.read(localeProvider.notifier).setLocale(const Locale('en')),
+                  ),
+                  _LanguageTile(
+                    name: l10n.polish,
+                    isSelected: ref.watch(localeProvider)?.languageCode == 'pl',
+                    onTap: () => ref.read(localeProvider.notifier).setLocale(const Locale('pl')),
+                  ),
+                ],
+              ),
+              
               const SizedBox(height: 32),
               Container(height: 1, color: AppTheme.border),
               const SizedBox(height: 24),
@@ -126,7 +159,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                               Icon(Icons.login, color: AppTheme.primary, size: 18),
                               const SizedBox(width: 12),
                               Text(
-                                'SIGN IN WITH GOOGLE',
+                                l10n.signInWithGoogle,
                                 style: GoogleFonts.rajdhani(
                                   color: AppTheme.primary,
                                   fontSize: 14,
@@ -153,7 +186,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         const Icon(Icons.logout, color: AppTheme.textSecondary, size: 18),
                         const SizedBox(width: 12),
                         Text(
-                          'SIGN OUT',
+                          l10n.signOut,
                           style: GoogleFonts.rajdhani(
                             color: AppTheme.textSecondary,
                             fontSize: 14,
@@ -235,6 +268,56 @@ class _ColorTile extends StatelessWidget {
               style: GoogleFonts.rajdhani(
                 color: isSelected ? color : AppTheme.textSecondary,
                 fontSize: 11,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                letterSpacing: 0.5,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _LanguageTile extends StatelessWidget {
+  final String name;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _LanguageTile({
+    required this.name,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final primaryColor = AppTheme.primary;
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
+        width: 100,
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? primaryColor.withValues(alpha: 0.15)
+              : AppTheme.surfaceElevated,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: isSelected ? primaryColor : AppTheme.border,
+            width: isSelected ? 1.5 : 1,
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              name,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.rajdhani(
+                color: isSelected ? primaryColor : AppTheme.textSecondary,
+                fontSize: 14,
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                 letterSpacing: 0.5,
               ),

@@ -7,7 +7,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'core/models/perk.dart';
 import 'core/theme/app_theme.dart';
 import 'core/providers/theme_provider.dart';
+import 'package:dbd_companion/l10n/generated/app_localizations.dart';
 import 'app/router.dart';
+import 'core/providers/locale_provider.dart';
 import 'firebase_options.dart';
 
 void main() {
@@ -45,12 +47,16 @@ class DBDCompanionApp extends ConsumerWidget {
     // Watching themeColorProvider triggers a full rebuild when the color changes,
     // causing AppTheme.dark to re-evaluate with the updated static primary color.
     final themeColor = ref.watch(themeColorProvider);
+    final locale = ref.watch(localeProvider);
     return MaterialApp.router(
       key: ValueKey(themeColor.toARGB32()),
       title: 'DBD Companion',
       theme: AppTheme.dark,
       routerConfig: router,
       debugShowCheckedModeBanner: false,
+      locale: locale,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
     );
   }
 }

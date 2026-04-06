@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:dbd_companion/l10n/generated/app_localizations.dart';
 import '../models/item.dart';
 import '../models/offering.dart';
 import '../models/perk.dart';
@@ -67,7 +68,10 @@ class PerkIcon extends StatelessWidget {
             // subtle category-tinted background
             Container(color: categoryColor.withValues(alpha: 0.08)),
             // icon image: local asset → network URL → letter fallback
-            _PerkImage(perk: perk, size: size, fallback: _fallbackIcon(categoryColor)),
+            Hero(
+              tag: 'perk_icon_${perk.id}',
+              child: _PerkImage(perk: perk, size: size, fallback: _fallbackIcon(categoryColor)),
+            ),
             // octagonal border overlay
             CustomPaint(
               size: Size(size, size),
@@ -676,6 +680,7 @@ class RoleToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Container(
       height: 42,
       decoration: BoxDecoration(
@@ -686,8 +691,8 @@ class RoleToggle extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _Tab(label: 'Survivor', isActive: isSurvivor, onTap: () => onChanged(true)),
-          _Tab(label: 'Killer', isActive: !isSurvivor, onTap: () => onChanged(false)),
+          _Tab(label: l10n?.survivor ?? 'Survivor', isActive: isSurvivor, onTap: () => onChanged(true)),
+          _Tab(label: l10n?.killer ?? 'Killer', isActive: !isSurvivor, onTap: () => onChanged(false)),
         ],
       ),
     );

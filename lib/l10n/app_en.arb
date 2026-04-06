@@ -1,0 +1,69 @@
+{
+  "@@locale": "en",
+  "settings": "SETTINGS",
+  "colorTheme": "COLOR THEME",
+  "signInWithGoogle": "SIGN IN WITH GOOGLE",
+  "signOut": "SIGN OUT",
+  "perks": "Perks",
+  "tabBuilds": "BUILDS",
+  "tabGroup": "GROUP",
+  "tabRandom": "RANDOM",
+  "tabMatches": "MATCHES",
+  "tabMaps": "MAPS",
+  "tabMore": "MORE",
+  "searchHint": "Search by name, character, tag...",
+  "noResults": "No results",
+  "noPerkFound": "No perk found for \"{search}\"",
+  "@noPerkFound": {
+    "placeholders": {
+      "search": {
+        "type": "String",
+        "example": "Sprint Burst"
+      }
+    }
+  },
+  "survivor": "Survivor",
+  "killer": "Killer",
+  "language": "SYSTEM LANGUAGE",
+  "languageTitle": "APLIKACJA",
+  "english": "English",
+  "polish": "Polish",
+  "perksCount": "{count, plural, =1 {1 perk} other {{count} perks}}",
+  "@perksCount": {
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "12"
+      }
+    }
+  },
+  "guestModeDesc": "Guest mode — your data is not saved online",
+  "signIn": "Sign In",
+  "myBuilds": "My Builds",
+  "createBuild": "Create Build",
+  "groupPlannerTitle": "Group Planner",
+  "randomizerTitle": "Randomizer",
+  "matchesTitle": "Matches",
+  "mapsTitle": "Maps",
+  "noBuildsYet": "No builds yet",
+  "createFirstSurvivorBuild": "Create your first survivor build",
+  "createFirstKillerBuild": "Create your first killer build",
+  "noGroupPlansYet": "No group plans yet",
+  "planBuildsForSquad": "Plan builds for your full 4-survivor squad",
+  "createGroupPlan": "Create Group Plan",
+  "yourBuild": "YOUR BUILD",
+  "perkNumber": "Perk {index}",
+  "@perkNumber": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      }
+    }
+  },
+  "rollPerks": "Roll Perks",
+  "saveAsBuild": "Save as Build",
+  "noMatchesRecorded": "No matches recorded",
+  "trackSurvivorGames": "Track your survivor games here",
+  "trackKillerGames": "Track your killer games here",
+  "addMatch": "Add Match"
+}

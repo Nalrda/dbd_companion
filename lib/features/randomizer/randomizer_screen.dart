@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/models/perk.dart';
 import '../../core/providers/providers.dart';
+import 'package:dbd_companion/l10n/generated/app_localizations.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
 
@@ -16,7 +17,7 @@ class RandomizerScreen extends ConsumerWidget {
     return Scaffold(
       body: Column(
         children: [
-          PageHeader(title: PageHeader.text('Perk Randomizer')),
+          PageHeader(title: PageHeader.text(AppLocalizations.of(context)!.randomizerTitle)),
           Expanded(child: Align(
         alignment: Alignment.topCenter,
         child: ConstrainedBox(
@@ -33,7 +34,7 @@ class RandomizerScreen extends ConsumerWidget {
                 ),
 
                 const SizedBox(height: 32),
-                const SectionHeader(title: 'YOUR BUILD'),
+                SectionHeader(title: AppLocalizations.of(context)!.yourBuild),
                 const SizedBox(height: 16),
 
                 if (state.selectedPerks.isEmpty && !state.isRolling)
@@ -190,7 +191,7 @@ class _PlaceholderSlot extends StatelessWidget {
             const Icon(Icons.question_mark, color: AppTheme.textDim, size: 16),
             const SizedBox(width: 8),
             Text(
-              'Perk ${index + 1}',
+              AppLocalizations.of(context)!.perkNumber(index + 1),
               style: const TextStyle(color: AppTheme.textDim, fontSize: 13),
             ),
           ],
@@ -211,7 +212,7 @@ class _RollButton extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: DbdButton(
-        label: 'Roll Perks',
+        label: AppLocalizations.of(context)!.rollPerks,
         icon: Icons.casino_outlined,
         onPressed: isRolling ? null : onRoll,
         isLoading: isRolling,
@@ -236,7 +237,7 @@ class _SaveButton extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: DbdButton(
-        label: 'Save as Build',
+        label: AppLocalizations.of(context)!.saveAsBuild,
         icon: Icons.bookmark_border,
         outlined: true,
         onPressed: () => _showSaveDialog(context),

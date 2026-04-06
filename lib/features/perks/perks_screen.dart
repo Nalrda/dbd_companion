@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:dbd_companion/l10n/generated/app_localizations.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../../core/models/perk.dart';
 import '../../core/providers/providers.dart';
 import '../../core/theme/app_theme.dart';
@@ -42,6 +44,7 @@ class _PerksScreenState extends ConsumerState<PerksScreen> {
   @override
   Widget build(BuildContext context) {
     final allPerksAsync = ref.watch(allPerksProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       body: Column(
@@ -52,16 +55,16 @@ class _PerksScreenState extends ConsumerState<PerksScreen> {
                     controller: _searchController,
                     autofocus: true,
                     style: const TextStyle(color: AppTheme.textPrimary, fontSize: 16),
-                    decoration: const InputDecoration(
-                      hintText: 'Search by name, character, tag...',
-                      hintStyle: TextStyle(color: AppTheme.textDim, fontSize: 14),
+                    decoration: InputDecoration(
+                      hintText: l10n.searchHint,
+                      hintStyle: const TextStyle(color: AppTheme.textDim, fontSize: 14),
                       border: InputBorder.none,
                       isDense: true,
                       contentPadding: EdgeInsets.zero,
                     ),
                     onChanged: (v) => setState(() => _search = v),
                   )
-                : PageHeader.text('Perki'),
+                : PageHeader.text(l10n.perks),
             actions: [
               IconButton(
                 icon: Icon(
@@ -101,7 +104,7 @@ class _PerksScreenState extends ConsumerState<PerksScreen> {
                 child: Row(
                   children: [
                     Text(
-                      '${filtered.length} perk${filtered.length == 1 ? '' : 's'}',
+                      l10n.perksCount(filtered.length),
                       style: GoogleFonts.rajdhani(
                         color: AppTheme.textSecondary,
                         fontSize: 12,
@@ -129,7 +132,10 @@ class _PerksScreenState extends ConsumerState<PerksScreen> {
                                 mainAxisExtent: 96,
                               ),
                               itemCount: filtered.length,
-                              itemBuilder: (context, i) => PerkCard(perk: filtered[i]),
+                              itemBuilder: (context, i) => PerkCard(perk: filtered[i])
+                                  .animate(delay: (i.clamp(0, 15) * 40).ms)
+                                  .fadeIn(duration: 300.ms)
+                                  .slideX(begin: 0.05, end: 0, duration: 300.ms, curve: Curves.easeOut),
                             );
                           }
                           return ListView.builder(
@@ -137,7 +143,10 @@ class _PerksScreenState extends ConsumerState<PerksScreen> {
                             itemCount: filtered.length,
                             itemBuilder: (context, i) => Padding(
                               padding: const EdgeInsets.only(bottom: 8),
-                              child: PerkCard(perk: filtered[i]),
+                              child: PerkCard(perk: filtered[i])
+                                  .animate(delay: (i.clamp(0, 15) * 40).ms)
+                                  .fadeIn(duration: 300.ms)
+                                  .slideX(begin: 0.05, end: 0, duration: 300.ms, curve: Curves.easeOut),
                             ),
                           );
                         },
@@ -161,30 +170,33 @@ class _EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.search_off, color: AppTheme.textDim, size: 48),
+            const Icon(Icons.search_off, color: AppTheme.textDim, size: 48)
+                .animate()
+                .scale(duration: 300.ms, curve: Curves.easeOutBack),
             const SizedBox(height: 16),
             Text(
-              'No results',
+              l10n.noResults,
               style: GoogleFonts.rajdhani(
                 color: AppTheme.textSecondary,
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
                 letterSpacing: 1.2,
               ),
-            ),
+            ).animate().fadeIn(delay: 100.ms),
             if (search.isNotEmpty) ...[
               const SizedBox(height: 8),
               Text(
-                'No perk found for "$search"',
+                l10n.noPerkFound(search),
                 style: const TextStyle(color: AppTheme.textDim, fontSize: 13),
                 textAlign: TextAlign.center,
-              ),
+              ).animate().fadeIn(delay: 200.ms),
             ],
           ],
         ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
+import 'package:dbd_companion/l10n/generated/app_localizations.dart';
 import '../core/providers/auth_provider.dart';
 import '../core/theme/app_theme.dart';
 
@@ -9,43 +10,44 @@ class ShellScreen extends ConsumerWidget {
   final Widget child;
   const ShellScreen({super.key, required this.child});
 
-  static const _tabs = [
-    _TabItem(
-      path: '/builds',
-      label: 'BUILDS',
-      icon: Icons.construction_outlined,
-      activeIcon: Icons.construction,
-    ),
-    _TabItem(
-      path: '/group',
-      label: 'GROUP',
-      icon: Icons.groups_outlined,
-      activeIcon: Icons.groups,
-    ),
-    _TabItem(
-      path: '/randomizer',
-      label: 'RANDOM',
-      icon: Icons.casino_outlined,
-      activeIcon: Icons.casino,
-    ),
-    _TabItem(
-      path: '/matches',
-      label: 'MATCHES',
-      icon: Icons.history_outlined,
-      activeIcon: Icons.history,
-    ),
-    _TabItem(
-      path: '/maps',
-      label: 'MAPS',
-      icon: Icons.map_outlined,
-      activeIcon: Icons.map,
-    ),
-  ];
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final tabs = [
+      _TabItem(
+        path: '/builds',
+        label: l10n.tabBuilds,
+        icon: Icons.construction_outlined,
+        activeIcon: Icons.construction,
+      ),
+      _TabItem(
+        path: '/group',
+        label: l10n.tabGroup,
+        icon: Icons.groups_outlined,
+        activeIcon: Icons.groups,
+      ),
+      _TabItem(
+        path: '/randomizer',
+        label: l10n.tabRandom,
+        icon: Icons.casino_outlined,
+        activeIcon: Icons.casino,
+      ),
+      _TabItem(
+        path: '/matches',
+        label: l10n.tabMatches,
+        icon: Icons.history_outlined,
+        activeIcon: Icons.history,
+      ),
+      _TabItem(
+        path: '/maps',
+        label: l10n.tabMaps,
+        icon: Icons.map_outlined,
+        activeIcon: Icons.map,
+      ),
+    ];
+
     final location = GoRouterState.of(context).matchedLocation;
-    final currentIndex = _tabs.indexWhere((t) => location.startsWith(t.path));
+    final currentIndex = tabs.indexWhere((t) => location.startsWith(t.path));
     final idx = currentIndex < 0 ? 0 : currentIndex;
     final isWide = MediaQuery.of(context).size.width >= 600;
     final authNotifier = ref.watch(authNotifierProvider);
@@ -63,8 +65,8 @@ class ShellScreen extends ConsumerWidget {
           children: [
             _TopNavBar(
               selectedIndex: idx,
-              tabs: _tabs,
-              onTap: (i) => context.go(_tabs[i].path),
+              tabs: tabs,
+              onTap: (i) => context.go(tabs[i].path),
               user: user,
               onSignOut: signOut,
             ),
@@ -97,8 +99,8 @@ class ShellScreen extends ConsumerWidget {
       ),
       bottomNavigationBar: _BottomNavBar(
         selectedIndex: idx,
-        tabs: _tabs,
-        onTap: (i) => context.go(_tabs[i].path),
+        tabs: tabs,
+        onTap: (i) => context.go(tabs[i].path),
         onSignOut: signOut,
       ),
     );
@@ -308,7 +310,7 @@ class _TopSignOutButtonState extends State<_TopSignOutButton> {
                 ),
               const SizedBox(width: 8),
               Text(
-                'SIGN OUT',
+                AppLocalizations.of(context)!.signOut,
                 style: GoogleFonts.rajdhani(
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
@@ -488,7 +490,7 @@ class _BottomSettingsItem extends StatelessWidget {
             const Icon(Icons.settings_outlined, color: AppTheme.textSecondary, size: 20),
             const SizedBox(height: 2),
             Text(
-              'MORE',
+              AppLocalizations.of(context)!.tabMore,
               style: GoogleFonts.rajdhani(
                 fontSize: 8,
                 fontWeight: FontWeight.w500,
@@ -522,7 +524,7 @@ class _GuestBanner extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              'Guest mode — your data is not saved online',
+              AppLocalizations.of(context)!.guestModeDesc,
               style: GoogleFonts.inter(
                 fontSize: 12,
                 color: AppTheme.textSecondary,
@@ -534,7 +536,7 @@ class _GuestBanner extends StatelessWidget {
             child: GestureDetector(
               onTap: onSignIn,
               child: Text(
-                'Sign In',
+                AppLocalizations.of(context)!.signIn,
                 style: GoogleFonts.rajdhani(
                   fontSize: 12,
                   fontWeight: FontWeight.w700,

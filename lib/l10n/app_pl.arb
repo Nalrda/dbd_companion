@@ -1,0 +1,67 @@
+{
+  "@@locale": "pl",
+  "settings": "USTAWIENIA",
+  "colorTheme": "MOTYW KOLORYSTYCZNY",
+  "signInWithGoogle": "ZALOGUJ PRZEZ GOOGLE",
+  "signOut": "WYLOGUJ SIĘ",
+  "perks": "Perki",
+  "tabBuilds": "BUILDY",
+  "tabGroup": "GRUPA",
+  "tabRandom": "LOSOWE",
+  "tabMatches": "MECZE",
+  "tabMaps": "MAPY",
+  "tabMore": "WIĘCEJ",
+  "searchHint": "Szukaj po nazwie, postaci, tagu...",
+  "noResults": "Brak wyników",
+  "noPerkFound": "Nie znaleziono perka dla zapytania: \"{search}\"",
+  "@noPerkFound": {
+    "placeholders": {
+      "search": {
+        "type": "String"
+      }
+    }
+  },
+  "survivor": "Ocalały",
+  "killer": "Zabójca",
+  "language": "JĘZYK APLIKACJI",
+  "languageTitle": "JĘZYK",
+  "english": "Angielski",
+  "polish": "Polski",
+  "perksCount": "{count, plural, one {1 perk} few {{count} perki} many {{count} perków} other {{count} perka}}",
+  "@perksCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "guestModeDesc": "Tryb gościa — dane nie są zapisywane w chmurze",
+  "signIn": "Zaloguj się",
+  "myBuilds": "Moje Buildy",
+  "createBuild": "Stwórz Build",
+  "groupPlannerTitle": "Planer Grupy",
+  "randomizerTitle": "Losowanie",
+  "matchesTitle": "Mecze",
+  "mapsTitle": "Mapy",
+  "noBuildsYet": "Brak buildów",
+  "createFirstSurvivorBuild": "Stwórz swój pierwszy build Ocalałego",
+  "createFirstKillerBuild": "Stwórz swój pierwszy build Zabójcy",
+  "noGroupPlansYet": "Brak planów grupy",
+  "planBuildsForSquad": "Zaplanuj buildy dla swojej 4-osobowej grupy",
+  "createGroupPlan": "Stwórz Plan Grupy",
+  "yourBuild": "TWÓJ BUILD",
+  "perkNumber": "Perk {index}",
+  "@perkNumber": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      }
+    }
+  },
+  "rollPerks": "Wylosuj Perki",
+  "saveAsBuild": "Zapisz jako Build",
+  "noMatchesRecorded": "Brak zarejestrowanych meczów",
+  "trackSurvivorGames": "Śledź swoje mecze Ocalałym tutaj",
+  "trackKillerGames": "Śledź swoje mecze Zabójcą tutaj",
+  "addMatch": "Dodaj Mecz"
+}

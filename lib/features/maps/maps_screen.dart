@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:dbd_companion/l10n/generated/app_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -18,7 +19,7 @@ class MapsScreen extends ConsumerWidget {
     return Scaffold(
       body: Column(
         children: [
-          PageHeader(title: PageHeader.text('Map Callouts')),
+          PageHeader(title: PageHeader.text(AppLocalizations.of(context)!.mapsTitle)),
           Expanded(child: realmsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text('Error: $e')),

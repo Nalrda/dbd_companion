@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:dbd_companion/l10n/generated/app_localizations.dart';
 import '../../core/models/group_plan.dart';
 import '../../core/providers/providers.dart';
 import '../../core/services/build_share_service.dart';
@@ -24,7 +25,7 @@ class GroupPlannerScreen extends ConsumerWidget {
       body: Column(
         children: [
           PageHeader(
-            title: PageHeader.text('Group Planner'),
+            title: PageHeader.text(AppLocalizations.of(context)!.groupPlannerTitle),
             actions: [
               IconButton(
                 icon: const Icon(Icons.download_outlined),
@@ -41,10 +42,10 @@ class GroupPlannerScreen extends ConsumerWidget {
           if (plans.isEmpty) {
             return EmptyState(
               icon: Icons.groups_outlined,
-              title: 'No group plans yet',
-              subtitle: 'Plan builds for your full 4-survivor squad',
+              title: AppLocalizations.of(context)!.noGroupPlansYet,
+              subtitle: AppLocalizations.of(context)!.planBuildsForSquad,
               action: DbdButton(
-                label: 'Create Group Plan',
+                label: AppLocalizations.of(context)!.createGroupPlan,
                 icon: Icons.add,
                 onPressed: () => _createPlan(context, ref),
               ),
