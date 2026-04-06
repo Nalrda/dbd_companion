@@ -14,6 +14,7 @@ import '../features/matches/matches_screen.dart';
 import '../features/randomizer/randomizer_screen.dart';
 import '../features/group_planner/group_planner_screen.dart';
 import '../features/group_planner/group_plan_editor_screen.dart';
+import '../features/dbdle/screens/dbdle_screen.dart';
 import '../features/settings/settings_screen.dart';
 import 'shell_screen.dart';
 
@@ -65,6 +66,7 @@ final routerProvider = Provider<GoRouter>((ref) {
 GoRoute(path: '/matches', pageBuilder: (_, state) => _fadeSlidePage(const MatchesScreen(), state)),
           GoRoute(path: '/maps', pageBuilder: (_, state) => _fadeSlidePage(const MapsScreen(), state)),
           GoRoute(path: '/group', pageBuilder: (_, state) => _fadeSlidePage(const GroupPlannerScreen(), state)),
+          GoRoute(path: '/dbdle', pageBuilder: (_, state) => _fadeSlidePage(const DbdleScreen(), state)),
         ],
       ),
       GoRoute(

@@ -40,6 +40,12 @@ class ShellScreen extends ConsumerWidget {
       icon: Icons.map_outlined,
       activeIcon: Icons.map,
     ),
+    _TabItem(
+      path: '/dbdle',
+      label: 'DBDLE',
+      icon: Icons.gamepad_outlined,
+      activeIcon: Icons.gamepad,
+    ),
   ];
 
   @override
