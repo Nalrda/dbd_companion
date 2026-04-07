@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../core/models/perk.dart';
 import '../../core/providers/providers.dart';
 import 'package:dbd_companion/l10n/generated/app_localizations.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
+import '../../core/widgets/design_system.dart';
 
 class RandomizerScreen extends ConsumerWidget {
   const RandomizerScreen({super.key});
@@ -15,57 +17,85 @@ class RandomizerScreen extends ConsumerWidget {
     final state = ref.watch(randomizerProvider);
 
     return Scaffold(
-      body: Column(
-        children: [
-          PageHeader(title: PageHeader.text(AppLocalizations.of(context)!.randomizerTitle)),
-          Expanded(child: Align(
-        alignment: Alignment.topCenter,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 680),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                RoleToggle(
-                  isSurvivor: state.isSurvivor,
-                  onChanged: (v) =>
-                      ref.read(randomizerProvider.notifier).setRole(v),
-                ),
-
-                const SizedBox(height: 32),
-                SectionHeader(title: AppLocalizations.of(context)!.yourBuild),
-                const SizedBox(height: 16),
-
-                if (state.selectedPerks.isEmpty && !state.isRolling)
-                  _EmptySlots()
-                else if (state.isRolling)
-                  _LoadingSlots()
-                else
-                  _ResultSlots(perks: state.selectedPerks),
-
-                const SizedBox(height: 32),
-
-                _RollButton(
-                  isRolling: state.isRolling,
-                  onRoll: () => ref.read(randomizerProvider.notifier).roll(),
-                ),
-
-                if (state.selectedPerks.length == 4) ...[
-                  const SizedBox(height: 12),
-                  _SaveButton(
-                    isSurvivor: state.isSurvivor,
-                    perks: state.selectedPerks,
-                    ref: ref,
-                  ),
-                ],
-
-                const SizedBox(height: 16),
-              ],
-            ),
+      backgroundColor: Colors.transparent,
+      body: AppBackground(
+        orbs: [
+          BackgroundOrb(
+            color: AppTheme.primary,
+            opacity: 0.2,
+            position: Alignment.center,
+            size: 500,
           ),
-        ))),
         ],
+        child: Column(
+          children: [
+            PageHeader(
+              title: PageHeader.text(
+                  AppLocalizations.of(context)!.randomizerTitle),
+            ),
+            Expanded(
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 680),
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        RoleToggle(
+                          isSurvivor: state.isSurvivor,
+                          onChanged: (v) =>
+                              ref.read(randomizerProvider.notifier).setRole(v),
+                        ),
+                        const SizedBox(height: 32),
+                        SectionHeader(
+                            title: AppLocalizations.of(context)!.yourBuild),
+                        const SizedBox(height: 16),
+
+                        if (state.selectedPerks.isEmpty && !state.isRolling)
+                          _EmptySlots()
+                        else if (state.isRolling)
+                          _LoadingSlots()
+                        else
+                          _ResultSlots(perks: state.selectedPerks),
+
+                        const SizedBox(height: 32),
+
+                        SizedBox(
+                          width: double.infinity,
+                          child: DbdButton(
+                            label: AppLocalizations.of(context)!.rollPerks,
+                            icon: Icons.casino_outlined,
+                            onPressed: state.isRolling
+                                ? null
+                                : () => ref
+                                    .read(randomizerProvider.notifier)
+                                    .roll(),
+                            isLoading: state.isRolling,
+                          ),
+                        ),
+
+                        if (state.selectedPerks.length == 4) ...[
+                          const SizedBox(height: 12),
+                          SizedBox(
+                            width: double.infinity,
+                            child: _SaveButton(
+                              isSurvivor: state.isSurvivor,
+                              perks: state.selectedPerks,
+                              ref: ref,
+                            ),
+                          ),
+                        ],
+                        const SizedBox(height: 16),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -98,15 +128,12 @@ class _LoadingSlots extends StatelessWidget {
             height: 80,
             decoration: BoxDecoration(
               color: AppTheme.surface,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(14),
               border: Border.all(color: AppTheme.border),
             ),
           )
               .animate(onPlay: (c) => c.repeat())
-              .shimmer(
-                duration: 1000.ms,
-                color: AppTheme.border,
-              ),
+              .shimmer(duration: 1000.ms, color: AppTheme.border),
         ),
       ),
     );
@@ -179,43 +206,24 @@ class _PlaceholderSlot extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 84,
-      decoration: const BoxDecoration(
-        color: AppTheme.surfaceElevated,
-        borderRadius: BorderRadius.all(Radius.circular(12)),
-        border: Border.fromBorderSide(BorderSide(color: AppTheme.border)),
+      decoration: BoxDecoration(
+        color: AppTheme.surface,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppTheme.border),
       ),
       child: Center(
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.question_mark, color: AppTheme.textDim, size: 16),
+            Icon(Icons.question_mark, color: AppTheme.textTertiary, size: 16),
             const SizedBox(width: 8),
             Text(
               AppLocalizations.of(context)!.perkNumber(index + 1),
-              style: const TextStyle(color: AppTheme.textDim, fontSize: 13),
+              style: GoogleFonts.outfit(
+                  color: AppTheme.textTertiary, fontSize: 13),
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _RollButton extends StatelessWidget {
-  final bool isRolling;
-  final VoidCallback onRoll;
-
-  const _RollButton({required this.isRolling, required this.onRoll});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: DbdButton(
-        label: AppLocalizations.of(context)!.rollPerks,
-        icon: Icons.casino_outlined,
-        onPressed: isRolling ? null : onRoll,
-        isLoading: isRolling,
       ),
     );
   }
@@ -234,14 +242,11 @@ class _SaveButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: DbdButton(
-        label: AppLocalizations.of(context)!.saveAsBuild,
-        icon: Icons.bookmark_border,
-        outlined: true,
-        onPressed: () => _showSaveDialog(context),
-      ),
+    return DbdButton(
+      label: AppLocalizations.of(context)!.saveAsBuild,
+      icon: Icons.bookmark_border,
+      outlined: true,
+      onPressed: () => _showSaveDialog(context),
     );
   }
 
@@ -250,22 +255,25 @@ class _SaveButton extends StatelessWidget {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppTheme.surfaceElevated,
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-        title: const Text('Save Build',
-            style: TextStyle(color: AppTheme.textPrimary)),
+        backgroundColor: AppTheme.backgroundSecondary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          side: BorderSide(color: AppTheme.border),
+        ),
+        title: Text('Save Build',
+            style: GoogleFonts.outfit(
+                color: AppTheme.textPrimary, fontWeight: FontWeight.w700)),
         content: TextField(
           controller: controller,
           autofocus: true,
-          style: const TextStyle(color: AppTheme.textPrimary),
+          style: GoogleFonts.outfit(color: AppTheme.textPrimary),
           decoration: const InputDecoration(hintText: 'Build name...'),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel',
-                style: TextStyle(color: AppTheme.textSecondary)),
+            child: Text('Cancel',
+                style: GoogleFonts.outfit(color: AppTheme.textSecondary)),
           ),
           TextButton(
             onPressed: () async {
@@ -284,7 +292,7 @@ class _SaveButton extends StatelessWidget {
               }
             },
             child: Text('Save',
-                style: TextStyle(color: AppTheme.primary)),
+                style: GoogleFonts.outfit(color: AppTheme.primary)),
           ),
         ],
       ),

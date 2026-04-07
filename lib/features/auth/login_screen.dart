@@ -1,9 +1,11 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/providers/auth_provider.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/widgets/design_system.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -12,9 +14,32 @@ class LoginScreen extends ConsumerStatefulWidget {
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends ConsumerState<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen>
+    with SingleTickerProviderStateMixin {
   bool _loading = false;
   bool _guestLoading = false;
+  late AnimationController _animController;
+  late Animation<double> _fadeAnim;
+  late Animation<Offset> _slideAnim;
+
+  @override
+  void initState() {
+    super.initState();
+    _animController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 900),
+    );
+    _fadeAnim = CurvedAnimation(parent: _animController, curve: Curves.easeOut);
+    _slideAnim = Tween<Offset>(begin: const Offset(0, 0.06), end: Offset.zero)
+        .animate(CurvedAnimation(parent: _animController, curve: Curves.easeOutCubic));
+    _animController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animController.dispose();
+    super.dispose();
+  }
 
   Future<void> _signIn() async {
     setState(() => _loading = true);
@@ -24,10 +49,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-              'Sign in failed: $e',
-              style: const TextStyle(color: AppTheme.textPrimary),
-            ),
+            content: Text('Sign in failed: $e',
+                style: const TextStyle(color: AppTheme.textPrimary)),
             backgroundColor: AppTheme.surfaceElevated,
             behavior: SnackBarBehavior.floating,
           ),
@@ -46,10 +69,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-              'Guest sign in failed: $e',
-              style: const TextStyle(color: AppTheme.textPrimary),
-            ),
+            content: Text('Guest sign in failed: $e',
+                style: const TextStyle(color: AppTheme.textPrimary)),
             backgroundColor: AppTheme.surfaceElevated,
             behavior: SnackBarBehavior.floating,
           ),
@@ -64,206 +85,334 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.background,
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 400),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Logo
-                Container(
-                  width: 72,
-                  height: 72,
-                  decoration: BoxDecoration(
-                    color: AppTheme.primaryDim.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(18),
-                    border: Border.all(
-                      color: AppTheme.primary.withValues(alpha: 0.5),
-                      width: 1.5,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppTheme.primary.withValues(alpha: 0.25),
-                        blurRadius: 24,
-                        spreadRadius: 2,
-                      ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Text(
-                      'D',
-                      style: GoogleFonts.rajdhani(
-                        color: AppTheme.primary,
-                        fontSize: 38,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 24),
+      body: AppBackground(
+        orbs: [
+          BackgroundOrb(
+            color: AppTheme.primary,
+            opacity: 0.28,
+            position: Alignment.topRight,
+            size: 450,
+          ),
+          BackgroundOrb(
+            color: AppTheme.primaryDim,
+            opacity: 0.2,
+            position: Alignment.bottomLeft,
+            size: 380,
+          ),
+        ],
+        child: Center(
+          child: SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 380),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 28),
+                child: FadeTransition(
+                  opacity: _fadeAnim,
+                  child: SlideTransition(
+                    position: _slideAnim,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Logo
+                        _AnimDelay(
+                          delay: 0,
+                          controller: _animController,
+                          child: _buildLogo(),
+                        ),
+                        const SizedBox(height: 28),
 
-                // Title
-                Text(
-                  'DBD COMPANION',
-                  style: GoogleFonts.rajdhani(
-                    color: AppTheme.textPrimary,
-                    fontSize: 26,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 3.0,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Sign in to continue',
-                  style: GoogleFonts.inter(
-                    color: AppTheme.textSecondary,
-                    fontSize: 13,
-                    letterSpacing: 0.3,
-                  ),
-                ),
-                const SizedBox(height: 48),
+                        // Title + tagline
+                        _AnimDelay(
+                          delay: 0.15,
+                          controller: _animController,
+                          child: _buildTitles(),
+                        ),
+                        const SizedBox(height: 44),
 
-                // Divider
-                Container(
-                  height: 1,
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Colors.transparent,
-                        AppTheme.border,
-                        Colors.transparent,
+                        // Auth card
+                        _AnimDelay(
+                          delay: 0.3,
+                          controller: _animController,
+                          child: _buildAuthCard(),
+                        ),
+                        const SizedBox(height: 24),
+
+                        // Footer
+                        _AnimDelay(
+                          delay: 0.45,
+                          controller: _animController,
+                          child: _buildFooter(),
+                        ),
                       ],
                     ),
                   ),
                 ),
-                const SizedBox(height: 32),
-
-                // Google Sign-In button
-                SizedBox(
-                  width: double.infinity,
-                  height: 52,
-                  child: _loading
-                      ? Center(
-                          child: SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(
-                              color: AppTheme.primary,
-                              strokeWidth: 2,
-                            ),
-                          ),
-                        )
-                      : OutlinedButton(
-                          onPressed: _signIn,
-                          style: OutlinedButton.styleFrom(
-                            backgroundColor: AppTheme.surfaceElevated,
-                            side: const BorderSide(
-                              color: AppTheme.border,
-                              width: 1,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              // Google "G" icon
-                              _GoogleIcon(),
-                              const SizedBox(width: 12),
-                              Text(
-                                'Sign in with Google',
-                                style: GoogleFonts.rajdhani(
-                                  color: AppTheme.textPrimary,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: 0.8,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                ),
-                const SizedBox(height: 12),
-
-                // Divider "or"
-                Row(
-                  children: [
-                    const Expanded(child: Divider(color: AppTheme.border)),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: Text(
-                        'or',
-                        style: GoogleFonts.inter(
-                          color: AppTheme.textDim,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
-                    const Expanded(child: Divider(color: AppTheme.border)),
-                  ],
-                ),
-                const SizedBox(height: 12),
-
-                // Guest button
-                SizedBox(
-                  width: double.infinity,
-                  height: 52,
-                  child: _guestLoading
-                      ? const Center(
-                          child: SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(
-                              color: AppTheme.textSecondary,
-                              strokeWidth: 2,
-                            ),
-                          ),
-                        )
-                      : OutlinedButton(
-                          onPressed: _signInAsGuest,
-                          style: OutlinedButton.styleFrom(
-                            backgroundColor: Colors.transparent,
-                            side: const BorderSide(
-                              color: AppTheme.border,
-                              width: 1,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.person_outline,
-                                color: AppTheme.textSecondary,
-                                size: 18,
-                              ),
-                              const SizedBox(width: 10),
-                              Text(
-                                'Continue as Guest',
-                                style: GoogleFonts.rajdhani(
-                                  color: AppTheme.textSecondary,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: 0.8,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                ),
-              ],
+              ),
             ),
           ),
         ),
       ),
     );
   }
+
+  Widget _buildLogo() {
+    return Container(
+      width: 80,
+      height: 80,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            AppTheme.primary.withValues(alpha: 0.3),
+            AppTheme.primaryDim.withValues(alpha: 0.2),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: AppTheme.primary.withValues(alpha: 0.5),
+          width: 1.5,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppTheme.primary.withValues(alpha: 0.35),
+            blurRadius: 32,
+            spreadRadius: 2,
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(19),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+          child: Center(
+            child: Text(
+              'D',
+              style: GoogleFonts.outfit(
+                color: AppTheme.primary,
+                fontSize: 42,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTitles() {
+    return Column(
+      children: [
+        Text(
+          'DBD COMPANION',
+          style: GoogleFonts.outfit(
+            color: AppTheme.textPrimary,
+            fontSize: 26,
+            fontWeight: FontWeight.w800,
+            letterSpacing: 4.0,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Plan your builds. Track your games.',
+          style: GoogleFonts.outfit(
+            color: AppTheme.textSecondary,
+            fontSize: 13,
+            fontWeight: FontWeight.w400,
+            letterSpacing: 0.3,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAuthCard() {
+    return GlassCard(
+      borderRadius: 24,
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Google Sign-In
+          _loading
+              ? const Center(
+                  child: SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                )
+              : _AuthButton(
+                  onPressed: _signIn,
+                  icon: _GoogleIcon(),
+                  label: 'Sign in with Google',
+                  isPrimary: true,
+                ),
+          const SizedBox(height: 16),
+
+          // Divider "or"
+          Row(
+            children: [
+              Expanded(child: Container(height: 1, color: AppTheme.border)),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 14),
+                child: Text(
+                  'or',
+                  style: GoogleFonts.outfit(
+                    color: AppTheme.textTertiary,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+              Expanded(child: Container(height: 1, color: AppTheme.border)),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // Guest button
+          _guestLoading
+              ? const Center(
+                  child: SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                )
+              : _AuthButton(
+                  onPressed: _signInAsGuest,
+                  icon: const Icon(Icons.person_outline,
+                      color: AppTheme.textSecondary, size: 20),
+                  label: 'Continue as Guest',
+                  isPrimary: false,
+                ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFooter() {
+    return Text(
+      'By continuing you agree to our Terms of Service',
+      style: GoogleFonts.outfit(
+        color: AppTheme.textTertiary,
+        fontSize: 11,
+      ),
+      textAlign: TextAlign.center,
+    );
+  }
 }
+
+// ─── Animated Delay Wrapper ───────────────────────────────────────────────────
+
+class _AnimDelay extends StatelessWidget {
+  final double delay;
+  final AnimationController controller;
+  final Widget child;
+
+  const _AnimDelay({
+    required this.delay,
+    required this.controller,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final begin = delay;
+    final end = (delay + 0.5).clamp(0.0, 1.0);
+    final fade = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: controller,
+        curve: Interval(begin, end, curve: Curves.easeOut),
+      ),
+    );
+    final slide = Tween<Offset>(
+      begin: const Offset(0, 0.08),
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(
+        parent: controller,
+        curve: Interval(begin, end, curve: Curves.easeOutCubic),
+      ),
+    );
+    return FadeTransition(
+      opacity: fade,
+      child: SlideTransition(position: slide, child: child),
+    );
+  }
+}
+
+// ─── Auth Button ──────────────────────────────────────────────────────────────
+
+class _AuthButton extends StatefulWidget {
+  final VoidCallback onPressed;
+  final Widget icon;
+  final String label;
+  final bool isPrimary;
+
+  const _AuthButton({
+    required this.onPressed,
+    required this.icon,
+    required this.label,
+    required this.isPrimary,
+  });
+
+  @override
+  State<_AuthButton> createState() => _AuthButtonState();
+}
+
+class _AuthButtonState extends State<_AuthButton> {
+  bool _hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: GestureDetector(
+        onTap: widget.onPressed,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOutCubic,
+          height: 52,
+          decoration: BoxDecoration(
+            color: widget.isPrimary
+                ? (_hovered
+                    ? Colors.white.withValues(alpha: 0.12)
+                    : Colors.white.withValues(alpha: 0.08))
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: widget.isPrimary
+                  ? Colors.white.withValues(alpha: _hovered ? 0.25 : 0.15)
+                  : AppTheme.border,
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              widget.icon,
+              const SizedBox(width: 12),
+              Text(
+                widget.label,
+                style: GoogleFonts.outfit(
+                  color: widget.isPrimary
+                      ? AppTheme.textPrimary
+                      : AppTheme.textSecondary,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: 0.3,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Google Icon ──────────────────────────────────────────────────────────────
 
 class _GoogleIcon extends StatelessWidget {
   static const _svg = '''

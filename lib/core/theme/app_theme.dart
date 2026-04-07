@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  // ─── Base Colors ────────────────────────────────────────────────────────────
-  static const Color background      = Color(0xFF0A0A0A); // pure near-black
-  static const Color surface         = Color(0xFF111111); // dark gray
-  static const Color surfaceElevated = Color(0xFF1A1A1A); // slightly lifted dark gray
-  static const Color hoverSurface    = Color(0xFF222222); // hover highlight
-  static const Color border          = Color(0xFF2A2A2A); // neutral dark gray border
+  // ─── Base Colors (glassmorphism palette) ──────────────────────────────────────
+  static const Color background      = Color(0xFF0A0A0F); // deep near-black
+  static const Color backgroundSecondary = Color(0xFF111118); // secondary bg
+  static const Color surface         = Color(0x0FFFFFFF); // glass white 6%
+  static const Color surfaceElevated = Color(0x17FFFFFF); // glass white 9%
+  static const Color hoverSurface    = Color(0x1FFFFFFF); // glass white 12%
+  static const Color border          = Color(0x14FFFFFF); // glass border 8%
+  static const Color borderHighlight = Color(0x1FFFFFFF); // glass border 12%
 
   // ─── Dynamic primary (updated by ThemeColorNotifier) ────────────────────────
   static Color primary    = const Color(0xFFCC2828); // blood red (default)
@@ -16,19 +18,20 @@ class AppTheme {
 
   static const Color accent          = Color(0xFFE05828); // orange-red secondary
 
-  static const Color textPrimary     = Color(0xFFF0EEEC); // warm white
-  static const Color textSecondary   = Color(0xFF888888); // neutral gray
-  static const Color textDim         = Color(0xFF444444); // dark neutral gray
+  static const Color textPrimary     = Color(0xFFF0EEE9); // warm white
+  static const Color textSecondary   = Color(0x80F0EEE9); // warm white 50%
+  static const Color textTertiary    = Color(0x4DF0EEE9); // warm white 30%
+  static const Color textDim         = Color(0x4DF0EEE9); // alias for tertiary
 
   // ─── Glow / Atmosphere ──────────────────────────────────────────────────────
-  static const Color hexPurple      = Color(0xFF8B35D6); // Entity purple (hex perk category)
+  static const Color hexPurple      = Color(0xFF8B35D6); // Entity purple
   static const Color hexPurpleDim   = Color(0xFF3D1270);
 
   // ─── Gradients ──────────────────────────────────────────────────────────────
   static const LinearGradient surfaceGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    colors: [Color(0xFF1A1A1A), Color(0xFF111111)],
+    colors: [Color(0x17FFFFFF), Color(0x0FFFFFFF)],
   );
 
   static LinearGradient get primaryGradient => LinearGradient(
@@ -83,26 +86,26 @@ class AppTheme {
   static Color perkCategoryColor(String category) {
     switch (category) {
       // Survivor
-      case 'healing':     return const Color(0xFF3E9E44); // dark green
-      case 'chase':       return const Color(0xFFD4883A); // warm amber
-      case 'stealth':     return const Color(0xFF1A8A6A); // dark teal
-      case 'generator':   return const Color(0xFF2196F3); // blue
-      case 'endgame':     return const Color(0xFFCC4A24); // ember orange
-      case 'teamwork':    return const Color(0xFF26A69A); // medium teal
-      case 'hook':        return const Color(0xFFB71C1C); // dark red
-      case 'information': return const Color(0xFF00B8D4); // cyan
-      case 'aura':        return const Color(0xFF7E57C2); // purple
-      case 'boon':        return const Color(0xFF80CBC4); // light teal
-      case 'invocation':  return const Color(0xFF6A1B9A); // deep purple
-      case 'exhaustion':  return const Color(0xFFE65100); // deep orange
-      case 'item':        return const Color(0xFFFFB300); // amber/gold
+      case 'healing':     return const Color(0xFF3E9E44);
+      case 'chase':       return const Color(0xFFD4883A);
+      case 'stealth':     return const Color(0xFF1A8A6A);
+      case 'generator':   return const Color(0xFF2196F3);
+      case 'endgame':     return const Color(0xFFCC4A24);
+      case 'teamwork':    return const Color(0xFF26A69A);
+      case 'hook':        return const Color(0xFFB71C1C);
+      case 'information': return const Color(0xFF00B8D4);
+      case 'aura':        return const Color(0xFF7E57C2);
+      case 'boon':        return const Color(0xFF80CBC4);
+      case 'invocation':  return const Color(0xFF6A1B9A);
+      case 'exhaustion':  return const Color(0xFFE65100);
+      case 'item':        return const Color(0xFFFFB300);
       // Killer
-      case 'tracking':    return const Color(0xFF42A5F5); // light blue
-      case 'control':     return const Color(0xFFEF5350); // red
-      case 'utility':     return const Color(0xFF78909C); // blue-grey
-      case 'exposed':     return const Color(0xFFFF6F00); // orange
-      case 'mobility':    return const Color(0xFF66BB6A); // green
-      case 'general':     return const Color(0xFF9E9E9E); // gray
+      case 'tracking':    return const Color(0xFF42A5F5);
+      case 'control':     return const Color(0xFFEF5350);
+      case 'utility':     return const Color(0xFF78909C);
+      case 'exposed':     return const Color(0xFFFF6F00);
+      case 'mobility':    return const Color(0xFF66BB6A);
+      case 'general':     return const Color(0xFF9E9E9E);
       default:            return const Color(0xFF38384F);
     }
   }
@@ -114,89 +117,89 @@ class AppTheme {
       brightness: Brightness.dark,
       scaffoldBackgroundColor: background,
       colorScheme: ColorScheme.dark(
-        surface: surface,
+        surface: const Color(0xFF111118),
         primary: primary,
         secondary: accent,
         onSurface: textPrimary,
         outline: border,
       ),
-      textTheme: GoogleFonts.interTextTheme(
+      textTheme: GoogleFonts.outfitTextTheme(
         ThemeData.dark().textTheme,
       ).apply(
         bodyColor: textPrimary,
         displayColor: textPrimary,
       ).copyWith(
-        // Rajdhani for display / headline / label
-        displayLarge: GoogleFonts.rajdhani(
+        displayLarge: GoogleFonts.outfit(
           fontSize: 28, fontWeight: FontWeight.w700,
           letterSpacing: 2.0, color: textPrimary,
         ),
-        headlineMedium: GoogleFonts.rajdhani(
+        headlineMedium: GoogleFonts.outfit(
           fontSize: 18, fontWeight: FontWeight.w700,
-          letterSpacing: 1.6, color: textPrimary,
+          letterSpacing: 1.0, color: textPrimary,
         ),
-        labelLarge: GoogleFonts.rajdhani(
+        labelLarge: GoogleFonts.outfit(
           fontSize: 14, fontWeight: FontWeight.w600,
           letterSpacing: 1.2, color: textPrimary,
         ),
       ),
       appBarTheme: AppBarTheme(
-        backgroundColor: background,
+        backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: false,
-        titleTextStyle: GoogleFonts.rajdhani(
+        titleTextStyle: GoogleFonts.outfit(
           color: textPrimary,
-          fontSize: 22,
+          fontSize: 20,
           fontWeight: FontWeight.w700,
-          letterSpacing: 1.4,
+          letterSpacing: 1.0,
         ),
         iconTheme: const IconThemeData(color: textPrimary),
       ),
       navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: surface,
-        indicatorColor: primaryDim,
+        backgroundColor: const Color(0xCC111118),
+        indicatorColor: Colors.transparent,
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
             return TextStyle(
-                color: primary, fontSize: 12, fontWeight: FontWeight.w600);
+                color: primary, fontSize: 11, fontWeight: FontWeight.w600,
+                letterSpacing: 0.5);
           }
-          return const TextStyle(color: textSecondary, fontSize: 12);
+          return TextStyle(color: textSecondary, fontSize: 11);
         }),
         iconTheme: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
             return IconThemeData(color: primary);
           }
-          return const IconThemeData(color: textSecondary);
+          return const IconThemeData(color: Color(0x80F0EEE9));
         }),
       ),
       cardTheme: CardThemeData(
-        color: surface,
+        color: const Color(0x0FFFFFFF),
         elevation: 0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-          side: const BorderSide(color: border, width: 1),
+          borderRadius: BorderRadius.circular(16),
+          side: const BorderSide(color: Color(0x14FFFFFF), width: 1),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: surfaceElevated,
+        fillColor: const Color(0x0FFFFFFF),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: border),
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0x14FFFFFF)),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: border),
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Color(0x14FFFFFF)),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: primary, width: 1.5),
         ),
-        hintStyle: const TextStyle(color: textDim),
+        hintStyle: const TextStyle(color: Color(0x4DF0EEE9)),
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       ),
-      dividerTheme: const DividerThemeData(color: border, thickness: 1),
+      dividerTheme: const DividerThemeData(color: Color(0x14FFFFFF), thickness: 1),
     );
   }
 
