@@ -238,7 +238,7 @@ class PageHeader extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           decoration: BoxDecoration(
             color: AppTheme.background.withValues(alpha: 0.7),
-            border: Border(
+            border: const Border(
               bottom: BorderSide(color: AppTheme.border),
             ),
           ),

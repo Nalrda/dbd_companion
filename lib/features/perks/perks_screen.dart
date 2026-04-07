@@ -6,6 +6,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import '../../core/models/perk.dart';
 import '../../core/providers/providers.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/widgets/design_system.dart';
 import '../../core/widgets/widgets.dart';
 
 // ─── Perks Screen ─────────────────────────────────────────────────────────────
@@ -47,17 +48,27 @@ class _PerksScreenState extends ConsumerState<PerksScreen> {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      body: Column(
+      backgroundColor: Colors.transparent,
+      body: AppBackground(
+        orbs: [
+          BackgroundOrb(
+            color: AppTheme.primary,
+            opacity: 0.15,
+            position: Alignment.topLeft,
+            size: 380,
+          ),
+        ],
+        child: Column(
         children: [
           PageHeader(
             title: _searchVisible
                 ? TextField(
                     controller: _searchController,
                     autofocus: true,
-                    style: const TextStyle(color: AppTheme.textPrimary, fontSize: 16),
+                    style: GoogleFonts.outfit(color: AppTheme.textPrimary, fontSize: 16),
                     decoration: InputDecoration(
                       hintText: l10n.searchHint,
-                      hintStyle: const TextStyle(color: AppTheme.textDim, fontSize: 14),
+                      hintStyle: GoogleFonts.outfit(color: AppTheme.textDim, fontSize: 14),
                       border: InputBorder.none,
                       isDense: true,
                       contentPadding: EdgeInsets.zero,
@@ -85,7 +96,7 @@ class _PerksScreenState extends ConsumerState<PerksScreen> {
           ),
           Expanded(child: allPerksAsync.when(
         loading: () => Center(child: CircularProgressIndicator(color: AppTheme.primary)),
-        error: (e, _) => Center(child: Text('Error: $e', style: const TextStyle(color: AppTheme.textSecondary))),
+        error: (e, _) => Center(child: Text('Error: $e', style: GoogleFonts.outfit(color: AppTheme.textSecondary))),
         data: (allPerks) {
           final filtered = _filter(allPerks);
           return Column(
@@ -158,6 +169,7 @@ class _PerksScreenState extends ConsumerState<PerksScreen> {
       )),
         ],
       ),
+      ),
     );
   }
 }
@@ -194,7 +206,7 @@ class _EmptyState extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 l10n.noPerkFound(search),
-                style: const TextStyle(color: AppTheme.textDim, fontSize: 13),
+                style: GoogleFonts.outfit(color: AppTheme.textDim, fontSize: 13),
                 textAlign: TextAlign.center,
               ).animate().fadeIn(delay: 200.ms),
             ],

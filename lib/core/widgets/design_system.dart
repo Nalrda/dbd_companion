@@ -639,7 +639,7 @@ class GlassPageHeader extends StatelessWidget {
           ),
           decoration: BoxDecoration(
             color: AppTheme.background.withValues(alpha: 0.7),
-            border: Border(
+            border: const Border(
               bottom: BorderSide(color: AppTheme.border),
             ),
           ),
@@ -649,6 +649,70 @@ class GlassPageHeader extends StatelessWidget {
               ...actions,
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Glass Alert Dialog ───────────────────────────────────────────────────────
+
+class GlassAlertDialog extends StatelessWidget {
+  final String title;
+  final Widget? content;
+  final String cancelLabel;
+  final String confirmLabel;
+  final VoidCallback onCancel;
+  final VoidCallback onConfirm;
+
+  const GlassAlertDialog({
+    super.key,
+    required this.title,
+    this.content,
+    this.cancelLabel = 'Cancel',
+    required this.confirmLabel,
+    required this.onCancel,
+    required this.onConfirm,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+        child: AlertDialog(
+          backgroundColor: AppTheme.backgroundSecondary,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+            side: const BorderSide(color: AppTheme.border),
+          ),
+          title: Text(
+            title,
+            style: GoogleFonts.outfit(
+              color: AppTheme.textPrimary,
+              fontSize: 17,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          content: content != null
+              ? DefaultTextStyle(
+                  style: GoogleFonts.outfit(color: AppTheme.textSecondary),
+                  child: content!,
+                )
+              : null,
+          actions: [
+            TextButton(
+              onPressed: onCancel,
+              child: Text(cancelLabel,
+                  style: GoogleFonts.outfit(color: AppTheme.textSecondary)),
+            ),
+            TextButton(
+              onPressed: onConfirm,
+              child: Text(confirmLabel,
+                  style: GoogleFonts.outfit(color: AppTheme.primary)),
+            ),
+          ],
         ),
       ),
     );

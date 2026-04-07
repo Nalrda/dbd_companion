@@ -136,33 +136,16 @@ class _MatchesScreenState extends ConsumerState<MatchesScreen> {
   void _confirmDelete(MatchRecord record) {
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: AppTheme.backgroundSecondary,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-          side: BorderSide(color: AppTheme.border),
-        ),
-        title: Text('Delete match?',
-            style: GoogleFonts.outfit(color: AppTheme.textPrimary,
-                fontWeight: FontWeight.w700)),
-        content: Text(
-            'This match record will be permanently deleted.',
-            style: GoogleFonts.outfit(color: AppTheme.textSecondary)),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text('Cancel',
-                style: GoogleFonts.outfit(color: AppTheme.textSecondary)),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(ctx);
-              ref.read(matchesProvider.notifier).delete(record.id);
-            },
-            child: Text('Delete',
-                style: GoogleFonts.outfit(color: AppTheme.primary)),
-          ),
-        ],
+      builder: (ctx) => GlassAlertDialog(
+        title: 'Delete match?',
+        content: const Text('This match record will be permanently deleted.'),
+        cancelLabel: 'Cancel',
+        confirmLabel: 'Delete',
+        onCancel: () => Navigator.pop(ctx),
+        onConfirm: () {
+          Navigator.pop(ctx);
+          ref.read(matchesProvider.notifier).delete(record.id);
+        },
       ),
     );
   }
@@ -376,7 +359,7 @@ class _MatchTileState extends State<_MatchTile> {
                   Row(
                     children: [
                       if (widget.record.characterName != null) ...[
-                        Icon(Icons.person_outline,
+                        const Icon(Icons.person_outline,
                             size: 12, color: AppTheme.textSecondary),
                         const SizedBox(width: 3),
                         Text(
@@ -392,7 +375,7 @@ class _MatchTileState extends State<_MatchTile> {
                           Text('  ·  ',
                               style: GoogleFonts.outfit(
                                   color: AppTheme.textTertiary, fontSize: 12)),
-                        Icon(Icons.map_outlined,
+                        const Icon(Icons.map_outlined,
                             size: 12, color: AppTheme.textSecondary),
                         const SizedBox(width: 3),
                         Flexible(
@@ -421,7 +404,7 @@ class _MatchTileState extends State<_MatchTile> {
             ),
             PopupMenuButton<String>(
               color: AppTheme.backgroundSecondary,
-              icon: Icon(Icons.more_vert,
+              icon: const Icon(Icons.more_vert,
                   color: AppTheme.textTertiary, size: 20),
               onSelected: (v) {
                 if (v == 'delete') widget.onDelete();

@@ -6,6 +6,7 @@ import '../../core/models/killer.dart';
 import '../../core/models/map_callout.dart';
 import '../../core/providers/providers.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/widgets/design_system.dart';
 import '../../core/widgets/widgets.dart';
 
 class MatchEditorScreen extends ConsumerStatefulWidget {
@@ -130,6 +131,7 @@ class _MatchEditorScreenState extends ConsumerState<MatchEditorScreen> {
     final mapsAsync = ref.watch(mapRealmsProvider);
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
         title: const Text('Add Match'),
         actions: [
@@ -147,136 +149,139 @@ class _MatchEditorScreenState extends ConsumerState<MatchEditorScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Role toggle
-            const SectionHeader(title: 'ROLE'),
-            const SizedBox(height: 12),
-            RoleToggle(
-              isSurvivor: _isSurvivor,
-              onChanged: (v) => setState(() {
-                _isSurvivor = v;
-                _outcome = null;
-                _gensRemaining = 0;
-              }),
-            ),
+      body: AppBackground(
+        orbs: AppBackground.defaultOrbs(),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Role toggle
+              const SectionHeader(title: 'ROLE'),
+              const SizedBox(height: 12),
+              RoleToggle(
+                isSurvivor: _isSurvivor,
+                onChanged: (v) => setState(() {
+                  _isSurvivor = v;
+                  _outcome = null;
+                  _gensRemaining = 0;
+                }),
+              ),
 
-            const SizedBox(height: 24),
-            const SectionHeader(title: 'OUTCOME'),
-            const SizedBox(height: 12),
+              const SizedBox(height: 24),
+              const SectionHeader(title: 'OUTCOME'),
+              const SizedBox(height: 12),
 
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: _outcomes.map((o) {
-                final selected = _outcome == o;
-                final color = _outcomeColor(o);
-                return GestureDetector(
-                  onTap: () => setState(() => _outcome = o),
-                  child: AnimatedScale(
-                    scale: selected ? 1.04 : 1.0,
-                    duration: const Duration(milliseconds: 150),
-                    curve: Curves.easeOut,
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 180),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 12),
-                      decoration: BoxDecoration(
-                        color: selected
-                            ? color.withValues(alpha: 0.15)
-                            : AppTheme.surfaceElevated,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: selected ? color : AppTheme.border,
-                          width: selected ? 1.5 : 1,
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: _outcomes.map((o) {
+                  final selected = _outcome == o;
+                  final color = _outcomeColor(o);
+                  return GestureDetector(
+                    onTap: () => setState(() => _outcome = o),
+                    child: AnimatedScale(
+                      scale: selected ? 1.04 : 1.0,
+                      duration: const Duration(milliseconds: 150),
+                      curve: Curves.easeOut,
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 180),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 12),
+                        decoration: BoxDecoration(
+                          color: selected
+                              ? color.withValues(alpha: 0.15)
+                              : AppTheme.surfaceElevated,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: selected ? color : AppTheme.border,
+                            width: selected ? 1.5 : 1,
+                          ),
                         ),
-                      ),
-                      child: Text(
-                        _outcomeLabel(o),
-                        style: GoogleFonts.rajdhani(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700,
-                          color: selected ? color : AppTheme.textSecondary,
-                          letterSpacing: 0.5,
+                        child: Text(
+                          _outcomeLabel(o),
+                          style: GoogleFonts.rajdhani(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            color: selected ? color : AppTheme.textSecondary,
+                            letterSpacing: 0.5,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                );
-              }).toList(),
-            ),
-
-            const SizedBox(height: 24),
-            const SectionHeader(title: 'KILLER PLAYED'),
-            const SizedBox(height: 10),
-            killersAsync.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Text('Error: $e',
-                  style: const TextStyle(color: AppTheme.accent)),
-              data: (killers) => _PickerButton(
-                value: _selectedKillerName,
-                hint: 'Select killer...',
-                icon: Icons.sports_kabaddi_outlined,
-                onTap: () => _pickKiller(killers),
-                onClear: _selectedKillerName != null
-                    ? () => setState(() => _selectedKillerName = null)
-                    : null,
+                  );
+                }).toList(),
               ),
-            ),
 
-            const SizedBox(height: 20),
-            const SectionHeader(title: 'MAP'),
-            const SizedBox(height: 10),
-            mapsAsync.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Text('Error: $e',
-                  style: const TextStyle(color: AppTheme.accent)),
-              data: (realms) => _PickerButton(
-                value: _selectedMapName,
-                hint: 'Select map...',
-                icon: Icons.map_outlined,
-                onTap: () => _pickMap(realms),
-                onClear: _selectedMapName != null
-                    ? () => setState(() => _selectedMapName = null)
-                    : null,
-              ),
-            ),
-
-            // Gens remaining — killer mode only
-            if (!_isSurvivor) ...[
-              const SizedBox(height: 20),
-              const SectionHeader(title: 'GENS REMAINING'),
+              const SizedBox(height: 24),
+              const SectionHeader(title: 'KILLER PLAYED'),
               const SizedBox(height: 10),
-              _GensCounter(
-                value: _gensRemaining,
-                onChanged: (v) => setState(() => _gensRemaining = v),
+              killersAsync.when(
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (e, _) => Text('Error: $e',
+                    style: GoogleFonts.outfit(color: AppTheme.accent)),
+                data: (killers) => _PickerButton(
+                  value: _selectedKillerName,
+                  hint: 'Select killer...',
+                  icon: Icons.sports_kabaddi_outlined,
+                  onTap: () => _pickKiller(killers),
+                  onClear: _selectedKillerName != null
+                      ? () => setState(() => _selectedKillerName = null)
+                      : null,
+                ),
+              ),
+
+              const SizedBox(height: 20),
+              const SectionHeader(title: 'MAP'),
+              const SizedBox(height: 10),
+              mapsAsync.when(
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (e, _) => Text('Error: $e',
+                    style: GoogleFonts.outfit(color: AppTheme.accent)),
+                data: (realms) => _PickerButton(
+                  value: _selectedMapName,
+                  hint: 'Select map...',
+                  icon: Icons.map_outlined,
+                  onTap: () => _pickMap(realms),
+                  onClear: _selectedMapName != null
+                      ? () => setState(() => _selectedMapName = null)
+                      : null,
+                ),
+              ),
+
+              // Gens remaining — killer mode only
+              if (!_isSurvivor) ...[
+                const SizedBox(height: 20),
+                const SectionHeader(title: 'GENS REMAINING'),
+                const SizedBox(height: 10),
+                _GensCounter(
+                  value: _gensRemaining,
+                  onChanged: (v) => setState(() => _gensRemaining = v),
+                ),
+              ],
+
+              const SizedBox(height: 20),
+              const SectionHeader(title: 'NOTES'),
+              const SizedBox(height: 10),
+              TextField(
+                controller: _notesController,
+                maxLines: 3,
+                decoration: const InputDecoration(
+                  hintText: 'What went well? What to improve?',
+                ),
+              ),
+
+              const SizedBox(height: 32),
+              SizedBox(
+                width: double.infinity,
+                child: DbdButton(
+                  label: 'Save Match',
+                  icon: Icons.check,
+                  onPressed: _save,
+                ),
               ),
             ],
-
-            const SizedBox(height: 20),
-            const SectionHeader(title: 'NOTES'),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _notesController,
-              maxLines: 3,
-              decoration: const InputDecoration(
-                hintText: 'What went well? What to improve?',
-              ),
-            ),
-
-            const SizedBox(height: 32),
-            SizedBox(
-              width: double.infinity,
-              child: DbdButton(
-                label: 'Save Match',
-                icon: Icons.check,
-                onPressed: _save,
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -330,35 +335,35 @@ class _PickerButtonState extends State<_PickerButton> {
                       : AppTheme.border,
             ),
           ),
-        child: Row(
-          children: [
-            Icon(
-              widget.icon,
-              size: 18,
-              color: hasValue ? AppTheme.primary : AppTheme.textDim,
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                widget.value ?? widget.hint,
-                style: TextStyle(
-                  color: hasValue ? AppTheme.textPrimary : AppTheme.textDim,
-                  fontSize: 14,
+          child: Row(
+            children: [
+              Icon(
+                widget.icon,
+                size: 18,
+                color: hasValue ? AppTheme.primary : AppTheme.textDim,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  widget.value ?? widget.hint,
+                  style: GoogleFonts.outfit(
+                    color: hasValue ? AppTheme.textPrimary : AppTheme.textDim,
+                    fontSize: 14,
+                  ),
                 ),
               ),
-            ),
-            if (widget.onClear != null)
-              GestureDetector(
-                onTap: widget.onClear,
-                child: const Icon(Icons.close, size: 16, color: AppTheme.textDim),
-              )
-            else
-              const Icon(Icons.chevron_right, size: 18, color: AppTheme.textDim),
-          ],
+              if (widget.onClear != null)
+                GestureDetector(
+                  onTap: widget.onClear,
+                  child: const Icon(Icons.close, size: 16, color: AppTheme.textDim),
+                )
+              else
+                const Icon(Icons.chevron_right, size: 18, color: AppTheme.textDim),
+            ],
+          ),
         ),
       ),
-    ),
-  );
+    );
   }
 }
 
@@ -401,7 +406,7 @@ class _GensCounter extends StatelessWidget {
                 ),
                 Text(
                   value == 0 ? 'all done' : 'gens left',
-                  style: const TextStyle(
+                  style: GoogleFonts.outfit(
                     fontSize: 11,
                     color: AppTheme.textDim,
                   ),
@@ -525,12 +530,12 @@ class _KillerPickerSheetState extends State<_KillerPickerSheet> {
                 return ListTile(
                   title: Text(
                     killer.name,
-                    style: const TextStyle(
+                    style: GoogleFonts.outfit(
                         color: AppTheme.textPrimary, fontSize: 14),
                   ),
                   subtitle: Text(
                     killer.power,
-                    style: const TextStyle(
+                    style: GoogleFonts.outfit(
                         color: AppTheme.textDim, fontSize: 12),
                   ),
                   onTap: () => Navigator.pop(ctx, killer.name),
@@ -607,12 +612,12 @@ class _MapPickerSheetState extends State<_MapPickerSheet> {
                 return ListTile(
                   title: Text(
                     map.name,
-                    style: const TextStyle(
+                    style: GoogleFonts.outfit(
                         color: AppTheme.textPrimary, fontSize: 14),
                   ),
                   subtitle: Text(
                     map.realm,
-                    style: const TextStyle(
+                    style: GoogleFonts.outfit(
                         color: AppTheme.textDim, fontSize: 12),
                   ),
                   onTap: () => Navigator.pop(ctx, map.name),

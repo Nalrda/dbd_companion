@@ -235,7 +235,7 @@ class _BuildsScreenState extends ConsumerState<BuildsScreen> {
     final controller = TextEditingController();
     showDialog(
       context: context,
-      builder: (ctx) => _GlassDialog(
+      builder: (ctx) => GlassAlertDialog(
         title: 'Import Build',
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -277,7 +277,7 @@ class _BuildsScreenState extends ConsumerState<BuildsScreen> {
   void _confirmDelete(Build build) {
     showDialog(
       context: context,
-      builder: (ctx) => _GlassDialog(
+      builder: (ctx) => GlassAlertDialog(
         title: 'Delete build?',
         content: Text(
           'Are you sure you want to delete "${build.name}"?',
@@ -446,7 +446,7 @@ class _BuildListItemState extends State<_BuildListItem> {
               ),
               PopupMenuButton<String>(
                 color: AppTheme.backgroundSecondary,
-                icon: Icon(Icons.more_vert,
+                icon: const Icon(Icons.more_vert,
                     color: AppTheme.textTertiary, size: 20),
                 onSelected: (v) {
                   if (v == 'delete') widget.onDelete();
@@ -464,58 +464,6 @@ class _BuildListItemState extends State<_BuildListItem> {
           ),
         ),
       ),
-    );
-  }
-}
-
-// ─── Glass Dialog ─────────────────────────────────────────────────────────────
-
-class _GlassDialog extends StatelessWidget {
-  final String title;
-  final Widget content;
-  final String cancelLabel;
-  final String confirmLabel;
-  final VoidCallback onCancel;
-  final VoidCallback onConfirm;
-
-  const _GlassDialog({
-    required this.title,
-    required this.content,
-    required this.cancelLabel,
-    required this.confirmLabel,
-    required this.onCancel,
-    required this.onConfirm,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      backgroundColor: AppTheme.backgroundSecondary,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-        side: BorderSide(color: AppTheme.border),
-      ),
-      title: Text(
-        title,
-        style: GoogleFonts.outfit(
-          color: AppTheme.textPrimary,
-          fontSize: 17,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-      content: content,
-      actions: [
-        TextButton(
-          onPressed: onCancel,
-          child: Text(cancelLabel,
-              style: GoogleFonts.outfit(color: AppTheme.textSecondary)),
-        ),
-        TextButton(
-          onPressed: onConfirm,
-          child: Text(confirmLabel,
-              style: GoogleFonts.outfit(color: AppTheme.primary)),
-        ),
-      ],
     );
   }
 }

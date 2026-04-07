@@ -126,15 +126,8 @@ class GroupPlannerScreen extends ConsumerWidget {
     final controller = TextEditingController();
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: AppTheme.backgroundSecondary,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-          side: BorderSide(color: AppTheme.border),
-        ),
-        title: Text('Import Group Plan',
-            style: GoogleFonts.outfit(
-                color: AppTheme.textPrimary, fontWeight: FontWeight.w700)),
+      builder: (ctx) => GlassAlertDialog(
+        title: 'Import Group Plan',
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -154,32 +147,24 @@ class GroupPlannerScreen extends ConsumerWidget {
             ),
           ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text('Cancel',
-                style: GoogleFonts.outfit(color: AppTheme.textSecondary)),
-          ),
-          TextButton(
-            onPressed: () async {
-              final imported =
-                  BuildShareService.decodeGroupPlan(controller.text);
-              if (imported == null) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Invalid group plan code')),
-                );
-                return;
-              }
-              Navigator.pop(ctx);
-              final plan = await ref
-                  .read(groupPlansProvider.notifier)
-                  .importPlan(imported);
-              if (context.mounted) context.push('/group/${plan.id}');
-            },
-            child: Text('Import',
-                style: GoogleFonts.outfit(color: AppTheme.primary)),
-          ),
-        ],
+        cancelLabel: 'Cancel',
+        confirmLabel: 'Import',
+        onCancel: () => Navigator.pop(ctx),
+        onConfirm: () async {
+          final imported =
+              BuildShareService.decodeGroupPlan(controller.text);
+          if (imported == null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Invalid group plan code')),
+            );
+            return;
+          }
+          Navigator.pop(ctx);
+          final plan = await ref
+              .read(groupPlansProvider.notifier)
+              .importPlan(imported);
+          if (context.mounted) context.push('/group/${plan.id}');
+        },
       ),
     );
   }
@@ -188,15 +173,8 @@ class GroupPlannerScreen extends ConsumerWidget {
     final controller = TextEditingController();
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: AppTheme.backgroundSecondary,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-          side: BorderSide(color: AppTheme.border),
-        ),
-        title: Text('New Group Plan',
-            style: GoogleFonts.outfit(
-                color: AppTheme.textPrimary, fontWeight: FontWeight.w700)),
+      builder: (ctx) => GlassAlertDialog(
+        title: 'New Group Plan',
         content: TextField(
           controller: controller,
           autofocus: true,
@@ -204,28 +182,20 @@ class GroupPlannerScreen extends ConsumerWidget {
           decoration: const InputDecoration(
               hintText: 'e.g. Ranked SWF, Fun build...'),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text('Cancel',
-                style: GoogleFonts.outfit(color: AppTheme.textSecondary)),
-          ),
-          TextButton(
-            onPressed: () async {
-              final name = controller.text.trim();
-              if (name.isEmpty) return;
-              final plan = await ref
-                  .read(groupPlansProvider.notifier)
-                  .create(name: name);
-              if (ctx.mounted) {
-                Navigator.pop(ctx);
-                context.push('/group/${plan.id}');
-              }
-            },
-            child: Text('Create',
-                style: GoogleFonts.outfit(color: AppTheme.primary)),
-          ),
-        ],
+        cancelLabel: 'Cancel',
+        confirmLabel: 'Create',
+        onCancel: () => Navigator.pop(ctx),
+        onConfirm: () async {
+          final name = controller.text.trim();
+          if (name.isEmpty) return;
+          final plan = await ref
+              .read(groupPlansProvider.notifier)
+              .create(name: name);
+          if (ctx.mounted) {
+            Navigator.pop(ctx);
+            context.push('/group/${plan.id}');
+          }
+        },
       ),
     );
   }
@@ -321,7 +291,7 @@ class _GroupPlanCardState extends State<_GroupPlanCard> {
                           padding: const EdgeInsets.only(right: 8),
                           child: Row(
                             children: [
-                              Icon(Icons.person,
+                              const Icon(Icons.person,
                                   size: 11,
                                   color: AppTheme.textTertiary),
                               const SizedBox(width: 2),
@@ -347,7 +317,7 @@ class _GroupPlanCardState extends State<_GroupPlanCard> {
               ),
               PopupMenuButton<String>(
                 color: AppTheme.backgroundSecondary,
-                icon: Icon(Icons.more_vert,
+                icon: const Icon(Icons.more_vert,
                     color: AppTheme.textTertiary, size: 20),
                 onSelected: (v) {
                   if (v == 'delete') widget.onDelete();

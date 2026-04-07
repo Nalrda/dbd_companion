@@ -135,7 +135,7 @@ class _TopNavBar extends StatelessWidget {
           padding: EdgeInsets.only(top: topPad),
           decoration: BoxDecoration(
             color: AppTheme.background.withValues(alpha: 0.8),
-            border: Border(
+            border: const Border(
               bottom: BorderSide(color: AppTheme.border),
             ),
           ),
@@ -300,7 +300,7 @@ class _BottomNavBar extends StatelessWidget {
           height: 62 + bottomPad,
           decoration: BoxDecoration(
             color: AppTheme.background.withValues(alpha: 0.85),
-            border: Border(
+            border: const Border(
               top: BorderSide(color: AppTheme.border),
             ),
           ),
@@ -476,7 +476,7 @@ class _GuestBanner extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(Icons.person_outline,
+          const Icon(Icons.person_outline,
               color: AppTheme.textSecondary, size: 14),
           const SizedBox(width: 8),
           Expanded(

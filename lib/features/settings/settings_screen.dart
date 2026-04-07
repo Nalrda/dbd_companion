@@ -73,7 +73,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ),
                   decoration: BoxDecoration(
                     color: AppTheme.background.withValues(alpha: 0.7),
-                    border: Border(
+                    border: const Border(
                       bottom: BorderSide(color: AppTheme.border),
                     ),
                   ),
@@ -269,7 +269,7 @@ class _ColorTileState extends State<_ColorTile> {
                         : null,
                   ),
                   child: widget.isSelected
-                      ? Icon(Icons.check, color: Colors.white, size: 17)
+                      ? const Icon(Icons.check, color: Colors.white, size: 17)
                       : null,
                 ),
                 const SizedBox(height: 8),

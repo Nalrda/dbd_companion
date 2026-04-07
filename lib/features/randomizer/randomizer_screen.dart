@@ -215,7 +215,7 @@ class _PlaceholderSlot extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.question_mark, color: AppTheme.textTertiary, size: 16),
+            const Icon(Icons.question_mark, color: AppTheme.textTertiary, size: 16),
             const SizedBox(width: 8),
             Text(
               AppLocalizations.of(context)!.perkNumber(index + 1),
@@ -254,47 +254,32 @@ class _SaveButton extends StatelessWidget {
     final controller = TextEditingController();
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: AppTheme.backgroundSecondary,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-          side: BorderSide(color: AppTheme.border),
-        ),
-        title: Text('Save Build',
-            style: GoogleFonts.outfit(
-                color: AppTheme.textPrimary, fontWeight: FontWeight.w700)),
+      builder: (ctx) => GlassAlertDialog(
+        title: 'Save Build',
         content: TextField(
           controller: controller,
           autofocus: true,
           style: GoogleFonts.outfit(color: AppTheme.textPrimary),
           decoration: const InputDecoration(hintText: 'Build name...'),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: Text('Cancel',
-                style: GoogleFonts.outfit(color: AppTheme.textSecondary)),
-          ),
-          TextButton(
-            onPressed: () async {
-              final name = controller.text.trim();
-              if (name.isEmpty) return;
-              await ref.read(buildsProvider.notifier).create(
-                    name: name,
-                    isSurvivor: isSurvivor,
-                    perkIds: perks.map((p) => p.id).toList(),
-                  );
-              if (ctx.mounted) {
-                Navigator.pop(ctx);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Build saved!')),
-                );
-              }
-            },
-            child: Text('Save',
-                style: GoogleFonts.outfit(color: AppTheme.primary)),
-          ),
-        ],
+        cancelLabel: 'Cancel',
+        confirmLabel: 'Save',
+        onCancel: () => Navigator.pop(ctx),
+        onConfirm: () async {
+          final name = controller.text.trim();
+          if (name.isEmpty) return;
+          await ref.read(buildsProvider.notifier).create(
+                name: name,
+                isSurvivor: isSurvivor,
+                perkIds: perks.map((p) => p.id).toList(),
+              );
+          if (ctx.mounted) {
+            Navigator.pop(ctx);
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Build saved!')),
+            );
+          }
+        },
       ),
     );
   }

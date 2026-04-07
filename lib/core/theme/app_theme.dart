@@ -163,7 +163,7 @@ class AppTheme {
                 color: primary, fontSize: 11, fontWeight: FontWeight.w600,
                 letterSpacing: 0.5);
           }
-          return TextStyle(color: textSecondary, fontSize: 11);
+          return const TextStyle(color: textSecondary, fontSize: 11);
         }),
         iconTheme: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
