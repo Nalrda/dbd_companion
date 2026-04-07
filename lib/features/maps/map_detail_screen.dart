@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../core/providers/providers.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/widgets/design_system.dart';
 
 class MapDetailScreen extends ConsumerWidget {
   final String realmId;
@@ -29,6 +31,7 @@ class MapDetailScreen extends ConsumerWidget {
         final map = realm.maps.firstWhere((m) => m.id == mapId);
 
         return Scaffold(
+          backgroundColor: Colors.transparent,
           appBar: AppBar(
             title: Text(map.name),
             bottom: PreferredSize(
@@ -36,49 +39,50 @@ class MapDetailScreen extends ConsumerWidget {
               child: Container(height: 1, color: AppTheme.border),
             ),
           ),
-          body: LayoutBuilder(
-            builder: (context, constraints) {
-              final isWide = constraints.maxWidth > 700;
-              // On wide screens, constrain the map viewer to prevent it from
-              // stretching too wide and losing detail
-              final viewerMaxWidth = isWide ? 800.0 : double.infinity;
+          body: AppBackground(
+            orbs: AppBackground.defaultOrbs(),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final isWide = constraints.maxWidth > 700;
+                final viewerMaxWidth = isWide ? 800.0 : double.infinity;
 
-              return Align(
-                alignment: Alignment.topCenter,
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: viewerMaxWidth),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: AppTheme.surfaceElevated,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: AppTheme.border),
-                      ),
-                      clipBehavior: Clip.antiAlias,
-                      child: InteractiveViewer(
-                        minScale: 0.5,
-                        maxScale: 5.0,
-                        boundaryMargin: const EdgeInsets.all(40),
-                        child: Image.asset(
-                          map.image,
-                          fit: BoxFit.contain,
-                          errorBuilder: (_, __, ___) => const SizedBox(
-                            height: 300,
-                            child: Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.map_outlined,
-                                      color: AppTheme.textDim, size: 48),
-                                  SizedBox(height: 12),
-                                  Text(
-                                    'Map image coming soon',
-                                    style: TextStyle(
-                                        color: AppTheme.textDim, fontSize: 14),
-                                  ),
-                                ],
+                return Align(
+                  alignment: Alignment.topCenter,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: viewerMaxWidth),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: AppTheme.surfaceElevated,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: AppTheme.border),
+                        ),
+                        clipBehavior: Clip.antiAlias,
+                        child: InteractiveViewer(
+                          minScale: 0.5,
+                          maxScale: 5.0,
+                          boundaryMargin: const EdgeInsets.all(40),
+                          child: Image.asset(
+                            map.image,
+                            fit: BoxFit.contain,
+                            errorBuilder: (_, __, ___) => SizedBox(
+                              height: 300,
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(Icons.map_outlined,
+                                        color: AppTheme.textDim, size: 48),
+                                    const SizedBox(height: 12),
+                                    Text(
+                                      'Map image coming soon',
+                                      style: GoogleFonts.outfit(
+                                          color: AppTheme.textDim, fontSize: 14),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -86,9 +90,9 @@ class MapDetailScreen extends ConsumerWidget {
                       ),
                     ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
         );
       },

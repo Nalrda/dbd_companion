@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -214,6 +215,55 @@ class _OctagonBorderPainter extends CustomPainter {
       old.cut != cut || old.color != color;
 }
 
+// ─── Page Header ──────────────────────────────────────────────────────────────
+// Inline page header for tab screens (replaces Flutter AppBar).
+
+class PageHeader extends StatelessWidget {
+  final Widget title;
+  final List<Widget> actions;
+
+  const PageHeader({
+    super.key,
+    required this.title,
+    this.actions = const [],
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+        child: Container(
+          height: 56,
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          decoration: BoxDecoration(
+            color: AppTheme.background.withValues(alpha: 0.7),
+            border: const Border(
+              bottom: BorderSide(color: AppTheme.border),
+            ),
+          ),
+          child: Row(
+            children: [
+              Expanded(child: title),
+              ...actions,
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  static Widget text(String label) => Text(
+        label,
+        style: GoogleFonts.outfit(
+          fontSize: 18,
+          fontWeight: FontWeight.w700,
+          color: AppTheme.textPrimary,
+          letterSpacing: 0.5,
+        ),
+      );
+}
+
 // ─── Perk Card ────────────────────────────────────────────────────────────────
 
 class PerkCard extends StatefulWidget {
@@ -414,22 +464,33 @@ class _BaseSlot extends StatelessWidget {
         height: height,
         decoration: BoxDecoration(
           color: isEmpty ? AppTheme.surface : AppTheme.surfaceElevated,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(14),
           border: Border.all(
             color: isEmpty ? AppTheme.border : filledBorderColor,
             width: 1,
           ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.12),
+              blurRadius: 10,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         child: isEmpty
             ? Center(
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(emptyIcon, color: AppTheme.textDim, size: emptyIconSize),
+                    Icon(emptyIcon, color: AppTheme.textTertiary, size: emptyIconSize),
                     const SizedBox(width: 6),
                     Text(
                       emptyLabel,
-                      style: const TextStyle(fontSize: 12, color: AppTheme.textDim),
+                      style: GoogleFonts.outfit(
+                        fontSize: 12,
+                        color: AppTheme.textTertiary,
+                        letterSpacing: 0.3,
+                      ),
                     ),
                   ],
                 ),
@@ -527,18 +588,27 @@ class SectionHeader extends StatelessWidget {
     return Row(
       children: [
         Container(
-          width: 2,
-          height: 14,
-          color: AppTheme.primary,
+          width: 2.5,
+          height: 16,
+          decoration: BoxDecoration(
+            color: AppTheme.primary,
+            borderRadius: BorderRadius.circular(2),
+            boxShadow: [
+              BoxShadow(
+                color: AppTheme.primary.withValues(alpha: 0.5),
+                blurRadius: 6,
+              ),
+            ],
+          ),
           margin: const EdgeInsets.only(right: 8),
         ),
         Text(
-          title,
-          style: GoogleFonts.rajdhani(
-            fontSize: 12,
+          title.toUpperCase(),
+          style: GoogleFonts.outfit(
+            fontSize: 11,
             fontWeight: FontWeight.w700,
             color: AppTheme.textSecondary,
-            letterSpacing: 1.5,
+            letterSpacing: 2.0,
           ),
         ),
         const SizedBox(width: 10),
@@ -592,10 +662,12 @@ class _DbdButtonState extends State<DbdButton> {
           : null,
       onTapCancel: () => setState(() => _pressed = false),
       child: AnimatedScale(
-        scale: _pressed ? 0.97 : 1.0,
-        duration: const Duration(milliseconds: 80),
+        scale: _pressed ? 0.97 : (_hovered ? 1.01 : 1.0),
+        duration: const Duration(milliseconds: 150),
+        curve: Curves.easeOutCubic,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 150),
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOutCubic,
           height: 52,
           decoration: BoxDecoration(
             gradient: widget.outlined
@@ -604,24 +676,20 @@ class _DbdButtonState extends State<DbdButton> {
                     ? AppTheme.primaryGradient
                     : null,
             color: widget.outlined
-                ? null
+                ? AppTheme.surface
                 : isEnabled
                     ? null
                     : AppTheme.primaryDim,
             border: widget.outlined
-                ? Border.all(color: AppTheme.primary)
+                ? Border.all(color: AppTheme.primary.withValues(alpha: _hovered ? 0.6 : 0.4))
                 : null,
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(12),
-              topRight: Radius.circular(12),
-              bottomRight: Radius.circular(12),
-              bottomLeft: Radius.circular(4),
-            ),
+            borderRadius: BorderRadius.circular(12),
             boxShadow: !widget.outlined && isEnabled
                 ? [
                     BoxShadow(
-                      color: AppTheme.primaryGlow,
-                      blurRadius: _pressed ? 6 : _hovered ? 24 : 16,
+                      color: AppTheme.primary.withValues(
+                          alpha: _pressed ? 0.25 : _hovered ? 0.5 : 0.35),
+                      blurRadius: _pressed ? 8 : _hovered ? 28 : 18,
                       spreadRadius: 0,
                       offset: const Offset(0, 4),
                     )
@@ -651,10 +719,10 @@ class _DbdButtonState extends State<DbdButton> {
                       ],
                       Text(
                         widget.label,
-                        style: GoogleFonts.rajdhani(
+                        style: GoogleFonts.outfit(
                           fontSize: 15,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.8,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.5,
                           color: widget.outlined
                               ? AppTheme.primary
                               : Colors.white,
@@ -682,10 +750,10 @@ class RoleToggle extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return Container(
-      height: 42,
+      height: 44,
       decoration: BoxDecoration(
         color: AppTheme.surface,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(color: AppTheme.border),
       ),
       child: Row(
@@ -711,18 +779,35 @@ class _Tab extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 180),
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOutCubic,
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
         decoration: BoxDecoration(
-          color: isActive ? AppTheme.primary : Colors.transparent,
-          borderRadius: BorderRadius.circular(9),
+          gradient: isActive
+              ? LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [AppTheme.primary, AppTheme.primaryDim],
+                )
+              : null,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: isActive
+              ? [
+                  BoxShadow(
+                    color: AppTheme.primary.withValues(alpha: 0.35),
+                    blurRadius: 10,
+                    offset: const Offset(0, 2),
+                  )
+                ]
+              : null,
         ),
         child: Text(
           label,
-          style: TextStyle(
+          style: GoogleFonts.outfit(
             fontSize: 13,
             fontWeight: FontWeight.w600,
             color: isActive ? Colors.white : AppTheme.textSecondary,
+            letterSpacing: 0.3,
           ),
         ),
       ),
@@ -754,20 +839,37 @@ class EmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 48, color: AppTheme.textDim),
-            const SizedBox(height: 16),
+            Container(
+              width: 72,
+              height: 72,
+              decoration: BoxDecoration(
+                color: AppTheme.surface,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: AppTheme.border),
+              ),
+              child: Icon(icon, size: 32, color: AppTheme.textTertiary),
+            ),
+            const SizedBox(height: 20),
             Text(
               title,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: AppTheme.textPrimary),
+              style: GoogleFonts.outfit(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: AppTheme.textPrimary,
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
             Text(
               subtitle,
-              style: const TextStyle(fontSize: 14, color: AppTheme.textSecondary),
+              style: GoogleFonts.outfit(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: AppTheme.textSecondary,
+              ),
               textAlign: TextAlign.center,
             ),
-            if (action != null) ...[const SizedBox(height: 24), action!],
+            if (action != null) ...[const SizedBox(height: 28), action!],
           ],
         ),
       ),
@@ -1430,49 +1532,3 @@ class _OfferingPickerSheetState extends ConsumerState<OfferingPickerSheet> {
   }
 }
 
-// ─── Page Header ──────────────────────────────────────────────────────────────
-// Inline page header for tab screens (replaces Flutter AppBar).
-// Used on wide screens below the top nav bar to display page title + actions.
-
-class PageHeader extends StatelessWidget {
-  /// The title area — can be a [Text] or a [TextField] (for search mode).
-  final Widget title;
-
-  /// Action widgets placed on the right side.
-  final List<Widget> actions;
-
-  const PageHeader({
-    super.key,
-    required this.title,
-    this.actions = const [],
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 52,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      decoration: const BoxDecoration(
-        color: AppTheme.background,
-        border: Border(bottom: BorderSide(color: AppTheme.border, width: 1)),
-      ),
-      child: Row(
-        children: [
-          Expanded(child: title),
-          ...actions,
-        ],
-      ),
-    );
-  }
-
-  /// Convenience factory for a plain text title.
-  static Widget text(String label) => Text(
-        label,
-        style: GoogleFonts.rajdhani(
-          fontSize: 18,
-          fontWeight: FontWeight.w700,
-          color: AppTheme.textPrimary,
-          letterSpacing: 1.2,
-        ),
-      );
-}

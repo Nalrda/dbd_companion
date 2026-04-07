@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../core/models/build.dart';
 import '../../core/models/perk.dart';
 import '../../core/providers/providers.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/widgets/design_system.dart';
 import '../../core/widgets/widgets.dart';
 
 class BuildEditorScreen extends ConsumerStatefulWidget {
@@ -155,6 +157,7 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
         : ref.watch(killerPerksProvider);
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
         title: Text(_existingBuild == null ? 'New Build' : 'Edit Build'),
         actions: [
@@ -168,15 +171,19 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               ),
-              child: const Text('Save', style: TextStyle(fontWeight: FontWeight.w600)),
+              child: Text('Save',
+                  style: GoogleFonts.outfit(fontWeight: FontWeight.w600, color: Colors.white)),
             ),
           ),
         ],
       ),
-      body: perksAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Error: $e')),
-        data: (perks) => _buildBody(perks),
+      body: AppBackground(
+        orbs: AppBackground.defaultOrbs(),
+        child: perksAsync.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, _) => Center(child: Text('Error: $e')),
+          data: (perks) => _buildBody(perks),
+        ),
       ),
     );
   }
@@ -216,7 +223,7 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
         children: [
           TextField(
             controller: _nameController,
-            style: const TextStyle(
+            style: GoogleFonts.outfit(
                 color: AppTheme.textPrimary, fontSize: 16, fontWeight: FontWeight.w600),
             decoration: const InputDecoration(
               hintText: 'Build name...',
@@ -258,7 +265,7 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
             const SizedBox(height: 10),
             TextField(
               controller: _addon1Controller,
-              style: const TextStyle(color: AppTheme.textPrimary, fontSize: 14),
+              style: GoogleFonts.outfit(color: AppTheme.textPrimary, fontSize: 14),
               decoration: const InputDecoration(
                 hintText: 'Add-on 1...',
                 prefixIcon: Icon(Icons.extension_outlined, color: AppTheme.textDim, size: 18),
@@ -267,7 +274,7 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
             const SizedBox(height: 8),
             TextField(
               controller: _addon2Controller,
-              style: const TextStyle(color: AppTheme.textPrimary, fontSize: 14),
+              style: GoogleFonts.outfit(color: AppTheme.textPrimary, fontSize: 14),
               decoration: const InputDecoration(
                 hintText: 'Add-on 2...',
                 prefixIcon: Icon(Icons.extension_outlined, color: AppTheme.textDim, size: 18),
@@ -294,7 +301,7 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
           TextField(
             controller: _notesController,
             maxLines: 3,
-            style: const TextStyle(color: AppTheme.textPrimary, fontSize: 14),
+            style: GoogleFonts.outfit(color: AppTheme.textPrimary, fontSize: 14),
             decoration: const InputDecoration(
               hintText: 'Build notes, strategy tips...',
               alignLabelWithHint: true,
@@ -345,7 +352,6 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
 
   void _openPerkPicker(int slot) {
     setState(() => _editingSlot = slot);
-    // On narrow screens always show bottom sheet
     final isWide = MediaQuery.of(context).size.width > 620;
     if (!isWide) {
       showModalBottomSheet(
@@ -378,7 +384,7 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
             padding: const EdgeInsets.fromLTRB(12, 12, 12, 6),
             child: TextField(
               onChanged: (v) => setState(() => _searchQuery = v),
-              style: const TextStyle(color: AppTheme.textPrimary),
+              style: GoogleFonts.outfit(color: AppTheme.textPrimary),
               decoration: const InputDecoration(
                 hintText: 'Search perks...',
                 prefixIcon: Icon(Icons.search, color: AppTheme.textDim, size: 18),
@@ -463,7 +469,7 @@ class _PerkPickerSheetState extends ConsumerState<_PerkPickerSheet> {
             child: TextField(
               onChanged: (v) => setState(() => _search = v),
               autofocus: true,
-              style: const TextStyle(color: AppTheme.textPrimary),
+              style: GoogleFonts.outfit(color: AppTheme.textPrimary),
               decoration: const InputDecoration(
                 hintText: 'Search perks...',
                 prefixIcon: Icon(Icons.search, color: AppTheme.textDim, size: 18),

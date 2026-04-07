@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -57,9 +58,9 @@ class ShellScreen extends ConsumerWidget {
     void signOut() => ref.read(authNotifierProvider).signOut();
     void signInWithGoogle() => ref.read(authNotifierProvider).signInWithGoogle();
 
-    // ── Wide / desktop: top horizontal nav bar ──────────────────────────────
     if (isWide) {
       return Scaffold(
+        backgroundColor: AppTheme.background,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -70,7 +71,6 @@ class ShellScreen extends ConsumerWidget {
               user: user,
               onSignOut: signOut,
             ),
-            const Divider(height: 1, thickness: 1, color: AppTheme.border),
             if (isGuest) _GuestBanner(onSignIn: signInWithGoogle),
             Expanded(
               child: Align(
@@ -86,8 +86,8 @@ class ShellScreen extends ConsumerWidget {
       );
     }
 
-    // ── Narrow / mobile: bottom navigation bar ──────────────────────────────
     return Scaffold(
+      backgroundColor: AppTheme.background,
       body: SafeArea(
         bottom: false,
         child: Column(
@@ -127,53 +127,68 @@ class _TopNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final topPad = MediaQuery.of(context).padding.top;
-    return Container(
-      height: 56 + topPad,
-      padding: EdgeInsets.only(top: topPad),
-      color: AppTheme.surface,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Row(
-          children: [
-            // ── Logo mark (click → settings) ─────────────────────────────────
-            MouseRegion(
-              cursor: SystemMouseCursors.click,
-              child: GestureDetector(
-                onTap: () => context.push('/settings'),
-                child: Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: AppTheme.primaryDim.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: AppTheme.primary.withValues(alpha: 0.5)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppTheme.primary.withValues(alpha: 0.2),
-                        blurRadius: 10,
+    return ClipRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+        child: Container(
+          height: 56 + topPad,
+          padding: EdgeInsets.only(top: topPad),
+          decoration: BoxDecoration(
+            color: AppTheme.background.withValues(alpha: 0.8),
+            border: const Border(
+              bottom: BorderSide(color: AppTheme.border),
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              children: [
+                // Logo mark
+                MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: GestureDetector(
+                    onTap: () => context.push('/settings'),
+                    child: Container(
+                      width: 36,
+                      height: 36,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            AppTheme.primary.withValues(alpha: 0.3),
+                            AppTheme.primaryDim.withValues(alpha: 0.2),
+                          ],
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                            color: AppTheme.primary.withValues(alpha: 0.5)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppTheme.primary.withValues(alpha: 0.25),
+                            blurRadius: 12,
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  child: Icon(
-                    Icons.settings,
-                    color: AppTheme.primary,
-                    size: 18,
+                      child: Icon(
+                        Icons.settings,
+                        color: AppTheme.primary,
+                        size: 17,
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                const Spacer(),
+                ...List.generate(
+                  tabs.length,
+                  (i) => _TopNavItem(
+                    tab: tabs[i],
+                    isActive: i == selectedIndex,
+                    onTap: () => onTap(i),
+                  ),
+                ),
+                const Spacer(),
+              ],
             ),
-            const Spacer(),
-            // ── Nav items ─────────────────────────────────────────────────────
-            ...List.generate(
-              tabs.length,
-              (i) => _TopNavItem(
-                tab: tabs[i],
-                isActive: i == selectedIndex,
-                onTap: () => onTap(i),
-              ),
-            ),
-            const Spacer(),
-          ],
+          ),
         ),
       ),
     );
@@ -200,7 +215,7 @@ class _TopNavItemState extends State<_TopNavItem> {
 
   @override
   Widget build(BuildContext context) {
-    final iconColor = widget.isActive
+    final color = widget.isActive
         ? AppTheme.primary
         : _hovered
             ? AppTheme.primary.withValues(alpha: 0.65)
@@ -214,18 +229,21 @@ class _TopNavItemState extends State<_TopNavItem> {
         onTap: widget.onTap,
         behavior: HitTestBehavior.opaque,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 180),
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOutCubic,
           height: 56,
           padding: const EdgeInsets.symmetric(horizontal: 14),
           decoration: BoxDecoration(
             color: widget.isActive
-                ? AppTheme.primary.withValues(alpha: 0.07)
+                ? AppTheme.primary.withValues(alpha: 0.08)
                 : _hovered
                     ? AppTheme.primary.withValues(alpha: 0.04)
                     : Colors.transparent,
             border: Border(
               bottom: BorderSide(
-                color: widget.isActive ? AppTheme.primary : Colors.transparent,
+                color: widget.isActive
+                    ? AppTheme.primary
+                    : Colors.transparent,
                 width: 2,
               ),
             ),
@@ -235,86 +253,17 @@ class _TopNavItemState extends State<_TopNavItem> {
             children: [
               Icon(
                 widget.isActive ? widget.tab.activeIcon : widget.tab.icon,
-                color: iconColor,
+                color: color,
                 size: 16,
               ),
               const SizedBox(width: 6),
               Text(
                 widget.tab.label,
-                style: GoogleFonts.rajdhani(
+                style: GoogleFonts.outfit(
                   fontSize: 12,
                   fontWeight:
-                      widget.isActive ? FontWeight.w700 : FontWeight.w600,
-                  color: iconColor,
-                  letterSpacing: 1.0,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _TopSignOutButton extends StatefulWidget {
-  final dynamic user;
-  final VoidCallback onSignOut;
-
-  const _TopSignOutButton({required this.user, required this.onSignOut});
-
-  @override
-  State<_TopSignOutButton> createState() => _TopSignOutButtonState();
-}
-
-class _TopSignOutButtonState extends State<_TopSignOutButton> {
-  bool _hovered = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => _hovered = true),
-      onExit: (_) => setState(() => _hovered = false),
-      child: GestureDetector(
-        onTap: widget.onSignOut,
-        behavior: HitTestBehavior.opaque,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 150),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          decoration: BoxDecoration(
-            color: _hovered
-                ? AppTheme.primary.withValues(alpha: 0.08)
-                : Colors.transparent,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: _hovered
-                  ? AppTheme.primary.withValues(alpha: 0.3)
-                  : AppTheme.border,
-            ),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (widget.user?.photoURL != null)
-                CircleAvatar(
-                  radius: 12,
-                  backgroundImage:
-                      NetworkImage(widget.user!.photoURL as String),
-                )
-              else
-                Icon(
-                  Icons.account_circle_outlined,
-                  color: _hovered ? AppTheme.primary : AppTheme.textSecondary,
-                  size: 18,
-                ),
-              const SizedBox(width: 8),
-              Text(
-                AppLocalizations.of(context)!.signOut,
-                style: GoogleFonts.rajdhani(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
-                  color: _hovered ? AppTheme.primary : AppTheme.textSecondary,
+                      widget.isActive ? FontWeight.w700 : FontWeight.w500,
+                  color: color,
                   letterSpacing: 0.8,
                 ),
               ),
@@ -344,33 +293,33 @@ class _BottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bottomPad = MediaQuery.of(context).padding.bottom;
-    return Container(
-      height: 60 + bottomPad,
-      decoration: BoxDecoration(
-        color: AppTheme.surface,
-        border: const Border(top: BorderSide(color: AppTheme.border)),
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.primaryGlow,
-            blurRadius: 24,
-            offset: const Offset(0, -2),
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: EdgeInsets.only(bottom: bottomPad),
-        child: Row(
-          children: [
-            ...List.generate(
-              tabs.length,
-              (i) => _BottomNavItem(
-                tab: tabs[i],
-                isActive: i == selectedIndex,
-                onTap: () => onTap(i),
-              ),
+    return ClipRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+        child: Container(
+          height: 62 + bottomPad,
+          decoration: BoxDecoration(
+            color: AppTheme.background.withValues(alpha: 0.85),
+            border: const Border(
+              top: BorderSide(color: AppTheme.border),
             ),
-            _BottomSettingsItem(onSignOut: onSignOut),
-          ],
+          ),
+          child: Padding(
+            padding: EdgeInsets.only(bottom: bottomPad),
+            child: Row(
+              children: [
+                ...List.generate(
+                  tabs.length,
+                  (i) => _BottomNavItem(
+                    tab: tabs[i],
+                    isActive: i == selectedIndex,
+                    onTap: () => onTap(i),
+                  ),
+                ),
+                _BottomSettingsItem(onSignOut: onSignOut),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -406,19 +355,23 @@ class _BottomNavItemState extends State<_BottomNavItem> {
           onTap: widget.onTap,
           behavior: HitTestBehavior.opaque,
           child: AnimatedContainer(
-            duration: const Duration(milliseconds: 180),
+            duration: const Duration(milliseconds: 200),
             color: _hovered && !widget.isActive
                 ? AppTheme.primary.withValues(alpha: 0.04)
                 : Colors.transparent,
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                // Active indicator dot
                 AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
+                  duration: const Duration(milliseconds: 250),
+                  curve: Curves.easeOutCubic,
                   height: 2,
-                  width: widget.isActive ? 28 : 0,
+                  width: widget.isActive ? 24 : 0,
+                  margin: const EdgeInsets.only(bottom: 4),
                   decoration: BoxDecoration(
                     color: AppTheme.primary,
+                    borderRadius: BorderRadius.circular(1),
                     boxShadow: widget.isActive
                         ? [
                             BoxShadow(
@@ -428,10 +381,8 @@ class _BottomNavItemState extends State<_BottomNavItem> {
                             )
                           ]
                         : null,
-                    borderRadius: BorderRadius.circular(1),
                   ),
                 ),
-                const SizedBox(height: 6),
                 Icon(
                   widget.isActive ? widget.tab.activeIcon : widget.tab.icon,
                   color: widget.isActive
@@ -443,17 +394,18 @@ class _BottomNavItemState extends State<_BottomNavItem> {
                 ),
                 const SizedBox(height: 2),
                 AnimatedDefaultTextStyle(
-                  duration: const Duration(milliseconds: 180),
-                  style: GoogleFonts.rajdhani(
+                  duration: const Duration(milliseconds: 200),
+                  style: GoogleFonts.outfit(
                     fontSize: widget.isActive ? 10 : 9,
-                    fontWeight:
-                        widget.isActive ? FontWeight.w700 : FontWeight.w500,
+                    fontWeight: widget.isActive
+                        ? FontWeight.w700
+                        : FontWeight.w400,
                     color: widget.isActive
                         ? AppTheme.primary
                         : _hovered
                             ? AppTheme.primary.withValues(alpha: 0.6)
                             : AppTheme.textSecondary,
-                    letterSpacing: 1.0,
+                    letterSpacing: 0.5,
                   ),
                   child: Text(
                     widget.tab.label,
@@ -461,7 +413,6 @@ class _BottomNavItemState extends State<_BottomNavItem> {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                const SizedBox(height: 6),
               ],
             ),
           ),
@@ -484,21 +435,21 @@ class _BottomSettingsItem extends StatelessWidget {
       child: SizedBox(
         width: 44,
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(height: 2),
-            const Icon(Icons.settings_outlined, color: AppTheme.textSecondary, size: 20),
+            const SizedBox(height: 6),
+            const Icon(Icons.settings_outlined,
+                color: AppTheme.textSecondary, size: 20),
             const SizedBox(height: 2),
             Text(
               AppLocalizations.of(context)!.tabMore,
-              style: GoogleFonts.rajdhani(
+              style: GoogleFonts.outfit(
                 fontSize: 8,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w400,
                 color: AppTheme.textSecondary,
-                letterSpacing: 0.8,
+                letterSpacing: 0.5,
               ),
             ),
-            const SizedBox(height: 6),
           ],
         ),
       ),
@@ -517,15 +468,21 @@ class _GuestBanner extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      color: AppTheme.primaryDim.withValues(alpha: 0.15),
+      decoration: BoxDecoration(
+        color: AppTheme.primary.withValues(alpha: 0.08),
+        border: Border(
+          bottom: BorderSide(color: AppTheme.primary.withValues(alpha: 0.15)),
+        ),
+      ),
       child: Row(
         children: [
-          const Icon(Icons.person_outline, color: AppTheme.textSecondary, size: 15),
+          const Icon(Icons.person_outline,
+              color: AppTheme.textSecondary, size: 14),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               AppLocalizations.of(context)!.guestModeDesc,
-              style: GoogleFonts.inter(
+              style: GoogleFonts.outfit(
                 fontSize: 12,
                 color: AppTheme.textSecondary,
               ),
@@ -537,11 +494,10 @@ class _GuestBanner extends StatelessWidget {
               onTap: onSignIn,
               child: Text(
                 AppLocalizations.of(context)!.signIn,
-                style: GoogleFonts.rajdhani(
+                style: GoogleFonts.outfit(
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
                   color: AppTheme.primary,
-                  letterSpacing: 0.5,
                 ),
               ),
             ),

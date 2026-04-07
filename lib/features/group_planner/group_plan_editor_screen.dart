@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../../core/models/group_plan.dart';
 import '../../core/models/perk.dart';
 import '../../core/providers/providers.dart';
@@ -9,6 +10,7 @@ import '../../core/repositories/group_plan_repository.dart';
 import '../../core/repositories/perk_repository.dart';
 import '../../core/services/build_share_service.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/widgets/design_system.dart';
 import '../../core/widgets/widgets.dart';
 
 class GroupPlanEditorScreen extends ConsumerStatefulWidget {
@@ -170,6 +172,7 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
     }
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
         title: Text(_plan?.name ?? 'Group Plan'),
         actions: [
@@ -188,12 +191,16 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
               ),
-              child: const Text('Save', style: TextStyle(fontWeight: FontWeight.w600)),
+              child: Text('Save',
+                  style: GoogleFonts.outfit(fontWeight: FontWeight.w600, color: Colors.white)),
             ),
           ),
         ],
       ),
-      body: _buildBody(),
+      body: AppBackground(
+        orbs: AppBackground.defaultOrbs(),
+        child: _buildBody(),
+      ),
     );
   }
 
@@ -222,18 +229,18 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            const Text(
+            Text(
               'Share Group Plan',
-              style: TextStyle(
+              style: GoogleFonts.outfit(
                 color: AppTheme.textPrimary,
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(height: 6),
-            const Text(
+            Text(
               'Copy the code below and send it to your squad.',
-              style: TextStyle(color: AppTheme.textSecondary, fontSize: 13),
+              style: GoogleFonts.outfit(color: AppTheme.textSecondary, fontSize: 13),
             ),
             const SizedBox(height: 16),
             Container(
@@ -279,7 +286,6 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
     final isWide = width > 700;
 
     if (isWide) {
-      // Wide layout: 4 columns side by side, centered with max width
       return Align(
         alignment: Alignment.topCenter,
         child: ConstrainedBox(
@@ -319,7 +325,6 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
       );
     }
 
-    // Narrow layout: scrollable list of columns
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -390,7 +395,7 @@ class _SurvivorColumn extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppTheme.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: color.withValues(alpha:0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Column(
         children: [
@@ -398,9 +403,9 @@ class _SurvivorColumn extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             decoration: BoxDecoration(
-              color: color.withValues(alpha:0.08),
+              color: color.withValues(alpha: 0.08),
               borderRadius: const BorderRadius.vertical(top: Radius.circular(13)),
-              border: Border(bottom: BorderSide(color: color.withValues(alpha:0.2))),
+              border: Border(bottom: BorderSide(color: color.withValues(alpha: 0.2))),
             ),
             child: Row(
               children: [
@@ -408,14 +413,14 @@ class _SurvivorColumn extends StatelessWidget {
                   width: 28,
                   height: 28,
                   decoration: BoxDecoration(
-                    color: color.withValues(alpha:0.15),
+                    color: color.withValues(alpha: 0.15),
                     shape: BoxShape.circle,
-                    border: Border.all(color: color.withValues(alpha:0.5)),
+                    border: Border.all(color: color.withValues(alpha: 0.5)),
                   ),
                   child: Center(
                     child: Text(
                       '${survivorIndex + 1}',
-                      style: TextStyle(
+                      style: GoogleFonts.outfit(
                         color: color,
                         fontWeight: FontWeight.w700,
                         fontSize: 13,
@@ -427,7 +432,7 @@ class _SurvivorColumn extends StatelessWidget {
                 Expanded(
                   child: Text(
                     label,
-                    style: TextStyle(
+                    style: GoogleFonts.outfit(
                       color: color,
                       fontWeight: FontWeight.w600,
                       fontSize: 14,
@@ -436,7 +441,7 @@ class _SurvivorColumn extends StatelessWidget {
                 ),
                 Text(
                   '$filledCount/4',
-                  style: TextStyle(
+                  style: GoogleFonts.outfit(
                     color: filledCount == 4 ? color : AppTheme.textSecondary,
                     fontSize: 12,
                     fontWeight: filledCount == 4 ? FontWeight.w700 : FontWeight.normal,
@@ -476,7 +481,7 @@ class _SurvivorColumn extends StatelessWidget {
                   padding: const EdgeInsets.only(bottom: 6),
                   child: Text(
                     'ITEM',
-                    style: TextStyle(
+                    style: GoogleFonts.outfit(
                       fontSize: 10,
                       fontWeight: FontWeight.w600,
                       color: color.withValues(alpha: 0.7),
@@ -503,7 +508,7 @@ class _SurvivorColumn extends StatelessWidget {
                   padding: const EdgeInsets.only(bottom: 6),
                   child: Text(
                     'OFFERING',
-                    style: TextStyle(
+                    style: GoogleFonts.outfit(
                       fontSize: 10,
                       fontWeight: FontWeight.w600,
                       color: color.withValues(alpha: 0.7),
@@ -554,7 +559,7 @@ class _CompactPerkSlot extends StatelessWidget {
           color: perk != null ? AppTheme.surfaceElevated : AppTheme.background,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: perk != null ? accentColor.withValues(alpha:0.3) : AppTheme.border,
+            color: perk != null ? accentColor.withValues(alpha: 0.3) : AppTheme.border,
           ),
         ),
         child: perk == null
@@ -565,7 +570,7 @@ class _CompactPerkSlot extends StatelessWidget {
                   const SizedBox(width: 4),
                   Text(
                     'Perk ${slotIndex + 1}',
-                    style: const TextStyle(fontSize: 12, color: AppTheme.textDim),
+                    style: GoogleFonts.outfit(fontSize: 12, color: AppTheme.textDim),
                   ),
                 ],
               )
@@ -579,7 +584,7 @@ class _CompactPerkSlot extends StatelessWidget {
                       children: [
                         Text(
                           perk!.name,
-                          style: const TextStyle(
+                          style: GoogleFonts.outfit(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
                             color: AppTheme.textPrimary,
@@ -588,7 +593,7 @@ class _CompactPerkSlot extends StatelessWidget {
                         ),
                         Text(
                           perk!.character,
-                          style: const TextStyle(fontSize: 10, color: AppTheme.textSecondary),
+                          style: GoogleFonts.outfit(fontSize: 10, color: AppTheme.textSecondary),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ],
@@ -661,7 +666,7 @@ class _PerkPickerSheetState extends State<_PerkPickerSheet> {
                 const SizedBox(width: 8),
                 Text(
                   'Pick perk for ${widget.survivorLabel}',
-                  style: const TextStyle(
+                  style: GoogleFonts.outfit(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
                     color: AppTheme.textPrimary,
@@ -676,7 +681,7 @@ class _PerkPickerSheetState extends State<_PerkPickerSheet> {
             child: TextField(
               onChanged: (v) => setState(() => _search = v),
               autofocus: true,
-              style: const TextStyle(color: AppTheme.textPrimary),
+              style: GoogleFonts.outfit(color: AppTheme.textPrimary),
               decoration: const InputDecoration(
                 hintText: 'Search perks...',
                 prefixIcon: Icon(Icons.search, color: AppTheme.textDim, size: 18),
