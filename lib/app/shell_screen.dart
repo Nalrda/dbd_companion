@@ -127,66 +127,68 @@ class _TopNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final topPad = MediaQuery.of(context).padding.top;
-    return ClipRect(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-        child: Container(
-          height: 56 + topPad,
-          padding: EdgeInsets.only(top: topPad),
-          decoration: BoxDecoration(
-            color: AppTheme.background.withValues(alpha: 0.8),
-            border: const Border(
-              bottom: BorderSide(color: AppTheme.border),
+    return RepaintBoundary(
+      child: ClipRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Container(
+            height: 56 + topPad,
+            padding: EdgeInsets.only(top: topPad),
+            decoration: BoxDecoration(
+              color: AppTheme.background.withValues(alpha: 0.8),
+              border: const Border(
+                bottom: BorderSide(color: AppTheme.border),
+              ),
             ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              children: [
-                // Logo mark
-                MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: GestureDetector(
-                    onTap: () => context.push('/settings'),
-                    child: Container(
-                      width: 36,
-                      height: 36,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            AppTheme.primary.withValues(alpha: 0.3),
-                            AppTheme.primaryDim.withValues(alpha: 0.2),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                children: [
+                  // Logo mark
+                  MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: GestureDetector(
+                      onTap: () => context.push('/settings'),
+                      child: Container(
+                        width: 36,
+                        height: 36,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              AppTheme.primary.withValues(alpha: 0.3),
+                              AppTheme.primaryDim.withValues(alpha: 0.2),
+                            ],
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                              color: AppTheme.primary.withValues(alpha: 0.5)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppTheme.primary.withValues(alpha: 0.25),
+                              blurRadius: 12,
+                            ),
                           ],
                         ),
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                            color: AppTheme.primary.withValues(alpha: 0.5)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppTheme.primary.withValues(alpha: 0.25),
-                            blurRadius: 12,
-                          ),
-                        ],
-                      ),
-                      child: Icon(
-                        Icons.settings,
-                        color: AppTheme.primary,
-                        size: 17,
+                        child: Icon(
+                          Icons.settings,
+                          color: AppTheme.primary,
+                          size: 17,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const Spacer(),
-                ...List.generate(
-                  tabs.length,
-                  (i) => _TopNavItem(
-                    tab: tabs[i],
-                    isActive: i == selectedIndex,
-                    onTap: () => onTap(i),
+                  const Spacer(),
+                  ...List.generate(
+                    tabs.length,
+                    (i) => _TopNavItem(
+                      tab: tabs[i],
+                      isActive: i == selectedIndex,
+                      onTap: () => onTap(i),
+                    ),
                   ),
-                ),
-                const Spacer(),
-              ],
+                  const Spacer(),
+                ],
+              ),
             ),
           ),
         ),
@@ -293,31 +295,33 @@ class _BottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bottomPad = MediaQuery.of(context).padding.bottom;
-    return ClipRect(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-        child: Container(
-          height: 62 + bottomPad,
-          decoration: BoxDecoration(
-            color: AppTheme.background.withValues(alpha: 0.85),
-            border: const Border(
-              top: BorderSide(color: AppTheme.border),
+    return RepaintBoundary(
+      child: ClipRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Container(
+            height: 62 + bottomPad,
+            decoration: BoxDecoration(
+              color: AppTheme.background.withValues(alpha: 0.85),
+              border: const Border(
+                top: BorderSide(color: AppTheme.border),
+              ),
             ),
-          ),
-          child: Padding(
-            padding: EdgeInsets.only(bottom: bottomPad),
-            child: Row(
-              children: [
-                ...List.generate(
-                  tabs.length,
-                  (i) => _BottomNavItem(
-                    tab: tabs[i],
-                    isActive: i == selectedIndex,
-                    onTap: () => onTap(i),
+            child: Padding(
+              padding: EdgeInsets.only(bottom: bottomPad),
+              child: Row(
+                children: [
+                  ...List.generate(
+                    tabs.length,
+                    (i) => _BottomNavItem(
+                      tab: tabs[i],
+                      isActive: i == selectedIndex,
+                      onTap: () => onTap(i),
+                    ),
                   ),
-                ),
-                _BottomSettingsItem(onSignOut: onSignOut),
-              ],
+                  _BottomSettingsItem(onSignOut: onSignOut),
+                ],
+              ),
             ),
           ),
         ),

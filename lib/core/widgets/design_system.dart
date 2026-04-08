@@ -114,7 +114,7 @@ class GlassCard extends StatelessWidget {
     final content = ClipRRect(
       borderRadius: BorderRadius.circular(borderRadius),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
+        filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
         child: Container(
           decoration: BoxDecoration(
             color: backgroundColor ?? AppTheme.surface,
@@ -385,35 +385,29 @@ class AccentPillToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(12),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-        child: Container(
-          height: 44,
-          decoration: BoxDecoration(
-            color: AppTheme.surface,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppTheme.border),
+    return Container(
+      height: 44,
+      decoration: BoxDecoration(
+        color: AppTheme.surface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppTheme.border),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _PillTab(
+            label: firstLabel,
+            icon: firstIcon,
+            isActive: isFirst,
+            onTap: () => onChanged(true),
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _PillTab(
-                label: firstLabel,
-                icon: firstIcon,
-                isActive: isFirst,
-                onTap: () => onChanged(true),
-              ),
-              _PillTab(
-                label: secondLabel,
-                icon: secondIcon,
-                isActive: !isFirst,
-                onTap: () => onChanged(false),
-              ),
-            ],
+          _PillTab(
+            label: secondLabel,
+            icon: secondIcon,
+            isActive: !isFirst,
+            onTap: () => onChanged(false),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -627,27 +621,29 @@ class GlassPageHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final topPad = MediaQuery.of(context).padding.top;
-    return ClipRect(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-        child: Container(
-          padding: EdgeInsets.only(
-            top: topPad + 12,
-            bottom: 12,
-            left: 16,
-            right: 8,
-          ),
-          decoration: BoxDecoration(
-            color: AppTheme.background.withValues(alpha: 0.7),
-            border: const Border(
-              bottom: BorderSide(color: AppTheme.border),
+    return RepaintBoundary(
+      child: ClipRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Container(
+            padding: EdgeInsets.only(
+              top: topPad + 12,
+              bottom: 12,
+              left: 16,
+              right: 8,
             ),
-          ),
-          child: Row(
-            children: [
-              Expanded(child: title),
-              ...actions,
-            ],
+            decoration: BoxDecoration(
+              color: AppTheme.background.withValues(alpha: 0.7),
+              border: const Border(
+                bottom: BorderSide(color: AppTheme.border),
+              ),
+            ),
+            child: Row(
+              children: [
+                Expanded(child: title),
+                ...actions,
+              ],
+            ),
           ),
         ),
       ),
@@ -680,7 +676,7 @@ class GlassAlertDialog extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(20),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: AlertDialog(
           backgroundColor: AppTheme.backgroundSecondary,
           shape: RoundedRectangleBorder(

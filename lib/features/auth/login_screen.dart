@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -181,19 +180,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
           ),
         ],
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(19),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-          child: Center(
-            child: Text(
-              'D',
-              style: GoogleFonts.outfit(
-                color: AppTheme.primary,
-                fontSize: 42,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
+      child: Center(
+        child: Text(
+          'D',
+          style: GoogleFonts.outfit(
+            color: AppTheme.primary,
+            fontSize: 42,
+            fontWeight: FontWeight.w800,
           ),
         ),
       ),
@@ -304,7 +297,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
 
 // ─── Animated Delay Wrapper ───────────────────────────────────────────────────
 
-class _AnimDelay extends StatelessWidget {
+class _AnimDelay extends StatefulWidget {
   final double delay;
   final AnimationController controller;
   final Widget child;
@@ -316,27 +309,40 @@ class _AnimDelay extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final begin = delay;
-    final end = (delay + 0.5).clamp(0.0, 1.0);
-    final fade = Tween<double>(begin: 0, end: 1).animate(
+  State<_AnimDelay> createState() => _AnimDelayState();
+}
+
+class _AnimDelayState extends State<_AnimDelay> {
+  late final Animation<double> _fade;
+  late final Animation<Offset> _slide;
+
+  @override
+  void initState() {
+    super.initState();
+    final begin = widget.delay;
+    final end = (widget.delay + 0.5).clamp(0.0, 1.0);
+    _fade = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
-        parent: controller,
+        parent: widget.controller,
         curve: Interval(begin, end, curve: Curves.easeOut),
       ),
     );
-    final slide = Tween<Offset>(
+    _slide = Tween<Offset>(
       begin: const Offset(0, 0.08),
       end: Offset.zero,
     ).animate(
       CurvedAnimation(
-        parent: controller,
+        parent: widget.controller,
         curve: Interval(begin, end, curve: Curves.easeOutCubic),
       ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return FadeTransition(
-      opacity: fade,
-      child: SlideTransition(position: slide, child: child),
+      opacity: _fade,
+      child: SlideTransition(position: _slide, child: widget.child),
     );
   }
 }

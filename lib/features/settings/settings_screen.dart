@@ -61,39 +61,41 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         child: Column(
           children: [
             // Custom AppBar
-            ClipRect(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                child: Container(
-                  padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).padding.top + 8,
-                    bottom: 8,
-                    left: 4,
-                    right: 16,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppTheme.background.withValues(alpha: 0.7),
-                    border: const Border(
-                      bottom: BorderSide(color: AppTheme.border),
+            RepaintBoundary(
+              child: ClipRect(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  child: Container(
+                    padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).padding.top + 8,
+                      bottom: 8,
+                      left: 4,
+                      right: 16,
                     ),
-                  ),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.arrow_back,
-                            color: AppTheme.textPrimary),
-                        onPressed: () => context.pop(),
+                    decoration: BoxDecoration(
+                      color: AppTheme.background.withValues(alpha: 0.7),
+                      border: const Border(
+                        bottom: BorderSide(color: AppTheme.border),
                       ),
-                      Text(
-                        l10n.settings.toUpperCase(),
-                        style: GoogleFonts.outfit(
-                          color: AppTheme.textPrimary,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 2.0,
+                    ),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.arrow_back,
+                              color: AppTheme.textPrimary),
+                          onPressed: () => context.pop(),
                         ),
-                      ),
-                    ],
+                        Text(
+                          l10n.settings.toUpperCase(),
+                          style: GoogleFonts.outfit(
+                            color: AppTheme.textPrimary,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 2.0,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -303,10 +305,8 @@ class _LanguageRow extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final locale = ref.watch(localeProvider);
-    final systemLang = Localizations.localeOf(context).languageCode;
 
-    final isEnSelected = locale?.languageCode == 'en' ||
-        (locale == null && systemLang != 'pl');
+    final isEnSelected = locale == null || locale.languageCode == 'en';
     final isPlSelected = locale?.languageCode == 'pl';
 
     return Wrap(

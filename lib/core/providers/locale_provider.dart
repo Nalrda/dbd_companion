@@ -11,7 +11,7 @@ class LocaleNotifier extends StateNotifier<Locale?> {
 
   static Locale? _loadLocale(SharedPreferences prefs) {
     final langCode = prefs.getString(_key);
-    if (langCode == null) return null;
+    if (langCode == null) return const Locale('en');
     return Locale(langCode);
   }
 
