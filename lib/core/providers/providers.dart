@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/build.dart';
 import '../models/group_plan.dart';
@@ -7,6 +8,8 @@ import '../models/map_callout.dart';
 import '../models/match_record.dart';
 import '../models/offering.dart';
 import '../models/perk.dart';
+import '../models/addon.dart';
+import '../repositories/addon_repository.dart';
 import '../repositories/build_repository.dart';
 import '../repositories/group_plan_repository.dart';
 import '../repositories/item_repository.dart';
@@ -51,6 +54,7 @@ class BuildsNotifier extends AsyncNotifier<List<Build>> {
     String? addon1,
     String? addon2,
     String? offeringId,
+    String? killerId,
   }) async {
     final newBuild = await BuildRepository.instance.createBuild(
       name: name,
@@ -62,6 +66,7 @@ class BuildsNotifier extends AsyncNotifier<List<Build>> {
       addon1: addon1,
       addon2: addon2,
       offeringId: offeringId,
+      killerId: killerId,
     );
     ref.invalidateSelf();
     return newBuild;
@@ -176,6 +181,18 @@ final killersProvider = FutureProvider<List<Killer>>((ref) async {
   return KillerRepository.instance.getAll();
 });
 
+// ─── Addon providers ──────────────────────────────────────────────────────────
+
+final killerAddonsProvider =
+    FutureProvider.family<List<Addon>, String>((ref, killerId) async {
+  return AddonRepository.instance.getKillerAddons(killerId);
+});
+
+final itemAddonsProvider =
+    FutureProvider.family<List<Addon>, String>((ref, itemCategory) async {
+  return AddonRepository.instance.getItemAddons(itemCategory);
+});
+
 // ─── Match providers ──────────────────────────────────────────────────────────
 
 final matchesProvider =
@@ -211,6 +228,91 @@ class MatchesNotifier extends AsyncNotifier<List<MatchRecord>> {
   Future<void> delete(String id) async {
     await MatchRepository.instance.delete(id);
     ref.invalidateSelf();
+  }
+}
+
+// ─── Perks filter notifier ───────────────────────────────────────────────────
+
+class PerksFilterState {
+  final String searchQuery;
+  final bool isSurvivor;
+  final bool isSearchVisible;
+  final List<Perk> allPerks;
+  // Changing this key forces the uncontrolled TextField to reset its text.
+  final Object searchFieldKey;
+
+  const PerksFilterState({
+    this.searchQuery = '',
+    this.isSurvivor = true,
+    this.isSearchVisible = false,
+    this.allPerks = const [],
+    this.searchFieldKey = 0,
+  });
+
+  List<Perk> get filteredPerks {
+    final q = searchQuery.toLowerCase().trim();
+    return allPerks.where((p) {
+      final matchRole = p.isSurvivor == isSurvivor;
+      final matchSearch = q.isEmpty ||
+          p.name.toLowerCase().contains(q) ||
+          p.character.toLowerCase().contains(q) ||
+          p.tags.any((t) => t.toLowerCase().contains(q));
+      return matchRole && matchSearch;
+    }).toList();
+  }
+
+  PerksFilterState copyWith({
+    String? searchQuery,
+    bool? isSurvivor,
+    bool? isSearchVisible,
+    List<Perk>? allPerks,
+    Object? searchFieldKey,
+  }) {
+    return PerksFilterState(
+      searchQuery: searchQuery ?? this.searchQuery,
+      isSurvivor: isSurvivor ?? this.isSurvivor,
+      isSearchVisible: isSearchVisible ?? this.isSearchVisible,
+      allPerks: allPerks ?? this.allPerks,
+      searchFieldKey: searchFieldKey ?? this.searchFieldKey,
+    );
+  }
+}
+
+final perksNotifierProvider =
+    NotifierProvider<PerksNotifier, PerksFilterState>(PerksNotifier.new);
+
+class PerksNotifier extends Notifier<PerksFilterState> {
+  @override
+  PerksFilterState build() {
+    // Listen for perk data changes and update only the allPerks field,
+    // preserving filter state across async loads.
+    ref.listen<AsyncValue<List<Perk>>>(allPerksProvider, (_, next) {
+      final perks = next.valueOrNull ?? const [];
+      state = state.copyWith(allPerks: perks);
+    });
+
+    final initialPerks = ref.read(allPerksProvider).valueOrNull ?? const [];
+    return PerksFilterState(allPerks: initialPerks);
+  }
+
+  void updateSearch(String query) {
+    state = state.copyWith(searchQuery: query);
+  }
+
+  void toggleRole(bool isSurvivor) {
+    state = state.copyWith(isSurvivor: isSurvivor);
+  }
+
+  void toggleSearch() {
+    if (state.isSearchVisible) {
+      state = state.copyWith(
+        isSearchVisible: false,
+        searchQuery: '',
+        searchFieldKey: UniqueKey(),
+      );
+    } else {
+      state = state.copyWith(isSearchVisible: true);
+    }
   }
 }
 

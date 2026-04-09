@@ -4,12 +4,16 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../core/models/addon.dart';
 import '../../core/models/build.dart';
 import '../../core/models/item.dart';
+import '../../core/models/killer.dart';
 import '../../core/models/offering.dart';
 import '../../core/models/perk.dart';
 import '../../core/providers/providers.dart';
+import '../../core/repositories/addon_repository.dart';
 import '../../core/repositories/item_repository.dart';
+import '../../core/repositories/killer_repository.dart';
 import '../../core/repositories/offering_repository.dart';
 import '../../core/repositories/perk_repository.dart';
 import '../../core/services/build_share_service.dart';
@@ -57,6 +61,9 @@ class _BuildDetailViewState extends State<_BuildDetailView> {
   List<Perk> _perks = [];
   Item? _item;
   Offering? _offering;
+  Killer? _killer;
+  Addon? _addon1;
+  Addon? _addon2;
 
   @override
   void initState() {
@@ -73,11 +80,25 @@ class _BuildDetailViewState extends State<_BuildDetailView> {
     final offering = widget.build.offeringId != null
         ? await OfferingRepository.instance.getById(widget.build.offeringId!)
         : null;
+    final killer = widget.build.killerId != null
+        ? (await KillerRepository.instance.getAll())
+            .cast<Killer?>()
+            .firstWhere((k) => k?.id == widget.build.killerId, orElse: () => null)
+        : null;
+    final addon1 = widget.build.addon1 != null
+        ? await AddonRepository.instance.getById(widget.build.addon1!)
+        : null;
+    final addon2 = widget.build.addon2 != null
+        ? await AddonRepository.instance.getById(widget.build.addon2!)
+        : null;
     if (mounted) {
       setState(() {
         _perks = perks;
         _item = item;
         _offering = offering;
+        _killer = killer;
+        _addon1 = addon1;
+        _addon2 = addon2;
       });
     }
   }
@@ -237,6 +258,18 @@ class _BuildDetailViewState extends State<_BuildDetailView> {
                           child: PerkCard(perk: e.value),
                         ).animate().fadeIn(delay: (e.key * 50).ms).slideY(begin: 0.05, end: 0)),
 
+                  // Killer (killer only)
+                  if (!widget.build.isSurvivor && _killer != null) ...[
+                    const SizedBox(height: 24),
+                    const SectionHeader(title: 'KILLER'),
+                    const SizedBox(height: 10),
+                    _InfoRow(
+                      icon: Icons.sports_kabaddi,
+                      label: _killer!.name,
+                      sublabel: _killer!.power,
+                    ),
+                  ],
+
                   // Item (survivor only)
                   if (widget.build.isSurvivor && _item != null) ...[
                     const SizedBox(height: 24),
@@ -249,25 +282,26 @@ class _BuildDetailViewState extends State<_BuildDetailView> {
                     ),
                   ],
 
-                  // Add-ons (killer only)
-                  if (!widget.build.isSurvivor &&
-                      ((widget.build.addon1?.isNotEmpty ?? false) ||
-                          (widget.build.addon2?.isNotEmpty ?? false))) ...[
+                  // Add-ons (when either slot is filled)
+                  if (_addon1 != null || _addon2 != null) ...[
                     const SizedBox(height: 24),
-                    const SectionHeader(title: 'ADD-ONS'),
+                    SectionHeader(
+                        title: widget.build.isSurvivor ? 'ITEM ADD-ONS' : 'KILLER ADD-ONS'),
                     const SizedBox(height: 10),
-                    if (widget.build.addon1?.isNotEmpty ?? false)
+                    if (_addon1 != null)
                       Padding(
                         padding: const EdgeInsets.only(bottom: 8),
                         child: _InfoRow(
                           icon: Icons.extension_outlined,
-                          label: widget.build.addon1!,
+                          label: _addon1!.name,
+                          badge: _addon1!.rarity,
                         ),
                       ),
-                    if (widget.build.addon2?.isNotEmpty ?? false)
+                    if (_addon2 != null)
                       _InfoRow(
                         icon: Icons.extension_outlined,
-                        label: widget.build.addon2!,
+                        label: _addon2!.name,
+                        badge: _addon2!.rarity,
                       ),
                   ],
 
@@ -348,8 +382,9 @@ class _InfoRow extends StatelessWidget {
   final IconData icon;
   final String label;
   final String? badge;
+  final String? sublabel;
 
-  const _InfoRow({required this.icon, required this.label, this.badge});
+  const _InfoRow({required this.icon, required this.label, this.badge, this.sublabel});
 
   static Color _rarityColor(String rarity) {
     switch (rarity) {
@@ -375,13 +410,23 @@ class _InfoRow extends StatelessWidget {
           Icon(icon, size: 18, color: AppTheme.textSecondary),
           const SizedBox(width: 10),
           Expanded(
-            child: Text(
-              label,
-              style: GoogleFonts.outfit(
-                color: AppTheme.textPrimary,
-                fontSize: 14,
-              ),
-            ),
+            child: sublabel != null
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(label,
+                          style: GoogleFonts.outfit(
+                              color: AppTheme.textPrimary, fontSize: 14)),
+                      Text(sublabel!,
+                          style: GoogleFonts.outfit(
+                              color: AppTheme.textSecondary, fontSize: 11)),
+                    ],
+                  )
+                : Text(
+                    label,
+                    style: GoogleFonts.outfit(
+                        color: AppTheme.textPrimary, fontSize: 14),
+                  ),
           ),
           if (badge != null && badge != 'none')
             Container(

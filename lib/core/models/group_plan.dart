@@ -55,6 +55,30 @@ class GroupPlan extends HiveObject {
   @HiveField(16)
   String? survivor4OfferingId;
 
+  @HiveField(17)
+  String? survivor1Addon1Id;
+
+  @HiveField(18)
+  String? survivor1Addon2Id;
+
+  @HiveField(19)
+  String? survivor2Addon1Id;
+
+  @HiveField(20)
+  String? survivor2Addon2Id;
+
+  @HiveField(21)
+  String? survivor3Addon1Id;
+
+  @HiveField(22)
+  String? survivor3Addon2Id;
+
+  @HiveField(23)
+  String? survivor4Addon1Id;
+
+  @HiveField(24)
+  String? survivor4Addon2Id;
+
   GroupPlan({
     required this.id,
     required this.name,
@@ -73,6 +97,14 @@ class GroupPlan extends HiveObject {
     this.survivor2OfferingId,
     this.survivor3OfferingId,
     this.survivor4OfferingId,
+    this.survivor1Addon1Id,
+    this.survivor1Addon2Id,
+    this.survivor2Addon1Id,
+    this.survivor2Addon2Id,
+    this.survivor3Addon1Id,
+    this.survivor3Addon2Id,
+    this.survivor4Addon1Id,
+    this.survivor4Addon2Id,
   })  : survivor1PerkIds = survivor1PerkIds ?? [],
         survivor2PerkIds = survivor2PerkIds ?? [],
         survivor3PerkIds = survivor3PerkIds ?? [],
@@ -140,6 +172,46 @@ class GroupPlan extends HiveObject {
     updatedAt = DateTime.now();
   }
 
+  String? getAddon1IdForSurvivor(int index) {
+    switch (index) {
+      case 0: return survivor1Addon1Id;
+      case 1: return survivor2Addon1Id;
+      case 2: return survivor3Addon1Id;
+      case 3: return survivor4Addon1Id;
+      default: return null;
+    }
+  }
+
+  String? getAddon2IdForSurvivor(int index) {
+    switch (index) {
+      case 0: return survivor1Addon2Id;
+      case 1: return survivor2Addon2Id;
+      case 2: return survivor3Addon2Id;
+      case 3: return survivor4Addon2Id;
+      default: return null;
+    }
+  }
+
+  void setAddon1IdForSurvivor(int index, String? id) {
+    switch (index) {
+      case 0: survivor1Addon1Id = id; break;
+      case 1: survivor2Addon1Id = id; break;
+      case 2: survivor3Addon1Id = id; break;
+      case 3: survivor4Addon1Id = id; break;
+    }
+    updatedAt = DateTime.now();
+  }
+
+  void setAddon2IdForSurvivor(int index, String? id) {
+    switch (index) {
+      case 0: survivor1Addon2Id = id; break;
+      case 1: survivor2Addon2Id = id; break;
+      case 2: survivor3Addon2Id = id; break;
+      case 3: survivor4Addon2Id = id; break;
+    }
+    updatedAt = DateTime.now();
+  }
+
   int get totalPerksCount =>
       survivor1PerkIds.length +
       survivor2PerkIds.length +
@@ -164,6 +236,14 @@ class GroupPlan extends HiveObject {
     'survivor2OfferingId': survivor2OfferingId,
     'survivor3OfferingId': survivor3OfferingId,
     'survivor4OfferingId': survivor4OfferingId,
+    'survivor1Addon1Id': survivor1Addon1Id,
+    'survivor1Addon2Id': survivor1Addon2Id,
+    'survivor2Addon1Id': survivor2Addon1Id,
+    'survivor2Addon2Id': survivor2Addon2Id,
+    'survivor3Addon1Id': survivor3Addon1Id,
+    'survivor3Addon2Id': survivor3Addon2Id,
+    'survivor4Addon1Id': survivor4Addon1Id,
+    'survivor4Addon2Id': survivor4Addon2Id,
   };
 
   factory GroupPlan.fromJson(Map<String, dynamic> json) => GroupPlan(
@@ -184,5 +264,13 @@ class GroupPlan extends HiveObject {
     survivor2OfferingId: json['survivor2OfferingId'] as String?,
     survivor3OfferingId: json['survivor3OfferingId'] as String?,
     survivor4OfferingId: json['survivor4OfferingId'] as String?,
+    survivor1Addon1Id: json['survivor1Addon1Id'] as String?,
+    survivor1Addon2Id: json['survivor1Addon2Id'] as String?,
+    survivor2Addon1Id: json['survivor2Addon1Id'] as String?,
+    survivor2Addon2Id: json['survivor2Addon2Id'] as String?,
+    survivor3Addon1Id: json['survivor3Addon1Id'] as String?,
+    survivor3Addon2Id: json['survivor3Addon2Id'] as String?,
+    survivor4Addon1Id: json['survivor4Addon1Id'] as String?,
+    survivor4Addon2Id: json['survivor4Addon2Id'] as String?,
   );
 }

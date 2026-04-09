@@ -47,6 +47,10 @@ class Build extends HiveObject {
   @HiveField(12)
   bool isFavorite;
 
+  /// Killer id from killers.json (killer builds only).
+  @HiveField(13)
+  String? killerId;
+
   Build({
     required this.id,
     required this.name,
@@ -61,6 +65,7 @@ class Build extends HiveObject {
     this.addon2,
     this.offeringId,
     this.isFavorite = false,
+    this.killerId,
   })  : tags = tags ?? [],
         createdAt = createdAt ?? DateTime.now(),
         updatedAt = updatedAt ?? DateTime.now();
@@ -77,6 +82,7 @@ class Build extends HiveObject {
     Object? addon1 = _sentinel,
     Object? addon2 = _sentinel,
     Object? offeringId = _sentinel,
+    Object? killerId = _sentinel,
     bool? isFavorite,
   }) {
     return Build(
@@ -92,6 +98,7 @@ class Build extends HiveObject {
       addon1: addon1 == _sentinel ? this.addon1 : addon1 as String?,
       addon2: addon2 == _sentinel ? this.addon2 : addon2 as String?,
       offeringId: offeringId == _sentinel ? this.offeringId : offeringId as String?,
+      killerId: killerId == _sentinel ? this.killerId : killerId as String?,
       isFavorite: isFavorite ?? this.isFavorite,
     );
   }
@@ -111,6 +118,7 @@ class Build extends HiveObject {
       'addon2': addon2,
       'offeringId': offeringId,
       'isFavorite': isFavorite,
+      'killerId': killerId,
     };
   }
 
@@ -129,6 +137,7 @@ class Build extends HiveObject {
       addon2: json['addon2'] as String?,
       offeringId: json['offeringId'] as String?,
       isFavorite: json['isFavorite'] as bool? ?? false,
+      killerId: json['killerId'] as String?,
     );
   }
 }

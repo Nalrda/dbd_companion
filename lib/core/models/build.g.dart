@@ -30,13 +30,14 @@ class BuildAdapter extends TypeAdapter<Build> {
       addon2: fields[10] as String?,
       offeringId: fields[11] as String?,
       isFavorite: fields[12] as bool? ?? false,
+      killerId: fields[13] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Build obj) {
     writer
-      ..writeByte(13)
+      ..writeByte(14)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -62,7 +63,9 @@ class BuildAdapter extends TypeAdapter<Build> {
       ..writeByte(11)
       ..write(obj.offeringId)
       ..writeByte(12)
-      ..write(obj.isFavorite);
+      ..write(obj.isFavorite)
+      ..writeByte(13)
+      ..write(obj.killerId);
   }
 
   @override

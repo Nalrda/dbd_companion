@@ -30,13 +30,21 @@ class GroupPlanAdapter extends TypeAdapter<GroupPlan> {
       survivor2OfferingId: fields[14] as String?,
       survivor3OfferingId: fields[15] as String?,
       survivor4OfferingId: fields[16] as String?,
+      survivor1Addon1Id: fields[17] as String?,
+      survivor1Addon2Id: fields[18] as String?,
+      survivor2Addon1Id: fields[19] as String?,
+      survivor2Addon2Id: fields[20] as String?,
+      survivor3Addon1Id: fields[21] as String?,
+      survivor3Addon2Id: fields[22] as String?,
+      survivor4Addon1Id: fields[23] as String?,
+      survivor4Addon2Id: fields[24] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, GroupPlan obj) {
     writer
-      ..writeByte(17)
+      ..writeByte(25)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -70,7 +78,23 @@ class GroupPlanAdapter extends TypeAdapter<GroupPlan> {
       ..writeByte(15)
       ..write(obj.survivor3OfferingId)
       ..writeByte(16)
-      ..write(obj.survivor4OfferingId);
+      ..write(obj.survivor4OfferingId)
+      ..writeByte(17)
+      ..write(obj.survivor1Addon1Id)
+      ..writeByte(18)
+      ..write(obj.survivor1Addon2Id)
+      ..writeByte(19)
+      ..write(obj.survivor2Addon1Id)
+      ..writeByte(20)
+      ..write(obj.survivor2Addon2Id)
+      ..writeByte(21)
+      ..write(obj.survivor3Addon1Id)
+      ..writeByte(22)
+      ..write(obj.survivor3Addon2Id)
+      ..writeByte(23)
+      ..write(obj.survivor4Addon1Id)
+      ..writeByte(24)
+      ..write(obj.survivor4Addon2Id);
   }
 
   @override

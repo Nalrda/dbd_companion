@@ -1,0 +1,477 @@
+{
+  "killer_addons": {
+    "kc_001": [
+      {"id": "kc001_a01", "name": "Rusted Jaws",        "rarity": "common"},
+      {"id": "kc001_a02", "name": "Tar Bottle",          "rarity": "common"},
+      {"id": "kc001_a03", "name": "Fastening Tools",     "rarity": "uncommon"},
+      {"id": "kc001_a04", "name": "Logwood Dye",         "rarity": "uncommon"},
+      {"id": "kc001_a05", "name": "Stitched Bag",        "rarity": "rare"},
+      {"id": "kc001_a06", "name": "Coiled Spring",       "rarity": "rare"},
+      {"id": "kc001_a07", "name": "Trapper Bag",         "rarity": "very_rare"},
+      {"id": "kc001_a08", "name": "Iridescent Stone",    "rarity": "ultra_rare"}
+    ],
+    "kc_002": [
+      {"id": "kc002_a01", "name": "Bone Clapper",              "rarity": "common"},
+      {"id": "kc002_a02", "name": "Blind Warrior's Bell",      "rarity": "common"},
+      {"id": "kc002_a03", "name": "The Ghost",                 "rarity": "uncommon"},
+      {"id": "kc002_a04", "name": "Windstorm",                 "rarity": "uncommon"},
+      {"id": "kc002_a05", "name": "Shadow Dance",              "rarity": "rare"},
+      {"id": "kc002_a06", "name": "Coxcombed Clapper",         "rarity": "rare"},
+      {"id": "kc002_a07", "name": "Ornate Bell",               "rarity": "very_rare"},
+      {"id": "kc002_a08", "name": "Iridescent Bell",           "rarity": "ultra_rare"}
+    ],
+    "kc_003": [
+      {"id": "kc003_a01", "name": "Homemade Muffler",      "rarity": "common"},
+      {"id": "kc003_a02", "name": "Lopro Chain",           "rarity": "common"},
+      {"id": "kc003_a03", "name": "Tuned Carburetor",      "rarity": "uncommon"},
+      {"id": "kc003_a04", "name": "Primer Bulb",           "rarity": "uncommon"},
+      {"id": "kc003_a05", "name": "Apex Muffler",          "rarity": "rare"},
+      {"id": "kc003_a06", "name": "Crash Bar",             "rarity": "rare"},
+      {"id": "kc003_a07", "name": "Doom Engravings",       "rarity": "very_rare"},
+      {"id": "kc003_a08", "name": "The Beast's Marks",     "rarity": "ultra_rare"}
+    ],
+    "kc_004": [
+      {"id": "kc004_a01", "name": "Fragile Wheeze",        "rarity": "common"},
+      {"id": "kc004_a02", "name": "Anxious Gasp",          "rarity": "common"},
+      {"id": "kc004_a03", "name": "Torn Bookmark",         "rarity": "uncommon"},
+      {"id": "kc004_a04", "name": "Soot-Blackened Veil",   "rarity": "uncommon"},
+      {"id": "kc004_a05", "name": "Adrenaline Vial",       "rarity": "rare"},
+      {"id": "kc004_a06", "name": "Kavanagh's Last Breath","rarity": "rare"},
+      {"id": "kc004_a07", "name": "Lullaby for a God",     "rarity": "very_rare"},
+      {"id": "kc004_a08", "name": "Class Photo",           "rarity": "ultra_rare"}
+    ],
+    "kc_005": [
+      {"id": "kc005_a01", "name": "Boyfriend's Memo",      "rarity": "common"},
+      {"id": "kc005_a02", "name": "Boyfriend's Shoe",      "rarity": "common"},
+      {"id": "kc005_a03", "name": "Scratched Mirror",      "rarity": "uncommon"},
+      {"id": "kc005_a04", "name": "Hair Tie",              "rarity": "uncommon"},
+      {"id": "kc005_a05", "name": "Phero Mones",           "rarity": "rare"},
+      {"id": "kc005_a06", "name": "Judith's Tombstone",    "rarity": "rare"},
+      {"id": "kc005_a07", "name": "Tombstone Piece",       "rarity": "very_rare"},
+      {"id": "kc005_a08", "name": "Tombstone",             "rarity": "ultra_rare"}
+    ],
+    "kc_006": [
+      {"id": "kc006_a01", "name": "Vigo's Jar of Salty Lips", "rarity": "common"},
+      {"id": "kc006_a02", "name": "Scarred Hand",              "rarity": "common"},
+      {"id": "kc006_a03", "name": "Willow Wreath",             "rarity": "uncommon"},
+      {"id": "kc006_a04", "name": "Rusty Shackles",            "rarity": "uncommon"},
+      {"id": "kc006_a05", "name": "Dried Cicada",              "rarity": "rare"},
+      {"id": "kc006_a06", "name": "Waterlogged Shoe",          "rarity": "rare"},
+      {"id": "kc006_a07", "name": "Mint Rag",                  "rarity": "very_rare"},
+      {"id": "kc006_a08", "name": "Iridescent Stone",          "rarity": "ultra_rare"}
+    ],
+    "kc_007": [
+      {"id": "kc007_a01", "name": "Needle and Thread",    "rarity": "common"},
+      {"id": "kc007_a02", "name": "Syringe",              "rarity": "common"},
+      {"id": "kc007_a03", "name": "Calm",                 "rarity": "uncommon"},
+      {"id": "kc007_a04", "name": "Discipline",           "rarity": "uncommon"},
+      {"id": "kc007_a05", "name": "Order",                "rarity": "rare"},
+      {"id": "kc007_a06", "name": "Scratched Ruler",      "rarity": "rare"},
+      {"id": "kc007_a07", "name": "Iridescent King",      "rarity": "very_rare"},
+      {"id": "kc007_a08", "name": "Carter's Notes",       "rarity": "ultra_rare"}
+    ],
+    "kc_008": [
+      {"id": "kc008_a01", "name": "Hatchet Carving",      "rarity": "common"},
+      {"id": "kc008_a02", "name": "Begrimed Chain",       "rarity": "common"},
+      {"id": "kc008_a03", "name": "Wooden Fox",           "rarity": "uncommon"},
+      {"id": "kc008_a04", "name": "Infantry Belt",        "rarity": "uncommon"},
+      {"id": "kc008_a05", "name": "Wailing Blade",        "rarity": "rare"},
+      {"id": "kc008_a06", "name": "Soldier's Puttees",    "rarity": "rare"},
+      {"id": "kc008_a07", "name": "Huntress Lullaby",     "rarity": "very_rare"},
+      {"id": "kc008_a08", "name": "Iridescent Head",      "rarity": "ultra_rare"}
+    ],
+    "kc_009": [
+      {"id": "kc009_a01", "name": "Tuned Primer",           "rarity": "common"},
+      {"id": "kc009_a02", "name": "Stock Primer Bulb",      "rarity": "common"},
+      {"id": "kc009_a03", "name": "The Chilli",             "rarity": "uncommon"},
+      {"id": "kc009_a04", "name": "Carburetor Tuning Guide","rarity": "uncommon"},
+      {"id": "kc009_a05", "name": "Hattie's Keepsake",      "rarity": "rare"},
+      {"id": "kc009_a06", "name": "Sledge",                 "rarity": "rare"},
+      {"id": "kc009_a07", "name": "Memorial Blueprint",     "rarity": "very_rare"},
+      {"id": "kc009_a08", "name": "Judith's Keepsake",      "rarity": "ultra_rare"}
+    ],
+    "kc_010": [
+      {"id": "kc010_a01", "name": "Dream Catcher",        "rarity": "common"},
+      {"id": "kc010_a02", "name": "Sheep Block",          "rarity": "common"},
+      {"id": "kc010_a03", "name": "Rotten Holly",         "rarity": "uncommon"},
+      {"id": "kc010_a04", "name": "Paint Thinner",        "rarity": "uncommon"},
+      {"id": "kc010_a05", "name": "Swing Chain",          "rarity": "rare"},
+      {"id": "kc010_a06", "name": "Fragmented Slate",     "rarity": "rare"},
+      {"id": "kc010_a07", "name": "Red Paint Brush",      "rarity": "very_rare"},
+      {"id": "kc010_a08", "name": "Iridescent Seal",      "rarity": "ultra_rare"}
+    ],
+    "kc_011": [
+      {"id": "kc011_a01", "name": "Jigsaw's Sketch",      "rarity": "common"},
+      {"id": "kc011_a02", "name": "Bag of Gears",         "rarity": "common"},
+      {"id": "kc011_a03", "name": "Rules Set No. 2",      "rarity": "uncommon"},
+      {"id": "kc011_a04", "name": "Combat Straps",        "rarity": "uncommon"},
+      {"id": "kc011_a05", "name": "Razor Wire",           "rarity": "rare"},
+      {"id": "kc011_a06", "name": "Workshop Grease",      "rarity": "rare"},
+      {"id": "kc011_a07", "name": "Amanda's Letter",      "rarity": "very_rare"},
+      {"id": "kc011_a08", "name": "Crate of Gears",       "rarity": "ultra_rare"}
+    ],
+    "kc_012": [
+      {"id": "kc012_a01", "name": "Motley Brew",          "rarity": "common"},
+      {"id": "kc012_a02", "name": "Three-Legged Race",    "rarity": "common"},
+      {"id": "kc012_a03", "name": "Solvent Jug",          "rarity": "uncommon"},
+      {"id": "kc012_a04", "name": "Garish Makeup Box",    "rarity": "uncommon"},
+      {"id": "kc012_a05", "name": "Berus' Toxin",         "rarity": "rare"},
+      {"id": "kc012_a06", "name": "Bloody Coil",          "rarity": "rare"},
+      {"id": "kc012_a07", "name": "Afterpiece Tonic",     "rarity": "very_rare"},
+      {"id": "kc012_a08", "name": "Iridescent Jug",       "rarity": "ultra_rare"}
+    ],
+    "kc_013": [
+      {"id": "kc013_a01", "name": "Dried Cherry Blossom",  "rarity": "common"},
+      {"id": "kc013_a02", "name": "Yakuyoke Amulet",       "rarity": "common"},
+      {"id": "kc013_a03", "name": "Haunting Guise",        "rarity": "uncommon"},
+      {"id": "kc013_a04", "name": "Father's Glasses",      "rarity": "uncommon"},
+      {"id": "kc013_a05", "name": "Kintsugi Teacup",       "rarity": "rare"},
+      {"id": "kc013_a06", "name": "Soul Starved",          "rarity": "rare"},
+      {"id": "kc013_a07", "name": "Mother-Daughter Ring",  "rarity": "very_rare"},
+      {"id": "kc013_a08", "name": "Iridescent Pendant",    "rarity": "ultra_rare"}
+    ],
+    "kc_014": [
+      {"id": "kc014_a01", "name": "Cold Dirt",            "rarity": "common"},
+      {"id": "kc014_a02", "name": "Legion Pin",           "rarity": "common"},
+      {"id": "kc014_a03", "name": "Franks' Mixtape",      "rarity": "uncommon"},
+      {"id": "kc014_a04", "name": "Julie's Mixtape",      "rarity": "uncommon"},
+      {"id": "kc014_a05", "name": "Susie's Mixtape",      "rarity": "rare"},
+      {"id": "kc014_a06", "name": "Joey's Mixtape",       "rarity": "rare"},
+      {"id": "kc014_a07", "name": "Mural Sketch",         "rarity": "very_rare"},
+      {"id": "kc014_a08", "name": "Iridescent Button",    "rarity": "ultra_rare"}
+    ],
+    "kc_015": [
+      {"id": "kc015_a01", "name": "Mangled Holly",        "rarity": "common"},
+      {"id": "kc015_a02", "name": "Defiled Tablet",       "rarity": "common"},
+      {"id": "kc015_a03", "name": "Black Incense",        "rarity": "uncommon"},
+      {"id": "kc015_a04", "name": "Corrupted Tablet",     "rarity": "uncommon"},
+      {"id": "kc015_a05", "name": "Ancient Nectar",       "rarity": "rare"},
+      {"id": "kc015_a06", "name": "Vile Bile",            "rarity": "rare"},
+      {"id": "kc015_a07", "name": "Iridescent Seal",      "rarity": "very_rare"},
+      {"id": "kc015_a08", "name": "Plague's Reach",       "rarity": "ultra_rare"}
+    ],
+    "kc_016": [
+      {"id": "kc016_a01", "name": "Leather Straps",         "rarity": "common"},
+      {"id": "kc016_a02", "name": "Stolen Sketchbook",      "rarity": "common"},
+      {"id": "kc016_a03", "name": "Night Vision Monocular", "rarity": "uncommon"},
+      {"id": "kc016_a04", "name": "Exposed Nerve",          "rarity": "uncommon"},
+      {"id": "kc016_a05", "name": "The Ghost's Camera",     "rarity": "rare"},
+      {"id": "kc016_a06", "name": "Olsen's Wallet",         "rarity": "rare"},
+      {"id": "kc016_a07", "name": "Ghost Face Gown",        "rarity": "very_rare"},
+      {"id": "kc016_a08", "name": "Chewed Pen",             "rarity": "ultra_rare"}
+    ],
+    "kc_017": [
+      {"id": "kc017_a01", "name": "Shattered Sode",         "rarity": "common"},
+      {"id": "kc017_a02", "name": "Demon Bident",           "rarity": "common"},
+      {"id": "kc017_a03", "name": "Funeral Daisies",        "rarity": "uncommon"},
+      {"id": "kc017_a04", "name": "Gravedigger's Shovel",   "rarity": "uncommon"},
+      {"id": "kc017_a05", "name": "Kanabo",                 "rarity": "rare"},
+      {"id": "kc017_a06", "name": "Accolades in Battle",    "rarity": "rare"},
+      {"id": "kc017_a07", "name": "Iridescent Crimson Dagger", "rarity": "very_rare"},
+      {"id": "kc017_a08", "name": "Oni's Horn",             "rarity": "ultra_rare"}
+    ],
+    "kc_018": [
+      {"id": "kc018_a01", "name": "Scarred Hand",           "rarity": "common"},
+      {"id": "kc018_a02", "name": "Shiny Pin",              "rarity": "common"},
+      {"id": "kc018_a03", "name": "Poker Chip",             "rarity": "uncommon"},
+      {"id": "kc018_a04", "name": "Rites of Judgement",     "rarity": "uncommon"},
+      {"id": "kc018_a05", "name": "Hell-Bound Chain",       "rarity": "rare"},
+      {"id": "kc018_a06", "name": "Bayshore's Gold Tooth",  "rarity": "rare"},
+      {"id": "kc018_a07", "name": "Warden's Keys",          "rarity": "very_rare"},
+      {"id": "kc018_a08", "name": "Iridescent Coin",        "rarity": "ultra_rare"}
+    ],
+    "kc_019": [
+      {"id": "kc019_a01", "name": "Punishment Knife",       "rarity": "common"},
+      {"id": "kc019_a02", "name": "Seized Ram",             "rarity": "common"},
+      {"id": "kc019_a03", "name": "Slippery Meat",          "rarity": "uncommon"},
+      {"id": "kc019_a04", "name": "Pyramid's Gaze",         "rarity": "uncommon"},
+      {"id": "kc019_a05", "name": "Rusty Chains",           "rarity": "rare"},
+      {"id": "kc019_a06", "name": "Torment Wire",           "rarity": "rare"},
+      {"id": "kc019_a07", "name": "Chains of Torment",      "rarity": "very_rare"},
+      {"id": "kc019_a08", "name": "Iridescent Seal",        "rarity": "ultra_rare"}
+    ],
+    "kc_020": [
+      {"id": "kc020_a01", "name": "Blighted Crow",          "rarity": "common"},
+      {"id": "kc020_a02", "name": "Summoning Stone",        "rarity": "common"},
+      {"id": "kc020_a03", "name": "Stormwalker's Elixir",   "rarity": "uncommon"},
+      {"id": "kc020_a04", "name": "Pustu-Vials",            "rarity": "uncommon"},
+      {"id": "kc020_a05", "name": "Blighted Serum",         "rarity": "rare"},
+      {"id": "kc020_a06", "name": "Alchemist's Ring",       "rarity": "rare"},
+      {"id": "kc020_a07", "name": "Vigo's Brain Hemisphere","rarity": "very_rare"},
+      {"id": "kc020_a08", "name": "Iridescent Blight Tag",  "rarity": "ultra_rare"}
+    ],
+    "kc_021": [
+      {"id": "kc021_a01", "name": "Toy Sword",              "rarity": "common"},
+      {"id": "kc021_a02", "name": "Toy Hammer",             "rarity": "common"},
+      {"id": "kc021_a03", "name": "La Llorona's Veil",      "rarity": "uncommon"},
+      {"id": "kc021_a04", "name": "Madeleine's Perfume",    "rarity": "uncommon"},
+      {"id": "kc021_a05", "name": "Victor's Remains",       "rarity": "rare"},
+      {"id": "kc021_a06", "name": "Charlotte's Embrace",    "rarity": "rare"},
+      {"id": "kc021_a07", "name": "Blood Bond",             "rarity": "very_rare"},
+      {"id": "kc021_a08", "name": "Iridescent Locket",      "rarity": "ultra_rare"}
+    ],
+    "kc_022": [
+      {"id": "kc022_a01", "name": "Soloist's Lament",       "rarity": "common"},
+      {"id": "kc022_a02", "name": "Fizz-Spin Soda",         "rarity": "common"},
+      {"id": "kc022_a03", "name": "Compound Blade",         "rarity": "uncommon"},
+      {"id": "kc022_a04", "name": "Ji-Woon's Autograph",    "rarity": "uncommon"},
+      {"id": "kc022_a05", "name": "Whirling Blade",         "rarity": "rare"},
+      {"id": "kc022_a06", "name": "Song of Blades",         "rarity": "rare"},
+      {"id": "kc022_a07", "name": "All-Kill",               "rarity": "very_rare"},
+      {"id": "kc022_a08", "name": "Iridescent Photocard",   "rarity": "ultra_rare"}
+    ],
+    "kc_023": [
+      {"id": "kc023_a01", "name": "Marvin's Blood",         "rarity": "common"},
+      {"id": "kc023_a02", "name": "Leather Loop",           "rarity": "common"},
+      {"id": "kc023_a03", "name": "T-Virus Sample",         "rarity": "uncommon"},
+      {"id": "kc023_a04", "name": "B.O.W. Field Disruptor", "rarity": "uncommon"},
+      {"id": "kc023_a05", "name": "Nemesis's Horn",         "rarity": "rare"},
+      {"id": "kc023_a06", "name": "Tyrant's Mirror",        "rarity": "rare"},
+      {"id": "kc023_a07", "name": "Nemesis's Tentacle",     "rarity": "very_rare"},
+      {"id": "kc023_a08", "name": "Iridescent Umbrella Badge", "rarity": "ultra_rare"}
+    ],
+    "kc_024": [
+      {"id": "kc024_a01", "name": "Barbs",                  "rarity": "common"},
+      {"id": "kc024_a02", "name": "Severed Hands",          "rarity": "common"},
+      {"id": "kc024_a03", "name": "Grim Embrace",           "rarity": "uncommon"},
+      {"id": "kc024_a04", "name": "Festering Hemlock",      "rarity": "uncommon"},
+      {"id": "kc024_a05", "name": "Brood of Torment",       "rarity": "rare"},
+      {"id": "kc024_a06", "name": "Crow's Eye",             "rarity": "rare"},
+      {"id": "kc024_a07", "name": "Dire Crow",              "rarity": "very_rare"},
+      {"id": "kc024_a08", "name": "Iridescent Quill",       "rarity": "ultra_rare"}
+    ],
+    "kc_025": [
+      {"id": "kc025_a01", "name": "Padlock",                "rarity": "common"},
+      {"id": "kc025_a02", "name": "Vestigial Compound",     "rarity": "common"},
+      {"id": "kc025_a03", "name": "Lengths of Lament",      "rarity": "uncommon"},
+      {"id": "kc025_a04", "name": "Flesh and Mud",          "rarity": "uncommon"},
+      {"id": "kc025_a05", "name": "Lock of Hair",           "rarity": "rare"},
+      {"id": "kc025_a06", "name": "Pale Rose",              "rarity": "rare"},
+      {"id": "kc025_a07", "name": "Coat of Eyes",           "rarity": "very_rare"},
+      {"id": "kc025_a08", "name": "Iridescent Lament",      "rarity": "ultra_rare"}
+    ],
+    "kc_026": [
+      {"id": "kc026_a01", "name": "Blade Schematics",       "rarity": "common"},
+      {"id": "kc026_a02", "name": "Broken Tracker",         "rarity": "common"},
+      {"id": "kc026_a03", "name": "Drone Part",             "rarity": "uncommon"},
+      {"id": "kc026_a04", "name": "Tracking Software",      "rarity": "uncommon"},
+      {"id": "kc026_a05", "name": "Hound Drone Disc",       "rarity": "rare"},
+      {"id": "kc026_a06", "name": "Drone Design",           "rarity": "rare"},
+      {"id": "kc026_a07", "name": "Network Access Chip",    "rarity": "very_rare"},
+      {"id": "kc026_a08", "name": "Iridescent Drone",       "rarity": "ultra_rare"}
+    ],
+    "kc_027": [
+      {"id": "kc027_a01", "name": "Strange Design",         "rarity": "common"},
+      {"id": "kc027_a02", "name": "Fetish",                 "rarity": "common"},
+      {"id": "kc027_a03", "name": "Contaminated Medicine",  "rarity": "uncommon"},
+      {"id": "kc027_a04", "name": "Fractured Jar",          "rarity": "uncommon"},
+      {"id": "kc027_a05", "name": "Brand New Part",         "rarity": "rare"},
+      {"id": "kc027_a06", "name": "UVX Emitter",            "rarity": "rare"},
+      {"id": "kc027_a07", "name": "Necronomicon",           "rarity": "very_rare"},
+      {"id": "kc027_a08", "name": "Iridescent UVX Core",    "rarity": "ultra_rare"}
+    ],
+    "kc_028": [
+      {"id": "kc028_a01", "name": "Depleted Lament",        "rarity": "common"},
+      {"id": "kc028_a02", "name": "Chatterer's Tooth",      "rarity": "common"},
+      {"id": "kc028_a03", "name": "Occult Impalement",      "rarity": "uncommon"},
+      {"id": "kc028_a04", "name": "Pinhead's Design",       "rarity": "uncommon"},
+      {"id": "kc028_a05", "name": "LeMarchand's Puzzle Box","rarity": "rare"},
+      {"id": "kc028_a06", "name": "Desire Engine",          "rarity": "rare"},
+      {"id": "kc028_a07", "name": "Lament Configuration",   "rarity": "very_rare"},
+      {"id": "kc028_a08", "name": "Iridescent Lament",      "rarity": "ultra_rare"}
+    ],
+    "kc_029": [
+      {"id": "kc029_a01", "name": "Shattered Bracelet",     "rarity": "common"},
+      {"id": "kc029_a02", "name": "Waterlogged Shoe",       "rarity": "common"},
+      {"id": "kc029_a03", "name": "Filmed Remembrance",     "rarity": "uncommon"},
+      {"id": "kc029_a04", "name": "Torn Curtain",           "rarity": "uncommon"},
+      {"id": "kc029_a05", "name": "Distorted Tape",         "rarity": "rare"},
+      {"id": "kc029_a06", "name": "Rotten Offerings",       "rarity": "rare"},
+      {"id": "kc029_a07", "name": "Cursed VHS",             "rarity": "very_rare"},
+      {"id": "kc029_a08", "name": "Iridescent Tape",        "rarity": "ultra_rare"}
+    ],
+    "kc_030": [
+      {"id": "kc030_a01", "name": "Dissolved Reagent",      "rarity": "common"},
+      {"id": "kc030_a02", "name": "Collapsed Floor",        "rarity": "common"},
+      {"id": "kc030_a03", "name": "Loose Cuffs",            "rarity": "uncommon"},
+      {"id": "kc030_a04", "name": "Vine Whip",              "rarity": "uncommon"},
+      {"id": "kc030_a05", "name": "Virulent Serum",         "rarity": "rare"},
+      {"id": "kc030_a06", "name": "Crimson Jewel",          "rarity": "rare"},
+      {"id": "kc030_a07", "name": "Mastermind's Glove",     "rarity": "very_rare"},
+      {"id": "kc030_a08", "name": "Iridescent Vial",        "rarity": "ultra_rare"}
+    ],
+    "kc_031": [
+      {"id": "kc031_a01", "name": "Grisly Gateau",          "rarity": "common"},
+      {"id": "kc031_a02", "name": "Rusted Axe",             "rarity": "common"},
+      {"id": "kc031_a03", "name": "The Order",              "rarity": "uncommon"},
+      {"id": "kc031_a04", "name": "Logistics Map",          "rarity": "uncommon"},
+      {"id": "kc031_a05", "name": "Map of the Realm",       "rarity": "rare"},
+      {"id": "kc031_a06", "name": "Order's Shield",         "rarity": "rare"},
+      {"id": "kc031_a07", "name": "King's Order",           "rarity": "very_rare"},
+      {"id": "kc031_a08", "name": "Iridescent Banner",      "rarity": "ultra_rare"}
+    ],
+    "kc_032": [
+      {"id": "kc032_a01", "name": "Turbocharged Biopod",    "rarity": "common"},
+      {"id": "kc032_a02", "name": "EMF Sensor",             "rarity": "common"},
+      {"id": "kc032_a03", "name": "Neural Pathways",        "rarity": "uncommon"},
+      {"id": "kc032_a04", "name": "Biopod Rangefinder",     "rarity": "uncommon"},
+      {"id": "kc032_a05", "name": "Amniotic Fluid",         "rarity": "rare"},
+      {"id": "kc032_a06", "name": "Bio-x Cylinder",         "rarity": "rare"},
+      {"id": "kc032_a07", "name": "Quantum Chip",           "rarity": "very_rare"},
+      {"id": "kc032_a08", "name": "Iridescent Biopod",      "rarity": "ultra_rare"}
+    ],
+    "kc_033": [
+      {"id": "kc033_a01", "name": "Spitter's Mucus",        "rarity": "common"},
+      {"id": "kc033_a02", "name": "Alien Skin",             "rarity": "common"},
+      {"id": "kc033_a03", "name": "Cerebral Parasite",      "rarity": "uncommon"},
+      {"id": "kc033_a04", "name": "Runner's Aid",           "rarity": "uncommon"},
+      {"id": "kc033_a05", "name": "Tail Tip",               "rarity": "rare"},
+      {"id": "kc033_a06", "name": "Alien Instinct",         "rarity": "rare"},
+      {"id": "kc033_a07", "name": "Facehugger Resin",       "rarity": "very_rare"},
+      {"id": "kc033_a08", "name": "Iridescent Scale",       "rarity": "ultra_rare"}
+    ],
+    "kc_034": [
+      {"id": "kc034_a01", "name": "Philly's Stylus",        "rarity": "common"},
+      {"id": "kc034_a02", "name": "Burnt Stick",            "rarity": "common"},
+      {"id": "kc034_a03", "name": "Budding Dark Power",     "rarity": "uncommon"},
+      {"id": "kc034_a04", "name": "Stitches",               "rarity": "uncommon"},
+      {"id": "kc034_a05", "name": "Voodoo Doll",            "rarity": "rare"},
+      {"id": "kc034_a06", "name": "Chucky's Knife",         "rarity": "rare"},
+      {"id": "kc034_a07", "name": "Good Guy Box",           "rarity": "very_rare"},
+      {"id": "kc034_a08", "name": "Iridescent Knife",       "rarity": "ultra_rare"}
+    ],
+    "kc_035": [
+      {"id": "kc035_a01", "name": "Moldy Tome",             "rarity": "common"},
+      {"id": "kc035_a02", "name": "Wizard Hat",             "rarity": "common"},
+      {"id": "kc035_a03", "name": "Orb of Misfortune",      "rarity": "uncommon"},
+      {"id": "kc035_a04", "name": "Finger of a Lesser Demon","rarity": "uncommon"},
+      {"id": "kc035_a05", "name": "Staff of Withering",     "rarity": "rare"},
+      {"id": "kc035_a06", "name": "Vile Darkness",          "rarity": "rare"},
+      {"id": "kc035_a07", "name": "Acererak's Phylactery",  "rarity": "very_rare"},
+      {"id": "kc035_a08", "name": "Iridescent Spell",       "rarity": "ultra_rare"}
+    ],
+    "kc_036": [
+      {"id": "kc036_a01", "name": "Silver Pocket Watch",    "rarity": "common"},
+      {"id": "kc036_a02", "name": "Wolf's Claw",            "rarity": "common"},
+      {"id": "kc036_a03", "name": "Castle's Architect",     "rarity": "uncommon"},
+      {"id": "kc036_a04", "name": "Alucard's Shield",       "rarity": "uncommon"},
+      {"id": "kc036_a05", "name": "Vampire's Embrace",      "rarity": "rare"},
+      {"id": "kc036_a06", "name": "Dracula's Ring",         "rarity": "rare"},
+      {"id": "kc036_a07", "name": "Blood of Alucard",       "rarity": "very_rare"},
+      {"id": "kc036_a08", "name": "Iridescent Sigil",       "rarity": "ultra_rare"}
+    ],
+    "kc_037": [
+      {"id": "kc037_a01", "name": "Dried Biscuit",          "rarity": "common"},
+      {"id": "kc037_a02", "name": "Squeaky Toy",            "rarity": "common"},
+      {"id": "kc037_a03", "name": "Training Harness",       "rarity": "uncommon"},
+      {"id": "kc037_a04", "name": "Well-worn Gloves",       "rarity": "uncommon"},
+      {"id": "kc037_a05", "name": "Scent Vial",             "rarity": "rare"},
+      {"id": "kc037_a06", "name": "Dog Ear Tag",            "rarity": "rare"},
+      {"id": "kc037_a07", "name": "Hunter's Whistle",       "rarity": "very_rare"},
+      {"id": "kc037_a08", "name": "Iridescent Collar",      "rarity": "ultra_rare"}
+    ],
+    "kc_038": [
+      {"id": "kc038_a01", "name": "Ghoul Mask",             "rarity": "common"},
+      {"id": "kc038_a02", "name": "Rinkaku Shard",          "rarity": "common"},
+      {"id": "kc038_a03", "name": "Kakugan",                "rarity": "uncommon"},
+      {"id": "kc038_a04", "name": "Quinque Steel",          "rarity": "uncommon"},
+      {"id": "kc038_a05", "name": "Kagune Enhancement",     "rarity": "rare"},
+      {"id": "kc038_a06", "name": "One-Eyed King's Mask",   "rarity": "rare"},
+      {"id": "kc038_a07", "name": "Black Reaper",           "rarity": "very_rare"},
+      {"id": "kc038_a08", "name": "Iridescent Eye",         "rarity": "ultra_rare"}
+    ],
+    "kc_039": [
+      {"id": "kc039_a01", "name": "Freddy Bear",            "rarity": "common"},
+      {"id": "kc039_a02", "name": "Bowtie",                 "rarity": "common"},
+      {"id": "kc039_a03", "name": "Faz-Coin",               "rarity": "uncommon"},
+      {"id": "kc039_a04", "name": "FNAF Badge",             "rarity": "uncommon"},
+      {"id": "kc039_a05", "name": "Fazbear Suit",           "rarity": "rare"},
+      {"id": "kc039_a06", "name": "Endoskeleton Part",      "rarity": "rare"},
+      {"id": "kc039_a07", "name": "Faz-Wrench",             "rarity": "very_rare"},
+      {"id": "kc039_a08", "name": "Iridescent Bonnie Guitar","rarity": "ultra_rare"}
+    ],
+    "kc_040": [
+      {"id": "kc040_a01", "name": "Jungle Weed",            "rarity": "common"},
+      {"id": "kc040_a02", "name": "Spirit Thread",          "rarity": "common"},
+      {"id": "kc040_a03", "name": "Floating Lock",          "rarity": "uncommon"},
+      {"id": "kc040_a04", "name": "Enchanted Flower",       "rarity": "uncommon"},
+      {"id": "kc040_a05", "name": "Separation Charm",       "rarity": "rare"},
+      {"id": "kc040_a06", "name": "Headless Body",          "rarity": "rare"},
+      {"id": "kc040_a07", "name": "Dismembered Tongue",     "rarity": "very_rare"},
+      {"id": "kc040_a08", "name": "Iridescent Thread",      "rarity": "ultra_rare"}
+    ],
+    "kc_041": [
+      {"id": "kc041_a01", "name": "Upside Down Particle",   "rarity": "common"},
+      {"id": "kc041_a02", "name": "Vine Tendril",           "rarity": "common"},
+      {"id": "kc041_a03", "name": "Shadow Particle",        "rarity": "uncommon"},
+      {"id": "kc041_a04", "name": "Hawkins Lab Pass",       "rarity": "uncommon"},
+      {"id": "kc041_a05", "name": "Mind Flayer Brain",      "rarity": "rare"},
+      {"id": "kc041_a06", "name": "Dimensional Key",        "rarity": "rare"},
+      {"id": "kc041_a07", "name": "Demogorgon Claws",       "rarity": "very_rare"},
+      {"id": "kc041_a08", "name": "Iridescent Gate Key",    "rarity": "ultra_rare"}
+    ]
+  },
+  "item_addons": {
+    "medkit": [
+      {"id": "mk_a01", "name": "Gauze Roll",                "rarity": "common"},
+      {"id": "mk_a02", "name": "Antiseptic Spray",          "rarity": "common"},
+      {"id": "mk_a03", "name": "Bandages",                  "rarity": "uncommon"},
+      {"id": "mk_a04", "name": "Suture Needle",             "rarity": "uncommon"},
+      {"id": "mk_a05", "name": "Styptic Agent",             "rarity": "rare"},
+      {"id": "mk_a06", "name": "Syringe",                   "rarity": "rare"},
+      {"id": "mk_a07", "name": "Anti-Haemorrhagic Syringe", "rarity": "very_rare"},
+      {"id": "mk_a08", "name": "Abdominal Dressing",        "rarity": "uncommon"},
+      {"id": "mk_a09", "name": "Emergency Suture",          "rarity": "rare"},
+      {"id": "mk_a10", "name": "Medical Scissors",          "rarity": "common"}
+    ],
+    "flashlight": [
+      {"id": "fl_a01", "name": "Lambent Light",             "rarity": "common"},
+      {"id": "fl_a02", "name": "Grip Wrap",                 "rarity": "common"},
+      {"id": "fl_a03", "name": "Wide Lens",                 "rarity": "uncommon"},
+      {"id": "fl_a04", "name": "Halogen",                   "rarity": "uncommon"},
+      {"id": "fl_a05", "name": "Odd Bulb",                  "rarity": "rare"},
+      {"id": "fl_a06", "name": "Battery",                   "rarity": "rare"},
+      {"id": "fl_a07", "name": "Power Bulb",                "rarity": "very_rare"},
+      {"id": "fl_a08", "name": "TIR Optic",                 "rarity": "very_rare"},
+      {"id": "fl_a09", "name": "Intense Halogen",           "rarity": "rare"},
+      {"id": "fl_a10", "name": "Low Amp Filament",          "rarity": "common"}
+    ],
+    "toolbox": [
+      {"id": "tb_a01", "name": "Wire Spool",                "rarity": "common"},
+      {"id": "tb_a02", "name": "Screws",                    "rarity": "common"},
+      {"id": "tb_a03", "name": "Rubber Grip Wrench",        "rarity": "uncommon"},
+      {"id": "tb_a04", "name": "Claw Hammer",               "rarity": "uncommon"},
+      {"id": "tb_a05", "name": "Hacksaw",                   "rarity": "rare"},
+      {"id": "tb_a06", "name": "Speed Square",              "rarity": "rare"},
+      {"id": "tb_a07", "name": "Odd Stamp",                 "rarity": "very_rare"},
+      {"id": "tb_a08", "name": "Brand New Part",            "rarity": "very_rare"},
+      {"id": "tb_a09", "name": "Socket Swivel",             "rarity": "uncommon"},
+      {"id": "tb_a10", "name": "Pliers",                    "rarity": "common"}
+    ],
+    "key": [
+      {"id": "key_a01", "name": "Broken Fragment",          "rarity": "common"},
+      {"id": "key_a02", "name": "Dull Key Handle",          "rarity": "common"},
+      {"id": "key_a03", "name": "Pink Gel",                 "rarity": "uncommon"},
+      {"id": "key_a04", "name": "Flat Stone",               "rarity": "uncommon"},
+      {"id": "key_a05", "name": "Dark Stone",               "rarity": "rare"},
+      {"id": "key_a06", "name": "Bloodstone",               "rarity": "rare"},
+      {"id": "key_a07", "name": "Ethereal Pendant",         "rarity": "very_rare"},
+      {"id": "key_a08", "name": "Black Lock",               "rarity": "very_rare"}
+    ],
+    "map": [
+      {"id": "map_a01", "name": "Map's Compass",            "rarity": "common"},
+      {"id": "map_a02", "name": "Annotated Blueprint",      "rarity": "common"},
+      {"id": "map_a03", "name": "Worn-out Tools",           "rarity": "uncommon"},
+      {"id": "map_a04", "name": "Detective's Hunch",        "rarity": "uncommon"},
+      {"id": "map_a05", "name": "Hollow Shell",             "rarity": "rare"},
+      {"id": "map_a06", "name": "Crumpled Note",            "rarity": "rare"},
+      {"id": "map_a07", "name": "Alex's Reference",         "rarity": "very_rare"},
+      {"id": "map_a08", "name": "Petrified Oak",            "rarity": "very_rare"}
+    ],
+    "firecracker": [
+      {"id": "fc_a01", "name": "Extra Sparkle",             "rarity": "common"},
+      {"id": "fc_a02", "name": "Short Fuse",                "rarity": "uncommon"}
+    ],
+    "none": []
+  }
+}

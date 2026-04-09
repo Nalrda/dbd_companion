@@ -20,10 +20,25 @@ class BuildsScreen extends ConsumerStatefulWidget {
 
 class _BuildsScreenState extends ConsumerState<BuildsScreen> {
   bool _showSurvivor = true;
+  bool _slidingToKiller = false;
   bool _showFavoritesOnly = false;
   String _search = '';
   bool _searchVisible = false;
   final _searchController = TextEditingController();
+
+  Widget _slideTransition(Widget child, Animation<double> animation) {
+    final isNew = child.key == ValueKey(_showSurvivor);
+    final dir = _slidingToKiller ? 1.0 : -1.0;
+    final beginOffset = Offset(isNew ? dir : -dir, 0);
+    return ClipRect(
+      child: SlideTransition(
+        position: Tween<Offset>(begin: beginOffset, end: Offset.zero).animate(
+          CurvedAnimation(parent: animation, curve: Curves.easeOutCubic),
+        ),
+        child: FadeTransition(opacity: animation, child: child),
+      ),
+    );
+  }
 
   @override
   void dispose() {
@@ -105,7 +120,10 @@ class _BuildsScreenState extends ConsumerState<BuildsScreen> {
                   padding: const EdgeInsets.only(right: 4),
                   child: RoleToggle(
                     isSurvivor: _showSurvivor,
-                    onChanged: (v) => setState(() => _showSurvivor = v),
+                    onChanged: (v) => setState(() {
+                      _slidingToKiller = !v;
+                      _showSurvivor = v;
+                    }),
                   ),
                 ),
               ],
@@ -137,90 +155,94 @@ class _BuildsScreenState extends ConsumerState<BuildsScreen> {
                     return b.updatedAt.compareTo(a.updatedAt);
                   });
 
-                  if (filtered.isEmpty) {
-                    return EmptyState(
-                      icon: _showFavoritesOnly
-                          ? Icons.star_outline
-                          : _search.isNotEmpty
-                              ? Icons.search_off
-                              : Icons.build_outlined,
-                      title: _showFavoritesOnly
-                          ? 'No favorites yet'
-                          : _search.isNotEmpty
-                              ? 'No results'
-                              : AppLocalizations.of(context)!.noBuildsYet,
-                      subtitle: _showFavoritesOnly
-                          ? 'Star a build to add it here'
-                          : _search.isNotEmpty
-                              ? 'Try a different search'
-                              : _showSurvivor
-                                  ? AppLocalizations.of(context)!
-                                      .createFirstSurvivorBuild
-                                  : AppLocalizations.of(context)!
-                                      .createFirstKillerBuild,
-                      action: (_showFavoritesOnly || _search.isNotEmpty)
-                          ? null
-                          : DbdButton(
-                              label:
-                                  AppLocalizations.of(context)!.createBuild,
-                              icon: Icons.add,
-                              onPressed: () => context.push(
-                                  '/builds/create?survivor=$_showSurvivor'),
-                            ),
-                    );
-                  }
-
-                  return LayoutBuilder(
-                    builder: (context, constraints) {
-                      final isWide = constraints.maxWidth > 700;
-                      if (isWide) {
-                        return GridView.builder(
-                          padding: const EdgeInsets.all(16),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10,
-                            mainAxisExtent: 110,
-                          ),
-                          itemCount: filtered.length,
-                          itemBuilder: (context, index) {
-                            return _BuildListItem(
-                              item: filtered[index],
-                              onTap: () => context
-                                  .push('/builds/${filtered[index].id}'),
-                              onDelete: () => _confirmDelete(filtered[index]),
-                              onToggleFavorite: () => ref
-                                  .read(buildsProvider.notifier)
-                                  .toggleFavorite(filtered[index].id),
+                  return AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    transitionBuilder: _slideTransition,
+                    child: KeyedSubtree(
+                      key: ValueKey(_showSurvivor),
+                      child: filtered.isEmpty
+                          ? EmptyState(
+                              icon: _showFavoritesOnly
+                                  ? Icons.star_outline
+                                  : _search.isNotEmpty
+                                      ? Icons.search_off
+                                      : Icons.build_outlined,
+                              title: _showFavoritesOnly
+                                  ? 'No favorites yet'
+                                  : _search.isNotEmpty
+                                      ? 'No results'
+                                      : AppLocalizations.of(context)!.noBuildsYet,
+                              subtitle: _showFavoritesOnly
+                                  ? 'Star a build to add it here'
+                                  : _search.isNotEmpty
+                                      ? 'Try a different search'
+                                      : _showSurvivor
+                                          ? AppLocalizations.of(context)!
+                                              .createFirstSurvivorBuild
+                                          : AppLocalizations.of(context)!
+                                              .createFirstKillerBuild,
+                              action: (_showFavoritesOnly || _search.isNotEmpty)
+                                  ? null
+                                  : DbdButton(
+                                      label: AppLocalizations.of(context)!.createBuild,
+                                      icon: Icons.add,
+                                      onPressed: () => context.push(
+                                          '/builds/create?survivor=$_showSurvivor'),
+                                    ),
                             )
-                                .animate()
-                                .fadeIn(delay: (index * 30).ms)
-                                .slideY(begin: 0.05, end: 0);
-                          },
-                        );
-                      }
-                      return ListView.separated(
-                        padding: const EdgeInsets.all(16),
-                        itemCount: filtered.length,
-                        separatorBuilder: (_, __) =>
-                            const SizedBox(height: 10),
-                        itemBuilder: (context, index) {
-                          return _BuildListItem(
-                            item: filtered[index],
-                            onTap: () =>
-                                context.push('/builds/${filtered[index].id}'),
-                            onDelete: () => _confirmDelete(filtered[index]),
-                            onToggleFavorite: () => ref
-                                .read(buildsProvider.notifier)
-                                .toggleFavorite(filtered[index].id),
-                          )
-                              .animate()
-                              .fadeIn(delay: (index * 40).ms)
-                              .slideY(begin: 0.05, end: 0);
-                        },
-                      );
-                    },
+                          : LayoutBuilder(
+                              builder: (context, constraints) {
+                                final isWide = constraints.maxWidth > 700;
+                                if (isWide) {
+                                  return GridView.builder(
+                                    padding: const EdgeInsets.all(16),
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      crossAxisSpacing: 10,
+                                      mainAxisSpacing: 10,
+                                      mainAxisExtent: 110,
+                                    ),
+                                    itemCount: filtered.length,
+                                    itemBuilder: (context, index) {
+                                      return _BuildListItem(
+                                        item: filtered[index],
+                                        onTap: () => context
+                                            .push('/builds/${filtered[index].id}'),
+                                        onDelete: () => _confirmDelete(filtered[index]),
+                                        onToggleFavorite: () => ref
+                                            .read(buildsProvider.notifier)
+                                            .toggleFavorite(filtered[index].id),
+                                      )
+                                          .animate()
+                                          .fadeIn(delay: (index * 30).ms)
+                                          .slideY(begin: 0.05, end: 0);
+                                    },
+                                  );
+                                }
+                                return ListView.separated(
+                                  padding: const EdgeInsets.all(16),
+                                  itemCount: filtered.length,
+                                  separatorBuilder: (_, __) =>
+                                      const SizedBox(height: 10),
+                                  itemBuilder: (context, index) {
+                                    return _BuildListItem(
+                                      item: filtered[index],
+                                      onTap: () => context
+                                          .push('/builds/${filtered[index].id}'),
+                                      onDelete: () => _confirmDelete(filtered[index]),
+                                      onToggleFavorite: () => ref
+                                          .read(buildsProvider.notifier)
+                                          .toggleFavorite(filtered[index].id),
+                                    )
+                                        .animate()
+                                        .fadeIn(delay: (index * 40).ms)
+                                        .slideY(begin: 0.05, end: 0);
+                                  },
+                                );
+                              },
+                            ),
+                    ),
                   );
                 },
               ),

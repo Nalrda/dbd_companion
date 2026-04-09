@@ -9,6 +9,7 @@ import '../../core/providers/theme_provider.dart';
 import '../../core/providers/auth_provider.dart';
 import '../../core/providers/locale_provider.dart';
 import '../../core/widgets/design_system.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -126,8 +127,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       // Auth action
                       if (isGuest)
                         _AuthButton(
-                          onPressed:
-                              _signingIn ? null : _signInWithGoogle,
+                          onPressed: _signingIn ? null : _signInWithGoogle,
                           isLoading: _signingIn,
                           icon: Icons.login,
                           label: l10n.signInWithGoogle,
@@ -164,17 +164,25 @@ class _ColorGrid extends ConsumerWidget {
     return Wrap(
       spacing: 10,
       runSpacing: 10,
-      children: AppTheme.themeColors.map((entry) {
-        final isSelected =
-            selectedColor.toARGB32() == entry.color.toARGB32();
-        return _ColorTile(
-          name: entry.name,
-          color: entry.color,
-          isSelected: isSelected,
-          onTap: () =>
-              ref.read(themeColorProvider.notifier).setColor(entry.color),
-        );
-      }).toList(),
+      children: [
+        ...AppTheme.themeColors.map((entry) {
+          final isSelected = selectedColor.toARGB32() == entry.color.toARGB32();
+
+          return _ColorTile(
+            name: entry.name,
+            color: entry.color,
+            isSelected: isSelected,
+            onTap: () =>
+                ref.read(themeColorProvider.notifier).setColor(entry.color),
+          );
+        }),
+
+        // 👇 NOWE – custom color
+        _CustomColorTile(
+          onColorPicked: (color) =>
+              ref.read(themeColorProvider.notifier).setColor(color),
+        ),
+      ],
     );
   }
 }
@@ -194,6 +202,98 @@ class _ColorTile extends StatefulWidget {
 
   @override
   State<_ColorTile> createState() => _ColorTileState();
+}
+
+class _CustomColorTile extends StatefulWidget {
+  final Function(Color) onColorPicked;
+
+  const _CustomColorTile({required this.onColorPicked});
+
+  @override
+  State<_CustomColorTile> createState() => _CustomColorTileState();
+}
+
+class _CustomColorTileState extends State<_CustomColorTile> {
+  bool _hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: GestureDetector(
+        onTap: () async {
+          Color pickedColor = Colors.blue;
+
+          await showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                backgroundColor: AppTheme.backgroundSecondary,
+                title: const Text(
+                  "Pick color",
+                  style: TextStyle(color: AppTheme.textPrimary),
+                ),
+                content: SingleChildScrollView(
+                  child: ColorPicker(
+                    pickerColor: pickedColor,
+                    onColorChanged: (color) {
+                      pickedColor = color;
+                    },
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                    child: const Text("Cancel"),
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                  ElevatedButton(
+                    child: const Text("Select"),
+                    onPressed: () {
+                      widget.onColorPicked(pickedColor);
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        },
+        child: AnimatedScale(
+          scale: _hovered ? 1.05 : 1.0,
+          duration: const Duration(milliseconds: 200),
+          child: Container(
+            width: 88,
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+            decoration: BoxDecoration(
+              color: AppTheme.surface,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: _hovered
+                    ? AppTheme.primary.withValues(alpha: 0.4)
+                    : AppTheme.border,
+              ),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.add, color: AppTheme.textSecondary),
+                const SizedBox(height: 8),
+                Text(
+                  "Custom",
+                  style: GoogleFonts.outfit(
+                    color: AppTheme.textSecondary,
+                    fontSize: 10,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class _ColorTileState extends State<_ColorTile> {
@@ -283,9 +383,8 @@ class _ColorTileState extends State<_ColorTile> {
                         ? widget.color
                         : AppTheme.textSecondary,
                     fontSize: 10,
-                    fontWeight: widget.isSelected
-                        ? FontWeight.w700
-                        : FontWeight.w400,
+                    fontWeight:
+                        widget.isSelected ? FontWeight.w700 : FontWeight.w400,
                     letterSpacing: 0.3,
                   ),
                 ),
@@ -316,16 +415,14 @@ class _LanguageRow extends ConsumerWidget {
         _LangTile(
           name: l10n.english,
           isSelected: isEnSelected,
-          onTap: () => ref
-              .read(localeProvider.notifier)
-              .setLocale(const Locale('en')),
+          onTap: () =>
+              ref.read(localeProvider.notifier).setLocale(const Locale('en')),
         ),
         _LangTile(
           name: l10n.polish,
           isSelected: isPlSelected,
-          onTap: () => ref
-              .read(localeProvider.notifier)
-              .setLocale(const Locale('pl')),
+          onTap: () =>
+              ref.read(localeProvider.notifier).setLocale(const Locale('pl')),
         ),
       ],
     );
@@ -357,9 +454,7 @@ class _LangTile extends StatelessWidget {
               : AppTheme.surface,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected
-                ? AppTheme.primary
-                : AppTheme.border,
+            color: isSelected ? AppTheme.primary : AppTheme.border,
             width: isSelected ? 1.5 : 1,
           ),
         ),
@@ -399,8 +494,7 @@ class _AuthButton extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        padding:
-            const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
         decoration: BoxDecoration(
           color: isPrimary
               ? AppTheme.primary.withValues(alpha: 0.08)
@@ -418,9 +512,8 @@ class _AuthButton extends StatelessWidget {
                   width: 20,
                   height: 20,
                   child: CircularProgressIndicator(
-                    color: isPrimary
-                        ? AppTheme.primary
-                        : AppTheme.textSecondary,
+                    color:
+                        isPrimary ? AppTheme.primary : AppTheme.textSecondary,
                     strokeWidth: 2,
                   ),
                 ),
@@ -429,18 +522,16 @@ class _AuthButton extends StatelessWidget {
                 children: [
                   Icon(
                     icon,
-                    color: isPrimary
-                        ? AppTheme.primary
-                        : AppTheme.textSecondary,
+                    color:
+                        isPrimary ? AppTheme.primary : AppTheme.textSecondary,
                     size: 18,
                   ),
                   const SizedBox(width: 12),
                   Text(
                     label,
                     style: GoogleFonts.outfit(
-                      color: isPrimary
-                          ? AppTheme.primary
-                          : AppTheme.textSecondary,
+                      color:
+                          isPrimary ? AppTheme.primary : AppTheme.textSecondary,
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                       letterSpacing: 0.5,

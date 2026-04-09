@@ -3,10 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../core/models/addon.dart';
 import '../../core/models/group_plan.dart';
 import '../../core/models/perk.dart';
 import '../../core/providers/providers.dart';
+import '../../core/repositories/addon_repository.dart';
 import '../../core/repositories/group_plan_repository.dart';
+import '../../core/repositories/item_repository.dart';
 import '../../core/repositories/perk_repository.dart';
 import '../../core/services/build_share_service.dart';
 import '../../core/theme/app_theme.dart';
@@ -30,6 +33,8 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
   final List<String?> _survivorItemIds = List.filled(4, null);
   // offering id per survivor
   final List<String?> _survivorOfferingIds = List.filled(4, null);
+  // addon ids per survivor [survivorIndex][0=addon1, 1=addon2]
+  final List<List<String?>> _survivorAddonIds = List.generate(4, (_) => List.filled(2, null));
   bool _loading = true;
 
   static const List<Color> _survivorColors = [
@@ -74,6 +79,8 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
           _resolvedPerks[i] = resolved[i];
           _survivorItemIds[i] = plan.getItemIdForSurvivor(i);
           _survivorOfferingIds[i] = plan.getOfferingIdForSurvivor(i);
+          _survivorAddonIds[i][0] = plan.getAddon1IdForSurvivor(i);
+          _survivorAddonIds[i][1] = plan.getAddon2IdForSurvivor(i);
         }
         _loading = false;
       });
@@ -89,6 +96,8 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
       );
       _plan!.setItemIdForSurvivor(i, _survivorItemIds[i]);
       _plan!.setOfferingIdForSurvivor(i, _survivorOfferingIds[i]);
+      _plan!.setAddon1IdForSurvivor(i, _survivorAddonIds[i][0]);
+      _plan!.setAddon2IdForSurvivor(i, _survivorAddonIds[i][1]);
     }
     await GroupPlanRepository.instance.save(_plan!);
     ref.invalidate(groupPlansProvider);
@@ -110,8 +119,40 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
       builder: (ctx) => ItemPickerSheet(
         selectedId: _survivorItemIds[survivorIndex],
         onSelect: (item) {
-          setState(() => _survivorItemIds[survivorIndex] =
-              item.id == 'no_item' ? null : item.id);
+          setState(() {
+            _survivorItemIds[survivorIndex] = item.id == 'no_item' ? null : item.id;
+            _survivorAddonIds[survivorIndex][0] = null;
+            _survivorAddonIds[survivorIndex][1] = null;
+          });
+          Navigator.pop(ctx);
+        },
+      ),
+    );
+  }
+
+  void _pickAddon(int survivorIndex, int addonSlot) async {
+    final itemId = _survivorItemIds[survivorIndex];
+    if (itemId == null) return;
+    final item = await ItemRepository.instance.getById(itemId);
+    if (item == null || !mounted) return;
+
+    final excludeId = addonSlot == 0
+        ? _survivorAddonIds[survivorIndex][1]
+        : _survivorAddonIds[survivorIndex][0];
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppTheme.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => _AddonPickerSheet(
+        itemCategory: item.category,
+        excludeId: excludeId,
+        selectedId: _survivorAddonIds[survivorIndex][addonSlot],
+        onSelect: (addon) {
+          setState(() => _survivorAddonIds[survivorIndex][addonSlot] = addon.id);
           Navigator.pop(ctx);
         },
       ),
@@ -304,17 +345,31 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
                     perkSlots: _resolvedPerks[si],
                     itemId: _survivorItemIds[si],
                     offeringId: _survivorOfferingIds[si],
+                    addon1Id: _survivorAddonIds[si][0],
+                    addon2Id: _survivorAddonIds[si][1],
                     onSlotTap: (slotIndex) => _pickPerk(si, slotIndex),
                     onSlotRemove: (slotIndex) => setState(
                       () => _resolvedPerks[si][slotIndex] = null,
                     ),
                     onItemTap: () => _pickItem(si),
                     onItemRemove: _survivorItemIds[si] != null
-                        ? () => setState(() => _survivorItemIds[si] = null)
+                        ? () => setState(() {
+                              _survivorItemIds[si] = null;
+                              _survivorAddonIds[si][0] = null;
+                              _survivorAddonIds[si][1] = null;
+                            })
                         : null,
                     onOfferingTap: () => _pickOffering(si),
                     onOfferingRemove: _survivorOfferingIds[si] != null
                         ? () => setState(() => _survivorOfferingIds[si] = null)
+                        : null,
+                    onAddon1Tap: () => _pickAddon(si, 0),
+                    onAddon1Remove: _survivorAddonIds[si][0] != null
+                        ? () => setState(() => _survivorAddonIds[si][0] = null)
+                        : null,
+                    onAddon2Tap: () => _pickAddon(si, 1),
+                    onAddon2Remove: _survivorAddonIds[si][1] != null
+                        ? () => setState(() => _survivorAddonIds[si][1] = null)
                         : null,
                   ),
                 ),
@@ -337,17 +392,31 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
             perkSlots: _resolvedPerks[si],
             itemId: _survivorItemIds[si],
             offeringId: _survivorOfferingIds[si],
+            addon1Id: _survivorAddonIds[si][0],
+            addon2Id: _survivorAddonIds[si][1],
             onSlotTap: (slotIndex) => _pickPerk(si, slotIndex),
             onSlotRemove: (slotIndex) => setState(
               () => _resolvedPerks[si][slotIndex] = null,
             ),
             onItemTap: () => _pickItem(si),
             onItemRemove: _survivorItemIds[si] != null
-                ? () => setState(() => _survivorItemIds[si] = null)
+                ? () => setState(() {
+                      _survivorItemIds[si] = null;
+                      _survivorAddonIds[si][0] = null;
+                      _survivorAddonIds[si][1] = null;
+                    })
                 : null,
             onOfferingTap: () => _pickOffering(si),
             onOfferingRemove: _survivorOfferingIds[si] != null
                 ? () => setState(() => _survivorOfferingIds[si] = null)
+                : null,
+            onAddon1Tap: () => _pickAddon(si, 0),
+            onAddon1Remove: _survivorAddonIds[si][0] != null
+                ? () => setState(() => _survivorAddonIds[si][0] = null)
+                : null,
+            onAddon2Tap: () => _pickAddon(si, 1),
+            onAddon2Remove: _survivorAddonIds[si][1] != null
+                ? () => setState(() => _survivorAddonIds[si][1] = null)
                 : null,
           ),
         )),
@@ -365,12 +434,18 @@ class _SurvivorColumn extends StatelessWidget {
   final List<Perk?> perkSlots;
   final String? itemId;
   final String? offeringId;
+  final String? addon1Id;
+  final String? addon2Id;
   final ValueChanged<int> onSlotTap;
   final ValueChanged<int> onSlotRemove;
   final VoidCallback onItemTap;
   final VoidCallback? onItemRemove;
   final VoidCallback onOfferingTap;
   final VoidCallback? onOfferingRemove;
+  final VoidCallback onAddon1Tap;
+  final VoidCallback? onAddon1Remove;
+  final VoidCallback onAddon2Tap;
+  final VoidCallback? onAddon2Remove;
 
   const _SurvivorColumn({
     required this.survivorIndex,
@@ -379,12 +454,18 @@ class _SurvivorColumn extends StatelessWidget {
     required this.perkSlots,
     required this.itemId,
     required this.offeringId,
+    this.addon1Id,
+    this.addon2Id,
     required this.onSlotTap,
     required this.onSlotRemove,
     required this.onItemTap,
     this.onItemRemove,
     required this.onOfferingTap,
     this.onOfferingRemove,
+    required this.onAddon1Tap,
+    this.onAddon1Remove,
+    required this.onAddon2Tap,
+    this.onAddon2Remove,
   });
 
   @override
@@ -497,6 +578,44 @@ class _SurvivorColumn extends StatelessWidget {
               ],
             ),
           ),
+
+          // Add-on slots (visible when item selected)
+          if (itemId != null)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 6),
+                    child: Text(
+                      'ADD-ONS',
+                      style: GoogleFonts.outfit(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        color: color.withValues(alpha: 0.7),
+                        letterSpacing: 0.8,
+                      ),
+                    ),
+                  ),
+                  _CompactAddonSlot(
+                    addonId: addon1Id,
+                    label: 'Add-on 1',
+                    accentColor: color,
+                    onTap: onAddon1Tap,
+                    onRemove: onAddon1Remove,
+                  ),
+                  const SizedBox(height: 6),
+                  _CompactAddonSlot(
+                    addonId: addon2Id,
+                    label: 'Add-on 2',
+                    accentColor: color,
+                    onTap: onAddon2Tap,
+                    onRemove: onAddon2Remove,
+                  ),
+                ],
+              ),
+            ),
 
           // Offering slot
           Padding(
@@ -710,6 +829,266 @@ class _PerkPickerSheetState extends State<_PerkPickerSheet> {
                 );
               },
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Compact Addon Slot ───────────────────────────────────────────────────────
+
+class _CompactAddonSlot extends StatefulWidget {
+  final String? addonId;
+  final String label;
+  final Color accentColor;
+  final VoidCallback onTap;
+  final VoidCallback? onRemove;
+
+  const _CompactAddonSlot({
+    required this.addonId,
+    required this.label,
+    required this.accentColor,
+    required this.onTap,
+    this.onRemove,
+  });
+
+  @override
+  State<_CompactAddonSlot> createState() => _CompactAddonSlotState();
+}
+
+class _CompactAddonSlotState extends State<_CompactAddonSlot> {
+  Addon? _addon;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  @override
+  void didUpdateWidget(_CompactAddonSlot old) {
+    super.didUpdateWidget(old);
+    if (old.addonId != widget.addonId) _load();
+  }
+
+  Future<void> _load() async {
+    if (widget.addonId == null) {
+      if (mounted) setState(() => _addon = null);
+      return;
+    }
+    final a = await AddonRepository.instance.getById(widget.addonId!);
+    if (mounted) setState(() => _addon = a);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: widget.onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+        decoration: BoxDecoration(
+          color: _addon != null ? AppTheme.surfaceElevated : AppTheme.background,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: _addon != null
+                ? widget.accentColor.withValues(alpha: 0.3)
+                : AppTheme.border,
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(Icons.extension_outlined,
+                size: 14,
+                color: _addon != null ? widget.accentColor : AppTheme.textDim),
+            const SizedBox(width: 6),
+            Expanded(
+              child: Text(
+                _addon?.name ?? widget.label,
+                style: GoogleFonts.outfit(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w500,
+                  color: _addon != null ? AppTheme.textPrimary : AppTheme.textDim,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            if (_addon != null && widget.onRemove != null)
+              GestureDetector(
+                onTap: widget.onRemove,
+                child: const Icon(Icons.close, size: 12, color: AppTheme.textDim),
+              )
+            else
+              const Icon(Icons.add, size: 13, color: AppTheme.textDim),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Addon Picker Sheet ───────────────────────────────────────────────────────
+
+class _AddonPickerSheet extends StatefulWidget {
+  final String itemCategory;
+  final String? selectedId;
+  final String? excludeId;
+  final ValueChanged<Addon> onSelect;
+
+  const _AddonPickerSheet({
+    required this.itemCategory,
+    required this.selectedId,
+    required this.onSelect,
+    this.excludeId,
+  });
+
+  @override
+  State<_AddonPickerSheet> createState() => _AddonPickerSheetState();
+}
+
+class _AddonPickerSheetState extends State<_AddonPickerSheet> {
+  String _search = '';
+  List<Addon> _addons = [];
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    AddonRepository.instance.getItemAddons(widget.itemCategory).then((list) {
+      if (mounted) setState(() { _addons = list; _loading = false; });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DraggableScrollableSheet(
+      expand: false,
+      initialChildSize: 0.75,
+      maxChildSize: 0.95,
+      builder: (ctx, controller) => Column(
+        children: [
+          const SizedBox(height: 8),
+          Center(
+            child: Container(
+              width: 40, height: 4,
+              decoration: BoxDecoration(
+                  color: AppTheme.border, borderRadius: BorderRadius.circular(2)),
+            ),
+          ),
+          const SizedBox(height: 12),
+          const Padding(
+            padding: EdgeInsets.only(left: 16, right: 16, bottom: 10),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text('Choose Add-on',
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: AppTheme.textPrimary)),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: TextField(
+              onChanged: (v) => setState(() => _search = v),
+              autofocus: true,
+              style: const TextStyle(color: AppTheme.textPrimary),
+              decoration: const InputDecoration(
+                hintText: 'Search add-ons...',
+                prefixIcon: Icon(Icons.search, color: AppTheme.textDim, size: 18),
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Expanded(
+            child: _loading
+                ? const Center(child: CircularProgressIndicator())
+                : Builder(builder: (_) {
+                    final filtered = _addons.where((a) {
+                      if (a.id == widget.excludeId) return false;
+                      return _search.isEmpty ||
+                          a.name.toLowerCase().contains(_search.toLowerCase());
+                    }).toList();
+
+                    if (filtered.isEmpty) {
+                      return const Center(
+                        child: Text('No add-ons available',
+                            style: TextStyle(color: AppTheme.textSecondary)),
+                      );
+                    }
+
+                    return ListView.builder(
+                      controller: controller,
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      itemCount: filtered.length,
+                      itemBuilder: (ctx, i) {
+                        final addon = filtered[i];
+                        final isSelected = addon.id == widget.selectedId;
+                        final rarityColor = AppTheme.rarityColor(addon.rarity);
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: GestureDetector(
+                            onTap: () => widget.onSelect(addon),
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 150),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 14, vertical: 12),
+                              decoration: BoxDecoration(
+                                color: isSelected
+                                    ? AppTheme.primaryDim.withValues(alpha: 0.3)
+                                    : AppTheme.surfaceElevated,
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: isSelected
+                                      ? AppTheme.primary
+                                      : AppTheme.border,
+                                  width: isSelected ? 1.5 : 1,
+                                ),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.extension_outlined,
+                                      size: 16, color: rarityColor),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: Text(addon.name,
+                                        style: const TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500,
+                                            color: AppTheme.textPrimary)),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 7, vertical: 3),
+                                    decoration: BoxDecoration(
+                                      color: rarityColor.withValues(alpha: 0.15),
+                                      borderRadius: BorderRadius.circular(5),
+                                      border: Border.all(
+                                          color: rarityColor.withValues(alpha: 0.5)),
+                                    ),
+                                    child: Text(
+                                      addon.rarity.replaceAll('_', ' '),
+                                      style: TextStyle(
+                                          fontSize: 10,
+                                          color: rarityColor,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                  ),
+                                  if (isSelected)
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8),
+                                      child: Icon(Icons.check_circle,
+                                          size: 16, color: AppTheme.primary),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }),
           ),
         ],
       ),

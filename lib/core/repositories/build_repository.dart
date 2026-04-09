@@ -62,6 +62,7 @@ class BuildRepository {
     String? addon1,
     String? addon2,
     String? offeringId,
+    String? killerId,
   }) async {
     final build = Build(
       id: _uuid.v4(),
@@ -74,6 +75,7 @@ class BuildRepository {
       addon1: addon1,
       addon2: addon2,
       offeringId: offeringId,
+      killerId: killerId,
     );
     if (_isGuest) {
       final box = await _localBox();
