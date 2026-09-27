@@ -14,7 +14,7 @@ Color offeringRarityColor(String rarity) {
     case 'uncommon':   return const Color(0xFFFFD54F);
     case 'rare':       return const Color(0xFFBA68C8);
     case 'very_rare':  return const Color(0xFFEF5350);
-    case 'ultra_rare': return const Color(0xFF37474F);
+    case 'ultra_rare': return const Color(0xFF8FA3AD);
     default:           return AppTheme.textDim;
   }
 }
@@ -74,34 +74,22 @@ class OfferingSlot extends ConsumerWidget {
 
     return BaseSlot(
       isEmpty: offering == null,
-      height: 64,
-      filledBorderColor: offering != null
-          ? offeringRarityColor(offering.rarity).withValues(alpha: 0.5)
-          : AppTheme.border,
-      emptyIcon: Icons.card_giftcard_outlined,
+      height: 60,
+      filledBorderColor: AppTheme.border,
+      emptyIcon: Icons.local_fire_department_outlined,
       emptyLabel: 'Choose Offering',
       onTap: onTap,
+      contentPadding: const EdgeInsets.fromLTRB(10, 6, 4, 6),
       filledContent: offering == null
           ? const SizedBox()
           : Row(
               children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: offeringRarityColor(offering.rarity).withValues(alpha: 0.15),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: offeringRarityColor(offering.rarity).withValues(alpha: 0.5),
-                    ),
-                  ),
-                  child: Icon(
-                    offeringCategoryIcon(offering.category),
-                    color: offeringRarityColor(offering.rarity),
-                    size: 20,
-                  ),
+                SquareGlyph(
+                  icon: offeringCategoryIcon(offering.category),
+                  color: offeringRarityColor(offering.rarity),
+                  size: 40,
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,32 +97,19 @@ class OfferingSlot extends ConsumerWidget {
                     children: [
                       Text(
                         offering.name,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: AppTheme.textPrimary,
-                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
+                        style: AppFonts.body(fontSize: 14, fontWeight: FontWeight.w600),
                       ),
-                      Text(
-                        offeringRarityLabel(offering.rarity),
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: offeringRarityColor(offering.rarity),
+                      if (offeringRarityLabel(offering.rarity).isNotEmpty)
+                        Text(
+                          offeringRarityLabel(offering.rarity).toUpperCase(),
+                          style: AppFonts.caption(color: offeringRarityColor(offering.rarity), fontSize: 11),
                         ),
-                      ),
                     ],
                   ),
                 ),
-                if (onRemove != null)
-                  GestureDetector(
-                    onTap: onRemove,
-                    child: const Padding(
-                      padding: EdgeInsets.all(4),
-                      child: Icon(Icons.close, size: 14, color: AppTheme.textDim),
-                    ),
-                  ),
+                if (onRemove != null) SlotRemoveButton(onPressed: onRemove!),
               ],
             ),
     );
@@ -182,6 +157,7 @@ class _OfferingPickerSheetState extends ConsumerState<OfferingPickerSheet> {
         : ref.watch(killerOfferingsProvider);
 
     return PickerSheetLayout(
+      title: 'Choose Offering',
       searchHint: 'Search offerings...',
       searchValue: _search,
       onSearch: (v) => setState(() => _search = v),
@@ -189,8 +165,8 @@ class _OfferingPickerSheetState extends ConsumerState<OfferingPickerSheet> {
       selectedCategory: _selectedCategory,
       onCategoryChanged: (v) => setState(() => _selectedCategory = v),
       listBuilder: (controller) => offeringsAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('$e')),
+        loading: () => const LoadingView(),
+        error: (e, _) => ErrorView(e),
         data: (offerings) {
           final filtered = offerings.where((o) {
             if (_selectedCategory != 'all' && o.category != _selectedCategory) {
@@ -212,72 +188,21 @@ class _OfferingPickerSheetState extends ConsumerState<OfferingPickerSheet> {
 
           return ListView.builder(
             controller: controller,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
             itemCount: list.length,
             itemBuilder: (ctx, i) {
               final o = list[i];
-              final isSelected = widget.selectedId == o.id;
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(10),
-                  onTap: () => widget.onSelect(o),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: isSelected ? AppTheme.primaryDim : AppTheme.surfaceElevated,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: isSelected
-                            ? AppTheme.primary
-                            : offeringRarityColor(o.rarity).withValues(alpha: 0.3),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 36,
-                          height: 36,
-                          decoration: BoxDecoration(
-                            color: offeringRarityColor(o.rarity).withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Icon(
-                            offeringCategoryIcon(o.category),
-                            color: offeringRarityColor(o.rarity),
-                            size: 18,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                o.name,
-                                style: const TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppTheme.textPrimary,
-                                ),
-                              ),
-                              if (o.rarity != 'none')
-                                Text(
-                                  offeringRarityLabel(o.rarity),
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    color: offeringRarityColor(o.rarity),
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
-                        if (isSelected)
-                          Icon(Icons.check_circle, color: AppTheme.primary, size: 18),
-                      ],
-                    ),
-                  ),
+              return PickerRow(
+                leading: SquareGlyph(
+                  icon: offeringCategoryIcon(o.category),
+                  color: offeringRarityColor(o.rarity),
+                  size: 38,
                 ),
+                title: o.name,
+                subtitle: o.rarity != 'none' ? offeringRarityLabel(o.rarity) : null,
+                subtitleColor: offeringRarityColor(o.rarity),
+                selected: widget.selectedId == o.id,
+                onTap: () => widget.onSelect(o),
               );
             },
           );

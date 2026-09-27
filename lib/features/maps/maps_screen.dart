@@ -1,56 +1,89 @@
 import 'package:flutter/material.dart';
 import 'package:dbd_companion/l10n/generated/app_localizations.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/models/map_callout.dart';
 import '../../core/providers/providers.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
-import '../../core/widgets/design_system.dart';
 
-class MapsScreen extends ConsumerWidget {
+class MapsScreen extends ConsumerStatefulWidget {
   const MapsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MapsScreen> createState() => _MapsScreenState();
+}
+
+class _MapsScreenState extends ConsumerState<MapsScreen> {
+  String _search = '';
+  final _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  /// Filters realms by the search query. A realm-name match keeps all of its
+  /// maps; otherwise only maps whose name or main building match are kept.
+  List<MapRealm> _filter(List<MapRealm> realms) {
+    final q = _search.trim().toLowerCase();
+    if (q.isEmpty) return realms;
+    final result = <MapRealm>[];
+    for (final r in realms) {
+      if (r.realm.toLowerCase().contains(q)) {
+        result.add(r);
+        continue;
+      }
+      final maps = r.maps
+          .where((m) =>
+              m.name.toLowerCase().contains(q) || m.mainBuilding.toLowerCase().contains(q))
+          .toList();
+      if (maps.isNotEmpty) result.add(MapRealm(id: r.id, realm: r.realm, maps: maps));
+    }
+    return result;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final realmsAsync = ref.watch(mapRealmsProvider);
+    final all = realmsAsync.valueOrNull ?? const <MapRealm>[];
+    final total = all.fold<int>(0, (n, r) => n + r.maps.length);
+    final filtered = _filter(all);
+    final shown = filtered.fold<int>(0, (n, r) => n + r.maps.length);
+
+    String? subtitle;
+    if (realmsAsync.hasValue) {
+      subtitle = _search.trim().isEmpty
+          ? '$total maps across ${all.length} realms'
+          : '$shown of $total maps';
+    }
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
       body: AppBackground(
-        orbs: [
-          BackgroundOrb(
-            color: AppTheme.primary,
-            opacity: 0.15,
-            position: Alignment.topCenter,
-            size: 400,
-          ),
-        ],
         child: Column(
           children: [
             PageHeader(
-              title: PageHeader.text(
-                  AppLocalizations.of(context)!.mapsTitle),
+              title: l10n.mapsTitle,
+              subtitle: subtitle,
+              bottom: AppSearchField(
+                controller: _searchController,
+                hint: 'Search maps, realms or buildings',
+                onChanged: (v) => setState(() => _search = v),
+              ),
             ),
             Expanded(
               child: realmsAsync.when(
-                loading: () =>
-                    const Center(child: CircularProgressIndicator()),
-                error: (e, _) => Center(child: Text('Error: $e')),
-                data: (realms) => ListView.separated(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: realms.length,
-                  separatorBuilder: (_, __) =>
-                      const SizedBox(height: 10),
-                  itemBuilder: (context, i) {
-                    return _RealmCard(realm: realms[i])
-                        .animate()
-                        .fadeIn(delay: (i * 40).ms)
-                        .slideY(begin: 0.05, end: 0);
-                  },
-                ),
+                loading: () => const LoadingView(),
+                error: (e, _) => ErrorView(e),
+                data: (_) => filtered.isEmpty
+                    ? EmptyState(
+                        icon: Icons.search_off,
+                        title: l10n.noResults,
+                        subtitle: 'Try a different map or realm name.',
+                      )
+                    : _content(filtered),
               ),
             ),
           ],
@@ -58,158 +91,217 @@ class MapsScreen extends ConsumerWidget {
       ),
     );
   }
+
+  Widget _content(List<MapRealm> realms) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final pad = pagePadding(context, top: 4, bottom: 32);
+        final wide = constraints.maxWidth > 760;
+        var index = 0;
+
+        final slivers = <Widget>[];
+        for (var r = 0; r < realms.length; r++) {
+          final realm = realms[r];
+          slivers.add(SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.only(top: r == 0 ? 4 : 26, bottom: 12),
+              child: SectionLabel(title: realm.realm, count: '${realm.maps.length}'),
+            ),
+          ));
+
+          final start = index;
+          index += realm.maps.length;
+          void open(DbdMap m) => context.push('/maps/${realm.id}/${m.id}');
+
+          if (wide) {
+            slivers.add(SliverGrid(
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 220,
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10,
+                mainAxisExtent: 262,
+              ),
+              delegate: SliverChildBuilderDelegate(
+                (_, i) => _MapCard(
+                  map: realm.maps[i],
+                  onTap: () => open(realm.maps[i]),
+                ).entrance(start + i),
+                childCount: realm.maps.length,
+              ),
+            ));
+          } else {
+            slivers.add(SliverList.separated(
+              itemCount: realm.maps.length,
+              separatorBuilder: (_, __) => const SizedBox(height: 8),
+              itemBuilder: (_, i) => _MapRow(
+                map: realm.maps[i],
+                onTap: () => open(realm.maps[i]),
+              ).entrance(start + i),
+            ));
+          }
+        }
+
+        return ContentWidth(
+          child: CustomScrollView(
+            slivers: [
+              SliverPadding(
+                padding: pad,
+                sliver: SliverMainAxisGroup(slivers: slivers),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }
 
-class _RealmCard extends StatelessWidget {
-  final MapRealm realm;
-  const _RealmCard({required this.realm});
+// ─── Thumbnail ────────────────────────────────────────────────────────────────
+
+/// Desaturated preview of the callout image, so the bright map art doesn't
+/// fight with the accent color in lists.
+class MapThumbnail extends StatelessWidget {
+  final String image;
+  final BoxFit fit;
+  final Alignment alignment;
+
+  const MapThumbnail({
+    super.key,
+    required this.image,
+    this.fit = BoxFit.cover,
+    this.alignment = Alignment.bottomCenter,
+  });
+
+  // Luminance with boosted contrast: the navy backdrop drops to black, the
+  // periwinkle floor plan becomes a dark warm grey and labels stay light.
+  static const _muted = ColorFilter.matrix(<double>[
+    0.26, 0.78, 0.26, 0, -122, //
+    0.26, 0.78, 0.26, 0, -127, //
+    0.26, 0.78, 0.26, 0, -130, //
+    0, 0, 0, 1, 0, //
+  ]);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppTheme.surface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppTheme.border),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.12),
-            blurRadius: 12,
-            offset: const Offset(0, 2),
+    return ColoredBox(
+      color: AppTheme.background,
+      child: ColorFiltered(
+        colorFilter: _muted,
+        child: Image.asset(
+          image,
+          fit: fit,
+          alignment: alignment,
+          cacheWidth: 400,
+          filterQuality: FilterQuality.medium,
+          errorBuilder: (_, __, ___) => const Center(
+            child: Icon(Icons.map_outlined, color: AppTheme.textTertiary, size: 22),
           ),
-        ],
+        ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
+    );
+  }
+}
+
+// ─── Map row (phones) ─────────────────────────────────────────────────────────
+
+class _MapRow extends StatelessWidget {
+  final DbdMap map;
+  final VoidCallback onTap;
+
+  const _MapRow({required this.map, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return AppPanel(
+      onTap: onTap,
+      padding: const EdgeInsets.fromLTRB(8, 8, 12, 8),
+      cut: 8,
+      child: Row(
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 16, 0),
-            child: Row(
+          ClipPath(
+            clipper: ShapeBorderClipper(shape: AppShapes.notched(cut: 6)),
+            child: SizedBox(width: 52, height: 52, child: MapThumbnail(image: map.image)),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                // Accent left strip
-                Container(
-                  width: 3,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [AppTheme.primary, AppTheme.primaryDim],
-                    ),
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(16),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppTheme.primary.withValues(alpha: 0.4),
-                        blurRadius: 8,
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 14),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    child: Text(
-                      realm.realm,
-                      style: GoogleFonts.outfit(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        color: AppTheme.textPrimary,
-                        letterSpacing: 0.3,
-                      ),
-                    ),
-                  ),
-                ),
                 Text(
-                  '${realm.maps.length} ${realm.maps.length == 1 ? 'map' : 'maps'}',
-                  style: GoogleFonts.outfit(
-                    fontSize: 12,
-                    color: AppTheme.textSecondary,
-                  ),
+                  map.name.toUpperCase(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppFonts.display(fontSize: 17, letterSpacing: 1),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  'Main: ${map.mainBuilding}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppFonts.body(fontSize: 12.5, color: AppTheme.textTertiary),
                 ),
               ],
             ),
           ),
-          Container(height: 1, color: AppTheme.border),
-          ...realm.maps.map((map) =>
-              _MapListTile(map: map, realmId: realm.id)),
+          const SizedBox(width: 8),
+          const Icon(Icons.chevron_right, size: 20, color: AppTheme.textTertiary),
         ],
       ),
     );
   }
 }
 
-class _MapListTile extends StatefulWidget {
+// ─── Map card (wide) ──────────────────────────────────────────────────────────
+
+class _MapCard extends StatelessWidget {
   final DbdMap map;
-  final String realmId;
-  const _MapListTile({required this.map, required this.realmId});
+  final VoidCallback onTap;
 
-  @override
-  State<_MapListTile> createState() => _MapListTileState();
-}
-
-class _MapListTileState extends State<_MapListTile> {
-  bool _hovered = false;
+  const _MapCard({required this.map, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => _hovered = true),
-      onExit: (_) => setState(() => _hovered = false),
-      child: GestureDetector(
-        onTap: () =>
-            context.push('/maps/${widget.realmId}/${widget.map.id}'),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 150),
-          color: _hovered
-              ? AppTheme.primary.withValues(alpha: 0.04)
-              : Colors.transparent,
-          padding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    widget.map.name,
-                    style: GoogleFonts.outfit(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: AppTheme.textPrimary,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 3),
-                  Text(
-                    'Main: ${widget.map.mainBuilding}',
-                    style: GoogleFonts.outfit(
-                      fontSize: 12,
-                      color: AppTheme.textSecondary,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
+    return AppPanel(
+      onTap: onTap,
+      padding: EdgeInsets.zero,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(1, 1, 1, 0),
+              child: ClipPath(
+                clipper: const ShapeBorderClipper(shape: BeveledRectangleBorder(
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(9)),
+                )),
+                child: MapThumbnail(image: map.image),
               ),
-              const Spacer(),
-              Icon(
-                Icons.chevron_right,
-                color: _hovered
-                    ? AppTheme.primary
-                    : AppTheme.textTertiary,
-                size: 20,
-              ),
-            ],
+            ),
           ),
-        ),
+          Container(height: 1, color: AppTheme.border),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(14, 10, 14, 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  map.name.toUpperCase(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppFonts.display(fontSize: 16, letterSpacing: 1),
+                ),
+                const SizedBox(height: 1),
+                Text(
+                  'Main: ${map.mainBuilding}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppFonts.body(fontSize: 12, color: AppTheme.textTertiary),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

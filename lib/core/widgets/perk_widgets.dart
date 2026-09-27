@@ -2,69 +2,11 @@ import 'package:flutter/material.dart';
 import '../models/perk.dart';
 import '../theme/app_theme.dart';
 import 'common_widgets.dart';
-
-// ─── Octagon Clipper ──────────────────────────────────────────────────────────
-
-class _OctagonClipper extends CustomClipper<Path> {
-  final double cut;
-  const _OctagonClipper({this.cut = 7});
-
-  @override
-  Path getClip(Size size) {
-    final c = cut;
-    return Path()
-      ..moveTo(c, 0)
-      ..lineTo(size.width - c, 0)
-      ..lineTo(size.width, c)
-      ..lineTo(size.width, size.height - c)
-      ..lineTo(size.width - c, size.height)
-      ..lineTo(c, size.height)
-      ..lineTo(0, size.height - c)
-      ..lineTo(0, c)
-      ..close();
-  }
-
-  @override
-  bool shouldReclip(_OctagonClipper old) => old.cut != cut;
-}
-
-class _OctagonBorderPainter extends CustomPainter {
-  final double cut;
-  final Color color;
-  final double strokeWidth;
-
-  const _OctagonBorderPainter({
-    required this.cut,
-    required this.color,
-    this.strokeWidth = 1.5,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth;
-    final c = cut;
-    final path = Path()
-      ..moveTo(c, 0)
-      ..lineTo(size.width - c, 0)
-      ..lineTo(size.width, c)
-      ..lineTo(size.width, size.height - c)
-      ..lineTo(size.width - c, size.height)
-      ..lineTo(c, size.height)
-      ..lineTo(0, size.height - c)
-      ..lineTo(0, c)
-      ..close();
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(_OctagonBorderPainter old) =>
-      old.cut != cut || old.color != color;
-}
+import 'design_system.dart';
 
 // ─── Perk Icon ────────────────────────────────────────────────────────────────
+// Perks are shown as diamonds, like in the game: a tinted rhombus with a
+// hairline frame and the white perk glyph centered inside.
 
 class PerkIcon extends StatelessWidget {
   final Perk perk;
@@ -80,56 +22,134 @@ class PerkIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final categoryColor = AppTheme.primary;
-    final cut = size * 0.14;
-    return Container(
+    final glyph = size * 0.78;
+    return SizedBox(
       width: size,
       height: size,
-      decoration: BoxDecoration(
-        color: AppTheme.surfaceElevated,
-        boxShadow: showCategoryGlow
-            ? [BoxShadow(color: categoryColor.withValues(alpha: 0.35), blurRadius: 8, spreadRadius: 0)]
-            : null,
-      ),
-      child: ClipPath(
-        clipper: _OctagonClipper(cut: cut),
-        child: Stack(
-          children: [
-            // subtle category-tinted background
-            Container(color: categoryColor.withValues(alpha: 0.08)),
-            // icon image: local asset → network URL → letter fallback
-            Hero(
-              tag: 'perk_icon_${perk.id}',
-              child: _PerkImage(perk: perk, size: size, fallback: _fallbackIcon(categoryColor)),
-            ),
-            // octagonal border overlay
-            CustomPaint(
-              size: Size(size, size),
-              painter: _OctagonBorderPainter(
-                cut: cut,
-                color: categoryColor.withValues(alpha: 0.55),
-                strokeWidth: 1.5,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          CustomPaint(
+            size: Size.square(size),
+            painter: DiamondFramePainter(
+              fill: Color.alphaBlend(
+                AppTheme.primary.withValues(alpha: showCategoryGlow ? 0.28 : 0.14),
+                AppTheme.surfaceElevated,
               ),
+              stroke: AppTheme.primary.withValues(alpha: showCategoryGlow ? 0.95 : 0.55),
+              glow: showCategoryGlow ? AppTheme.primaryGlow : null,
             ),
-          ],
-        ),
+          ),
+          Hero(
+            tag: 'perk_icon_${perk.id}',
+            child: SizedBox(
+              width: glyph,
+              height: glyph,
+              child: _PerkImage(perk: perk, size: glyph, fallback: _fallback(glyph)),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _fallbackIcon(Color categoryColor) {
-    return Container(
-      color: categoryColor.withValues(alpha: 0.12),
-      child: Center(
+  Widget _fallback(double glyph) => Center(
         child: Text(
-          perk.name[0],
-          style: TextStyle(
-            color: categoryColor.withValues(alpha: 0.8),
-            fontSize: size * 0.38,
-            fontWeight: FontWeight.w800,
-          ),
+          perk.name.isNotEmpty ? perk.name[0] : '?',
+          style: AppFonts.display(fontSize: glyph * 0.42, color: AppTheme.textSecondary),
         ),
-      ),
+      );
+}
+
+/// Diamond (rhombus) with fill, hairline stroke and optional glow.
+class DiamondFramePainter extends CustomPainter {
+  final Color fill;
+  final Color stroke;
+  final Color? glow;
+  final double strokeWidth;
+
+  DiamondFramePainter({
+    required this.fill,
+    required this.stroke,
+    this.glow,
+    this.strokeWidth = 1.3,
+  });
+
+  Path _path(Size size, double inset) {
+    final w = size.width, h = size.height;
+    return Path()
+      ..moveTo(w / 2, inset)
+      ..lineTo(w - inset, h / 2)
+      ..lineTo(w / 2, h - inset)
+      ..lineTo(inset, h / 2)
+      ..close();
+  }
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final outer = _path(size, 1);
+    if (glow != null) {
+      canvas.drawPath(
+        outer,
+        Paint()
+          ..color = glow!
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8),
+      );
+    }
+    canvas.drawPath(outer, Paint()..color = fill);
+    canvas.drawPath(
+      outer,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = strokeWidth
+        ..color = stroke,
+    );
+    // Inner hairline for depth.
+    canvas.drawPath(
+      _path(size, size.width * 0.09),
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 0.8
+        ..color = stroke.withValues(alpha: stroke.a * 0.35),
+    );
+  }
+
+  @override
+  bool shouldRepaint(DiamondFramePainter old) =>
+      old.fill != fill || old.stroke != stroke || old.glow != glow;
+}
+
+/// Row of four small diamonds showing a build's perks at a glance; empty
+/// positions render as outlines.
+class PerkDiamondRow extends StatelessWidget {
+  final List<Perk?> perks;
+  final double size;
+  final double spacing;
+
+  const PerkDiamondRow({super.key, required this.perks, this.size = 34, this.spacing = 2});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: List.generate(4, (i) {
+        final perk = i < perks.length ? perks[i] : null;
+        return Padding(
+          padding: EdgeInsets.only(right: i == 3 ? 0 : spacing),
+          child: perk != null
+              ? Tooltip(message: perk.name, child: PerkIcon(perk: perk, size: size))
+              : SizedBox(
+                  width: size,
+                  height: size,
+                  child: CustomPaint(
+                    painter: DiamondFramePainter(
+                      fill: AppTheme.background.withValues(alpha: 0.5),
+                      stroke: AppTheme.border,
+                    ),
+                  ),
+                ),
+        );
+      }),
     );
   }
 }
@@ -170,7 +190,7 @@ class _PerkImage extends StatelessWidget {
         perk.iconUrl!,
         width: size,
         height: size,
-        fit: BoxFit.cover,
+        fit: BoxFit.contain,
         filterQuality: FilterQuality.low,
         errorBuilder: (_, __, ___) => fallback,
         loadingBuilder: (_, child, progress) =>
@@ -190,7 +210,7 @@ class _PerkImage extends StatelessWidget {
       nameFile,
       width: size,
       height: size,
-      fit: BoxFit.cover,
+      fit: BoxFit.contain,
       filterQuality: FilterQuality.low,
       cacheWidth: cacheSize,
       cacheHeight: cacheSize,
@@ -198,7 +218,7 @@ class _PerkImage extends StatelessWidget {
         idFile,
         width: size,
         height: size,
-        fit: BoxFit.cover,
+        fit: BoxFit.contain,
         filterQuality: FilterQuality.low,
         cacheWidth: cacheSize,
         cacheHeight: cacheSize,
@@ -210,7 +230,7 @@ class _PerkImage extends StatelessWidget {
 
 // ─── Perk Card ────────────────────────────────────────────────────────────────
 
-class PerkCard extends StatefulWidget {
+class PerkCard extends StatelessWidget {
   final Perk perk;
   final bool isSelected;
   final VoidCallback? onTap;
@@ -225,142 +245,46 @@ class PerkCard extends StatefulWidget {
   });
 
   @override
-  State<PerkCard> createState() => _PerkCardState();
-}
-
-class _PerkCardState extends State<PerkCard> {
-  bool _hovered = false;
-
-  @override
   Widget build(BuildContext context) {
-    final categoryColor = AppTheme.primary;
-    final borderAccent = widget.isSelected
-        ? AppTheme.primary
-        : _hovered
-            ? AppTheme.primary.withValues(alpha: 0.45)
-            : AppTheme.border;
-    final borderWidth = widget.isSelected ? 1.5 : 1.0;
-
-    return MouseRegion(
-      onEnter: (_) => setState(() => _hovered = true),
-      onExit: (_) => setState(() => _hovered = false),
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: widget.onTap,
-        child: AnimatedScale(
-          scale: _hovered && !widget.isSelected ? 1.015 : 1.0,
-          duration: const Duration(milliseconds: 160),
-          curve: Curves.easeOut,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              decoration: BoxDecoration(
-                gradient: widget.isSelected
-                    ? LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          AppTheme.primaryGlow.withValues(alpha: 0.22),
-                          AppTheme.surfaceElevated,
-                        ],
-                      )
-                    : AppTheme.surfaceGradient,
-                border: Border(
-                  left: BorderSide(color: categoryColor, width: 3),
-                  top: BorderSide(color: borderAccent, width: borderWidth),
-                  right: BorderSide(color: borderAccent, width: borderWidth),
-                  bottom: BorderSide(color: borderAccent, width: borderWidth),
-                ),
-                boxShadow: widget.isSelected
-                    ? [
-                        BoxShadow(
-                          color: AppTheme.primaryGlow,
-                          blurRadius: 14,
-                          spreadRadius: 0,
-                          offset: const Offset(0, 2),
-                        )
-                      ]
-                    : _hovered
-                        ? [
-                            BoxShadow(
-                              color: AppTheme.primaryGlow,
-                              blurRadius: 12,
-                              spreadRadius: 0,
-                              offset: const Offset(0, 2),
-                            )
-                          ]
-                        : null,
-              ),
-              child: widget.compact ? _buildCompact() : _buildFull(),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCompact() {
-    return Padding(
-      padding: const EdgeInsets.all(10),
+    final iconSize = compact ? 46.0 : 60.0;
+    return AppPanel(
+      onTap: onTap,
+      selected: isSelected,
+      cut: 8,
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: compact ? 6 : 8),
       child: Row(
         children: [
-          PerkIcon(perk: widget.perk, size: 52, showCategoryGlow: widget.isSelected),
-          const SizedBox(width: 10),
+          PerkIcon(perk: perk, size: iconSize, showCategoryGlow: isSelected),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  widget.perk.name,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: AppTheme.textPrimary,
-                  ),
+                  perk.name,
+                  maxLines: compact ? 1 : 2,
                   overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  widget.perk.character,
-                  style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFull() {
-    return Padding(
-      padding: const EdgeInsets.all(14),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          PerkIcon(perk: widget.perk, size: 70, showCategoryGlow: widget.isSelected),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.perk.name,
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w700,
-                    color: AppTheme.textPrimary,
+                  style: AppFonts.body(
+                    fontSize: compact ? 14 : 15,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: 1),
                 Text(
-                  widget.perk.character,
-                  style: const TextStyle(fontSize: 13, color: AppTheme.textSecondary),
+                  perk.character,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppFonts.body(fontSize: 12.5, color: AppTheme.textTertiary),
                 ),
               ],
             ),
           ),
+          if (isSelected)
+            Padding(
+              padding: const EdgeInsets.only(left: 8, right: 4),
+              child: Icon(Icons.check, size: 18, color: AppTheme.primary),
+            ),
         ],
       ),
     );
@@ -387,12 +311,11 @@ class PerkSlot extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseSlot(
       isEmpty: perk == null,
-      height: 88,
-      filledBorderColor: AppTheme.primary.withValues(alpha: 0.4),
+      height: 76,
+      filledBorderColor: AppTheme.border,
       emptyIcon: Icons.add,
-      emptyIconSize: 18,
       emptyLabel: 'Perk ${index + 1}',
-      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      contentPadding: const EdgeInsets.fromLTRB(8, 6, 4, 6),
       onTap: onTap,
       animate: true,
       filledContent: perk == null
@@ -408,28 +331,21 @@ class PerkSlot extends StatelessWidget {
                     children: [
                       Text(
                         perk!.name,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: AppTheme.textPrimary,
-                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppFonts.body(fontSize: 15, fontWeight: FontWeight.w600),
                       ),
-                      const SizedBox(height: 2),
+                      const SizedBox(height: 1),
                       Text(
                         perk!.character,
-                        style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppFonts.body(fontSize: 12.5, color: AppTheme.textTertiary),
                       ),
                     ],
                   ),
                 ),
-                if (onRemove != null)
-                  GestureDetector(
-                    onTap: onRemove,
-                    child: Container(
-                      padding: const EdgeInsets.all(4),
-                      child: const Icon(Icons.close, size: 16, color: AppTheme.textDim),
-                    ),
-                  ),
+                if (onRemove != null) SlotRemoveButton(onPressed: onRemove!),
               ],
             ),
     );
