@@ -476,10 +476,7 @@ class _MatchRow extends StatelessWidget {
                 ),
                 if (perks.isNotEmpty) ...[
                   const SizedBox(height: 6),
-                  HeroMode(
-                    enabled: false,
-                    child: PerkDiamondRow(perks: perks, size: 26),
-                  ),
+                  PerkDiamondRow(perks: perks, size: 26),
                 ],
               ],
             ),
@@ -588,14 +585,11 @@ class _MatchTable extends StatelessWidget {
                   matches[i].gensRemaining?.toString() ?? '—',
                   style: AppFonts.display(fontSize: 17, color: AppTheme.textSecondary),
                 ),
-                perks: HeroMode(
-                  enabled: false,
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: matches[i].perkIds.isEmpty
-                        ? Text('—', style: AppFonts.body(color: AppTheme.textTertiary))
-                        : PerkDiamondRow(perks: perksOf(matches[i]), size: 28, spacing: 2),
-                  ),
+                perks: Align(
+                  alignment: Alignment.centerLeft,
+                  child: matches[i].perkIds.isEmpty
+                      ? Text('—', style: AppFonts.body(color: AppTheme.textTertiary))
+                      : PerkDiamondRow(perks: perksOf(matches[i]), size: 28, spacing: 2),
                 ),
                 date: Tooltip(
                   message: _fullDate(matches[i].createdAt),

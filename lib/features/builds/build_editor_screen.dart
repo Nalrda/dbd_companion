@@ -160,7 +160,13 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
             killerId: _selectedKillerId,
           );
     }
-    if (mounted) context.pop();
+    if (!mounted) return;
+    // Opened from a deep link or after a web refresh there is nothing to pop.
+    if (context.canPop()) {
+      context.pop();
+    } else {
+      context.go(widget.buildId != null ? '/builds/${widget.buildId}' : '/builds');
+    }
   }
 
   bool get _twoColumn => MediaQuery.sizeOf(context).width >= _twoColumnMin;
@@ -543,31 +549,27 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
                   title: 'No perks found',
                   subtitle: 'Try a different name, character or tag.',
                 )
-              // Perks in the build also sit in the slots; keep hero tags unique.
-              : HeroMode(
-                  enabled: false,
-                  child: ListView.builder(
-                    padding: const EdgeInsets.only(bottom: 24),
-                    itemCount: filtered.length,
-                    itemBuilder: (context, index) {
-                      final perk = filtered[index];
-                      final isUsed = _perkSlots.contains(perk.id);
-                      final card = PerkCard(
-                        perk: perk,
-                        compact: true,
-                        isSelected: isUsed,
-                        onTap: () => _onBrowserPerkTap(perk),
-                      );
-                      return RepaintBoundary(
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 6),
-                          child: isUsed
-                              ? Tooltip(message: 'In this build — click to remove', child: card)
-                              : card,
-                        ),
-                      );
-                    },
-                  ),
+              : ListView.builder(
+                  padding: const EdgeInsets.only(bottom: 24),
+                  itemCount: filtered.length,
+                  itemBuilder: (context, index) {
+                    final perk = filtered[index];
+                    final isUsed = _perkSlots.contains(perk.id);
+                    final card = PerkCard(
+                      perk: perk,
+                      compact: true,
+                      isSelected: isUsed,
+                      onTap: () => _onBrowserPerkTap(perk),
+                    );
+                    return RepaintBoundary(
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 6),
+                        child: isUsed
+                            ? Tooltip(message: 'In this build — click to remove', child: card)
+                            : card,
+                      ),
+                    );
+                  },
                 ),
         ),
       ],

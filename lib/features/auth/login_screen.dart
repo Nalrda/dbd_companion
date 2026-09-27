@@ -328,7 +328,6 @@ class _GoogleButtonState extends State<_GoogleButton> {
         child: Material(
           type: MaterialType.transparency,
           shape: shape,
-          clipBehavior: Clip.antiAlias,
           child: InkWell(
             onTap: enabled ? widget.onPressed : null,
             customBorder: shape,

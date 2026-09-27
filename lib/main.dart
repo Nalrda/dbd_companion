@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/models/perk.dart';
@@ -27,6 +30,15 @@ Future<void> _appMain() async {
   if (!Hive.isAdapterRegistered(0)) Hive.registerAdapter(PerkAdapter());
 
   final prefs = await SharedPreferences.getInstance();
+
+  // Fonts ship in assets/google_fonts; load them before the first frame so
+  // text doesn't re-layout (and jump) once they arrive.
+  LicenseRegistry.addLicense(() async* {
+    final license = await rootBundle.loadString('assets/google_fonts/OFL.txt');
+    yield LicenseEntryWithLineBreaks(['google_fonts'], license);
+  });
+  AppFonts.preload();
+  await GoogleFonts.pendingFonts();
 
   runApp(
     ProviderScope(

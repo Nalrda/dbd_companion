@@ -319,8 +319,8 @@ class _RailItemState extends State<_RailItem> {
                 ? AppTheme.surface
                 : Colors.transparent,
         shape: shape,
-        clipBehavior: Clip.antiAlias,
         child: InkWell(
+          customBorder: shape,
           onTap: widget.onTap,
           child: Stack(
             children: [

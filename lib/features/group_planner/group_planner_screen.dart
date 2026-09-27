@@ -249,26 +249,22 @@ class _GroupPlanCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          // The same perk may appear in several cards — keep hero tags out of it.
-          HeroMode(
-            enabled: false,
-            child: Padding(
-              padding: const EdgeInsets.only(right: 12),
-              child: Column(
-                children: [
-                  Row(children: [
-                    Expanded(child: survivor(0)),
-                    const SizedBox(width: 14),
-                    Expanded(child: survivor(1)),
-                  ]),
-                  const SizedBox(height: 8),
-                  Row(children: [
-                    Expanded(child: survivor(2)),
-                    const SizedBox(width: 14),
-                    Expanded(child: survivor(3)),
-                  ]),
-                ],
-              ),
+          Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: Column(
+              children: [
+                Row(children: [
+                  Expanded(child: survivor(0)),
+                  const SizedBox(width: 14),
+                  Expanded(child: survivor(1)),
+                ]),
+                const SizedBox(height: 8),
+                Row(children: [
+                  Expanded(child: survivor(2)),
+                  const SizedBox(width: 14),
+                  Expanded(child: survivor(3)),
+                ]),
+              ],
             ),
           ),
         ],

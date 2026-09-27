@@ -42,6 +42,17 @@ class AppFonts {
         fontStyle: fontStyle,
       );
 
+  /// Registers every weight the app uses so they load before the first frame.
+  static void preload() {
+    for (final w in const [FontWeight.w400, FontWeight.w500, FontWeight.w600, FontWeight.w700]) {
+      body(fontWeight: w);
+    }
+    body(fontStyle: FontStyle.italic);
+    for (final w in const [FontWeight.w500, FontWeight.w600, FontWeight.w700]) {
+      display(fontWeight: w);
+    }
+  }
+
   /// Small uppercase caption used for section labels and metadata.
   static TextStyle caption({Color? color, double fontSize = 11}) => display(
         fontSize: fontSize,
@@ -245,7 +256,8 @@ class AppTheme {
     return base.copyWith(
       scaffoldBackgroundColor: background,
       canvasColor: backgroundSecondary,
-      splashFactory: InkSparkle.splashFactory,
+      // InkSparkle compiles a shader on first use, which stutters the first tap.
+      splashFactory: InkRipple.splashFactory,
       highlightColor: primary.withValues(alpha: 0.06),
       splashColor: primary.withValues(alpha: 0.10),
       hoverColor: Colors.white.withValues(alpha: 0.03),

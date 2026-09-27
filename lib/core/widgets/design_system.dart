@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 import 'dart:typed_data';
-import 'dart:ui' show PointMode;
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -53,7 +53,28 @@ class _FogPainter extends CustomPainter {
 
   _FogPainter({required this.accent, required this.hazeX});
 
-  static final _grain = <int, Float32List>{};
+  /// A small noise tile rendered once and repeated as a shader: far cheaper
+  /// than plotting tens of thousands of points for every page.
+  static final ui.Image _grainTile = _buildGrainTile();
+
+  static ui.Image _buildGrainTile() {
+    const tile = 128;
+    final rnd = math.Random(7);
+    const count = tile * tile ~/ 90;
+    final points = Float32List(count * 2);
+    for (var i = 0; i < count * 2; i++) {
+      points[i] = rnd.nextDouble() * tile;
+    }
+    final recorder = ui.PictureRecorder();
+    Canvas(recorder).drawRawPoints(
+      ui.PointMode.points,
+      points,
+      Paint()
+        ..color = const Color(0x0DFFFFFF)
+        ..strokeWidth = 1,
+    );
+    return recorder.endRecording().toImageSync(tile, tile);
+  }
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -85,24 +106,10 @@ class _FogPainter extends CustomPainter {
             Rect.fromLTWH(0, size.height * 0.55, size.width, size.height * 0.45)),
     );
 
-    // Film grain — deterministic points, cached per canvas size bucket.
-    final key = (size.width ~/ 64) * 10000 + (size.height ~/ 64);
-    final points = _grain.putIfAbsent(key, () {
-      final rnd = math.Random(7);
-      final count = (size.width * size.height / 90).clamp(0, 60000).toInt();
-      final list = Float32List(count * 2);
-      for (var i = 0; i < count; i++) {
-        list[i * 2] = rnd.nextDouble() * size.width;
-        list[i * 2 + 1] = rnd.nextDouble() * size.height;
-      }
-      return list;
-    });
-    canvas.drawRawPoints(
-      PointMode.points,
-      points,
-      Paint()
-        ..color = const Color(0x0DFFFFFF)
-        ..strokeWidth = 1,
+    // Film grain.
+    canvas.drawRect(
+      rect,
+      Paint()..shader = ImageShader(_grainTile, TileMode.repeated, TileMode.repeated, Matrix4.identity().storage),
     );
   }
 
@@ -195,7 +202,6 @@ class _AppPanelState extends State<AppPanel> {
       child: Material(
         type: MaterialType.transparency,
         shape: shape,
-        clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: widget.onTap,
           onLongPress: widget.onLongPress,
@@ -344,7 +350,6 @@ class _AppButtonState extends State<AppButton> {
         child: Material(
           type: MaterialType.transparency,
           shape: shape,
-          clipBehavior: Clip.antiAlias,
           child: InkWell(
             onTap: enabled ? widget.onPressed : null,
             customBorder: shape,
@@ -408,8 +413,8 @@ class _AppIconButtonState extends State<AppIconButton> {
       child: Material(
         color: widget.active ? AppTheme.primarySoft : AppTheme.surface,
         shape: shape,
-        clipBehavior: Clip.antiAlias,
         child: InkWell(
+          customBorder: shape,
           onTap: widget.onPressed,
           child: SizedBox(
             width: widget.size,
@@ -454,8 +459,8 @@ class AppFab extends StatelessWidget {
         child: Material(
           color: AppTheme.primary,
           shape: shape,
-          clipBehavior: Clip.antiAlias,
           child: InkWell(
+            customBorder: shape,
             onTap: onPressed,
             child: SizedBox(
               width: 58,
@@ -561,13 +566,18 @@ class _SegmentButton extends StatelessWidget {
                 Icon(icon, size: 15, color: active ? AppTheme.primary : fg),
                 const SizedBox(width: 6),
               ],
-              Text(
-                label.toUpperCase(),
-                style: AppFonts.display(
-                  fontSize: 14,
-                  fontWeight: active ? FontWeight.w700 : FontWeight.w600,
-                  color: fg,
-                  letterSpacing: 1.2,
+              Flexible(
+                child: Text(
+                  label.toUpperCase(),
+                  maxLines: 1,
+                  softWrap: false,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppFonts.display(
+                    fontSize: 14,
+                    fontWeight: active ? FontWeight.w700 : FontWeight.w600,
+                    color: fg,
+                    letterSpacing: 1.2,
+                  ),
                 ),
               ),
             ],
@@ -608,8 +618,8 @@ class AppChip extends StatelessWidget {
     return Material(
       color: selected ? accent.withValues(alpha: 0.12) : AppTheme.surface,
       shape: shape,
-      clipBehavior: Clip.antiAlias,
       child: InkWell(
+        customBorder: shape,
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
@@ -916,39 +926,85 @@ Future<String?> showAppTextPrompt(
   String cancelLabel = 'Cancel',
   int maxLines = 1,
 }) {
-  final controller = TextEditingController(text: initialValue);
   return showDialog<String>(
     context: context,
-    builder: (ctx) {
-      void submit() {
-        final v = controller.text.trim();
-        if (v.isNotEmpty) Navigator.of(ctx).pop(v);
-      }
+    builder: (_) => _TextPromptDialog(
+      title: title,
+      message: message,
+      hint: hint,
+      initialValue: initialValue,
+      confirmLabel: confirmLabel,
+      cancelLabel: cancelLabel,
+      maxLines: maxLines,
+    ),
+  );
+}
 
-      return AppDialog(
-        title: title,
-        cancelLabel: cancelLabel,
-        confirmLabel: confirmLabel,
-        onCancel: () => Navigator.of(ctx).pop(),
-        onConfirm: submit,
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (message != null) ...[Text(message), const SizedBox(height: 12)],
-            TextField(
-              controller: controller,
-              autofocus: true,
-              maxLines: maxLines,
-              style: AppFonts.body(),
-              decoration: InputDecoration(hintText: hint),
-              onSubmitted: maxLines == 1 ? (_) => submit() : null,
-            ),
-          ],
-        ),
-      );
-    },
-  ).whenComplete(controller.dispose);
+/// Owns its controller so it outlives the dialog's closing animation —
+/// disposing it when the returned future completes would crash the
+/// still-animating TextField.
+class _TextPromptDialog extends StatefulWidget {
+  final String title;
+  final String? message;
+  final String? hint;
+  final String? initialValue;
+  final String confirmLabel;
+  final String cancelLabel;
+  final int maxLines;
+
+  const _TextPromptDialog({
+    required this.title,
+    required this.message,
+    required this.hint,
+    required this.initialValue,
+    required this.confirmLabel,
+    required this.cancelLabel,
+    required this.maxLines,
+  });
+
+  @override
+  State<_TextPromptDialog> createState() => _TextPromptDialogState();
+}
+
+class _TextPromptDialogState extends State<_TextPromptDialog> {
+  late final _controller = TextEditingController(text: widget.initialValue);
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    final v = _controller.text.trim();
+    if (v.isNotEmpty) Navigator.of(context).pop(v);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AppDialog(
+      title: widget.title,
+      cancelLabel: widget.cancelLabel,
+      confirmLabel: widget.confirmLabel,
+      onCancel: () => Navigator.of(context).pop(),
+      onConfirm: _submit,
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (widget.message != null) ...[Text(widget.message!), const SizedBox(height: 12)],
+          TextField(
+            controller: _controller,
+            autofocus: true,
+            maxLines: widget.maxLines,
+            style: AppFonts.body(),
+            decoration: InputDecoration(hintText: widget.hint),
+            onSubmitted: widget.maxLines == 1 ? (_) => _submit() : null,
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 /// Short confirmation toast.
@@ -998,7 +1054,10 @@ EdgeInsets pagePadding(BuildContext context, {double top = 0, double bottom = 24
 
 /// Consistent staggered entrance for list items.
 extension AppEntrance on Widget {
+  /// Only the first [max] items animate: items further down a long list are
+  /// built while scrolling, and fading them in then just looks like lag.
   Widget entrance(int index, {int step = 35, int max = 10}) {
+    if (index > max) return this;
     final delay = (index.clamp(0, max) * step).ms;
     return animate()
         .fadeIn(duration: 260.ms, delay: delay, curve: Curves.easeOut)

@@ -183,20 +183,29 @@ class MapThumbnail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // The filter is applied while painting the image (DecorationImage), not via
+    // ColorFiltered, which would add an offscreen layer per thumbnail and make
+    // the grid stutter while scrolling. Map art is opaque, so the fallback
+    // icon underneath only shows if the asset is missing.
     return ColoredBox(
       color: AppTheme.background,
-      child: ColorFiltered(
-        colorFilter: _muted,
-        child: Image.asset(
-          image,
-          fit: fit,
-          alignment: alignment,
-          cacheWidth: 400,
-          filterQuality: FilterQuality.medium,
-          errorBuilder: (_, __, ___) => const Center(
-            child: Icon(Icons.map_outlined, color: AppTheme.textTertiary, size: 22),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          const Center(child: Icon(Icons.map_outlined, color: AppTheme.textTertiary, size: 22)),
+          DecoratedBox(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: ResizeImage(AssetImage(image), width: 400),
+                fit: fit,
+                alignment: alignment,
+                colorFilter: _muted,
+                filterQuality: FilterQuality.medium,
+                onError: (_, __) {},
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

@@ -88,7 +88,12 @@ class _MatchEditorScreenState extends ConsumerState<MatchEditorScreen> {
             ? null
             : _notesController.text.trim(),
       );
-      if (mounted) context.pop();
+      if (!mounted) return;
+      if (context.canPop()) {
+        context.pop();
+      } else {
+        context.go('/matches');
+      }
     } catch (e) {
       if (mounted) showAppSnack(context, 'Error saving match: $e', error: true);
     }

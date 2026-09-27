@@ -40,13 +40,10 @@ class PerkIcon extends StatelessWidget {
               glow: showCategoryGlow ? AppTheme.primaryGlow : null,
             ),
           ),
-          Hero(
-            tag: 'perk_icon_${perk.id}',
-            child: SizedBox(
-              width: glyph,
-              height: glyph,
-              child: _PerkImage(perk: perk, size: glyph, fallback: _fallback(glyph)),
-            ),
+          SizedBox(
+            width: glyph,
+            height: glyph,
+            child: _PerkImage(perk: perk, size: glyph, fallback: _fallback(glyph)),
           ),
         ],
       ),
