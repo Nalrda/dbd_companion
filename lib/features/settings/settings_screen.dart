@@ -1,15 +1,12 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:go_router/go_router.dart';
 import 'package:dbd_companion/l10n/generated/app_localizations.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/providers/theme_provider.dart';
 import '../../core/providers/auth_provider.dart';
 import '../../core/providers/locale_provider.dart';
-import '../../core/widgets/design_system.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import '../../core/widgets/widgets.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -26,16 +23,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     try {
       await ref.read(authNotifierProvider).signInWithGoogle();
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Sign in failed: $e',
-                style: const TextStyle(color: AppTheme.textPrimary)),
-            backgroundColor: AppTheme.backgroundSecondary,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
-      }
+      if (mounted) showAppSnack(context, 'Sign in failed: $e', error: true);
     } finally {
       if (mounted) setState(() => _signingIn = false);
     }
@@ -44,105 +32,50 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final selectedColor = ref.watch(themeColorProvider);
-    final authNotifier = ref.watch(authNotifierProvider);
-    final isGuest = authNotifier.isGuest;
+    final auth = ref.watch(authNotifierProvider);
     final l10n = AppLocalizations.of(context)!;
 
+    final sections = <Widget>[
+      SectionLabel(title: l10n.colorTheme),
+      const SizedBox(height: 12),
+      _ColorGrid(selectedColor: selectedColor),
+      const SizedBox(height: 32),
+      SectionLabel(title: l10n.language),
+      const SizedBox(height: 12),
+      const _LanguagePanel(),
+      const SizedBox(height: 32),
+      const SectionLabel(title: 'Account'),
+      const SizedBox(height: 12),
+      _AccountPanel(
+        auth: auth,
+        signingIn: _signingIn,
+        onSignIn: _signInWithGoogle,
+        onSignOut: () => ref.read(authNotifierProvider).signOut(),
+      ),
+      const SizedBox(height: 40),
+      const _Footer(),
+    ];
+
     return Scaffold(
-      backgroundColor: AppTheme.background,
       body: AppBackground(
-        orbs: [
-          BackgroundOrb(
-            color: selectedColor,
-            opacity: 0.2,
-            position: Alignment.topRight,
-            size: 350,
-          ),
-        ],
         child: Column(
           children: [
-            // Custom AppBar
-            RepaintBoundary(
-              child: ClipRect(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: Container(
-                    padding: EdgeInsets.only(
-                      top: MediaQuery.of(context).padding.top + 8,
-                      bottom: 8,
-                      left: 4,
-                      right: 16,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppTheme.background.withValues(alpha: 0.7),
-                      border: const Border(
-                        bottom: BorderSide(color: AppTheme.border),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.arrow_back,
-                              color: AppTheme.textPrimary),
-                          onPressed: () => context.pop(),
-                        ),
-                        Text(
-                          l10n.settings.toUpperCase(),
-                          style: GoogleFonts.outfit(
-                            color: AppTheme.textPrimary,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 2.0,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+            ContentWidth(
+              maxWidth: 640 + 56,
+              child: PageHeader(
+                showBack: true,
+                title: l10n.settings,
+                subtitle: 'Appearance, language and account',
               ),
             ),
-
             Expanded(
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 600),
-                  child: ListView(
-                    padding: const EdgeInsets.all(24),
-                    children: [
-                      // Color Theme section
-                      SectionLabel(title: l10n.colorTheme),
-                      const SizedBox(height: 16),
-                      _ColorGrid(selectedColor: selectedColor),
-                      const SizedBox(height: 32),
-
-                      // Language section
-                      SectionLabel(title: l10n.language),
-                      const SizedBox(height: 16),
-                      _LanguageRow(),
-                      const SizedBox(height: 32),
-
-                      Container(height: 1, color: AppTheme.border),
-                      const SizedBox(height: 24),
-
-                      // Auth action
-                      if (isGuest)
-                        _AuthButton(
-                          onPressed: _signingIn ? null : _signInWithGoogle,
-                          isLoading: _signingIn,
-                          icon: Icons.login,
-                          label: l10n.signInWithGoogle,
-                          isPrimary: true,
-                        )
-                      else
-                        _AuthButton(
-                          onPressed: () =>
-                              ref.read(authNotifierProvider).signOut(),
-                          icon: Icons.logout,
-                          label: l10n.signOut,
-                          isPrimary: false,
-                        ),
-                    ],
-                  ),
+              child: ContentWidth(
+                maxWidth: 640 + 56,
+                child: ListView(
+                  padding: pagePadding(context, top: 8, bottom: 32),
+                  children: [
+                    for (var i = 0; i < sections.length; i++) sections[i].entrance(i ~/ 3),
+                  ],
                 ),
               ),
             ),
@@ -153,7 +86,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 }
 
-// ─── Color Grid ───────────────────────────────────────────────────────────────
+// ─── Color grid ───────────────────────────────────────────────────────────────
 
 class _ColorGrid extends ConsumerWidget {
   final Color selectedColor;
@@ -161,385 +94,356 @@ class _ColorGrid extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Wrap(
-      spacing: 10,
-      runSpacing: 10,
-      children: [
-        ...AppTheme.themeColors.map((entry) {
-          final isSelected = selectedColor.toARGB32() == entry.color.toARGB32();
+    final notifier = ref.read(themeColorProvider.notifier);
+    final selected = selectedColor.toARGB32();
+    final isPreset = AppTheme.themeColors.any((e) => e.color.toARGB32() == selected);
 
-          return _ColorTile(
-            name: entry.name,
-            color: entry.color,
-            isSelected: isSelected,
-            onTap: () =>
-                ref.read(themeColorProvider.notifier).setColor(entry.color),
-          );
-        }),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final wide = constraints.maxWidth >= 520;
+        final cols = wide ? 5 : 2;
+        const gap = 8.0;
+        final tileWidth = (constraints.maxWidth - gap * (cols - 1)) / cols;
 
-        // 👇 NOWE – custom color
-        _CustomColorTile(
-          onColorPicked: (color) =>
-              ref.read(themeColorProvider.notifier).setColor(color),
+        final tiles = <Widget>[
+          for (final entry in AppTheme.themeColors)
+            _Swatch(
+              name: entry.name,
+              color: entry.color,
+              selected: entry.color.toARGB32() == selected,
+              vertical: wide,
+              onTap: () => notifier.setColor(entry.color),
+            ),
+          _Swatch(
+            name: 'Custom',
+            color: isPreset ? null : selectedColor,
+            selected: !isPreset,
+            vertical: wide,
+            onTap: () => _pickCustom(context, selectedColor, notifier.setColor),
+          ),
+        ];
+
+        return Wrap(
+          spacing: gap,
+          runSpacing: gap,
+          children: [for (final t in tiles) SizedBox(width: tileWidth, child: t)],
+        );
+      },
+    );
+  }
+
+  Future<void> _pickCustom(
+    BuildContext context,
+    Color initial,
+    ValueChanged<Color> onColorPicked,
+  ) async {
+    Color pickedColor = initial;
+    await showDialog<void>(
+      context: context,
+      builder: (ctx) => AppDialog(
+        title: 'Pick color',
+        confirmLabel: 'Select',
+        onCancel: () => Navigator.pop(ctx),
+        onConfirm: () {
+          onColorPicked(pickedColor);
+          Navigator.pop(ctx);
+        },
+        content: SingleChildScrollView(
+          child: ColorPicker(
+            pickerColor: pickedColor,
+            onColorChanged: (color) => pickedColor = color,
+            labelTypes: const [],
+            enableAlpha: false,
+            portraitOnly: true,
+            hexInputBar: true,
+            colorPickerWidth: 300,
+            pickerAreaHeightPercent: 0.7,
+            pickerAreaBorderRadius: BorderRadius.circular(AppShapes.radiusSm),
+          ),
         ),
-      ],
+      ),
     );
   }
 }
 
-class _ColorTile extends StatefulWidget {
+/// Notched tile showing a theme color. `color == null` renders the "custom"
+/// placeholder (palette icon on an empty chip).
+class _Swatch extends StatelessWidget {
   final String name;
-  final Color color;
-  final bool isSelected;
+  final Color? color;
+  final bool selected;
+  final bool vertical;
   final VoidCallback onTap;
 
-  const _ColorTile({
+  const _Swatch({
     required this.name,
     required this.color,
-    required this.isSelected,
+    required this.selected,
+    required this.vertical,
     required this.onTap,
   });
 
   @override
-  State<_ColorTile> createState() => _ColorTileState();
-}
-
-class _CustomColorTile extends StatefulWidget {
-  final Function(Color) onColorPicked;
-
-  const _CustomColorTile({required this.onColorPicked});
-
-  @override
-  State<_CustomColorTile> createState() => _CustomColorTileState();
-}
-
-class _CustomColorTileState extends State<_CustomColorTile> {
-  bool _hovered = false;
-
-  @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => _hovered = true),
-      onExit: (_) => setState(() => _hovered = false),
-      child: GestureDetector(
-        onTap: () async {
-          Color pickedColor = Colors.blue;
+    final c = color;
+    final chip = Container(
+      width: vertical ? double.infinity : 30,
+      height: vertical ? 40 : 30,
+      alignment: Alignment.center,
+      decoration: ShapeDecoration(
+        color: c ?? AppTheme.background,
+        shape: AppShapes.notched(
+          cut: vertical ? 8 : 6,
+          side: BorderSide(
+            color: c == null ? AppTheme.borderHighlight : Colors.black.withValues(alpha: 0.25),
+          ),
+        ),
+      ),
+      child: c == null
+          ? const Icon(Icons.palette_outlined, size: 17, color: AppTheme.textSecondary)
+          : null,
+    );
 
-          await showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                backgroundColor: AppTheme.backgroundSecondary,
-                title: const Text(
-                  "Pick color",
-                  style: TextStyle(color: AppTheme.textPrimary),
-                ),
-                content: SingleChildScrollView(
-                  child: ColorPicker(
-                    pickerColor: pickedColor,
-                    onColorChanged: (color) {
-                      pickedColor = color;
-                    },
-                  ),
-                ),
-                actions: [
-                  TextButton(
-                    child: const Text("Cancel"),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                  ElevatedButton(
-                    child: const Text("Select"),
-                    onPressed: () {
-                      widget.onColorPicked(pickedColor);
-                      Navigator.pop(context);
-                    },
+    final label = Text(
+      name.toUpperCase(),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: AppFonts.display(
+        fontSize: 14,
+        fontWeight: selected ? FontWeight.w700 : FontWeight.w600,
+        color: selected ? AppTheme.textPrimary : AppTheme.textSecondary,
+        letterSpacing: 1.1,
+      ),
+    );
+
+    final check = AnimatedOpacity(
+      opacity: selected ? 1 : 0,
+      duration: const Duration(milliseconds: 160),
+      child: Icon(Icons.check, size: 16, color: AppTheme.primary),
+    );
+
+    return Semantics(
+      selected: selected,
+      button: true,
+      label: '$name theme color',
+      child: AppPanel(
+        onTap: onTap,
+        selected: selected,
+        cut: 8,
+        padding: vertical
+            ? const EdgeInsets.fromLTRB(8, 8, 8, 8)
+            : const EdgeInsets.fromLTRB(8, 8, 10, 8),
+        child: vertical
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  chip,
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      const SizedBox(width: 2),
+                      Expanded(child: label),
+                      check,
+                    ],
                   ),
                 ],
-              );
-            },
-          );
-        },
-        child: AnimatedScale(
-          scale: _hovered ? 1.05 : 1.0,
-          duration: const Duration(milliseconds: 200),
-          child: Container(
-            width: 88,
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-            decoration: BoxDecoration(
-              color: AppTheme.surface,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: _hovered
-                    ? AppTheme.primary.withValues(alpha: 0.4)
-                    : AppTheme.border,
+              )
+            : Row(
+                children: [
+                  chip,
+                  const SizedBox(width: 12),
+                  Expanded(child: label),
+                  check,
+                ],
               ),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.add, color: AppTheme.textSecondary),
-                const SizedBox(height: 8),
-                Text(
-                  "Custom",
-                  style: GoogleFonts.outfit(
-                    color: AppTheme.textSecondary,
-                    fontSize: 10,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
       ),
     );
   }
 }
 
-class _ColorTileState extends State<_ColorTile> {
-  bool _hovered = false;
+// ─── Language ─────────────────────────────────────────────────────────────────
 
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => _hovered = true),
-      onExit: (_) => setState(() => _hovered = false),
-      child: GestureDetector(
-        onTap: widget.onTap,
-        child: AnimatedScale(
-          scale: widget.isSelected
-              ? 1.0
-              : _hovered
-                  ? 1.05
-                  : 1.0,
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeOutCubic,
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            width: 88,
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-            decoration: BoxDecoration(
-              color: widget.isSelected
-                  ? widget.color.withValues(alpha: 0.12)
-                  : AppTheme.surface,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: widget.isSelected
-                    ? widget.color
-                    : _hovered
-                        ? widget.color.withValues(alpha: 0.4)
-                        : AppTheme.border,
-                width: widget.isSelected ? 1.5 : 1,
-              ),
-              boxShadow: widget.isSelected
-                  ? [
-                      BoxShadow(
-                        color: widget.color.withValues(alpha: 0.3),
-                        blurRadius: 14,
-                      )
-                    ]
-                  : null,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    gradient: RadialGradient(
-                      colors: [
-                        widget.color.withValues(alpha: 0.8),
-                        widget.color.withValues(alpha: 0.4),
-                      ],
-                    ),
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: widget.isSelected
-                          ? widget.color
-                          : widget.color.withValues(alpha: 0.5),
-                      width: widget.isSelected ? 2 : 1.5,
-                    ),
-                    boxShadow: widget.isSelected
-                        ? [
-                            BoxShadow(
-                              color: widget.color.withValues(alpha: 0.4),
-                              blurRadius: 10,
-                            )
-                          ]
-                        : null,
-                  ),
-                  child: widget.isSelected
-                      ? const Icon(Icons.check, color: Colors.white, size: 17)
-                      : null,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  widget.name,
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.outfit(
-                    color: widget.isSelected
-                        ? widget.color
-                        : AppTheme.textSecondary,
-                    fontSize: 10,
-                    fontWeight:
-                        widget.isSelected ? FontWeight.w700 : FontWeight.w400,
-                    letterSpacing: 0.3,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+class _LanguagePanel extends ConsumerWidget {
+  const _LanguagePanel();
 
-// ─── Language Row ─────────────────────────────────────────────────────────────
-
-class _LanguageRow extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final locale = ref.watch(localeProvider);
+    final code = locale?.languageCode == 'pl' ? 'pl' : 'en';
+    final compact = AppLayout.isCompact(context);
 
-    final isEnSelected = locale == null || locale.languageCode == 'en';
-    final isPlSelected = locale?.languageCode == 'pl';
+    final segmented = AppSegmented<String>(
+      expand: compact,
+      value: code,
+      onChanged: (v) => ref.read(localeProvider.notifier).setLocale(Locale(v)),
+      segments: [
+        AppSegment(value: 'en', label: l10n.english),
+        AppSegment(value: 'pl', label: l10n.polish),
+      ],
+    );
 
-    return Wrap(
-      spacing: 10,
-      runSpacing: 10,
+    final label = Row(
       children: [
-        _LangTile(
-          name: l10n.english,
-          isSelected: isEnSelected,
-          onTap: () =>
-              ref.read(localeProvider.notifier).setLocale(const Locale('en')),
-        ),
-        _LangTile(
-          name: l10n.polish,
-          isSelected: isPlSelected,
-          onTap: () =>
-              ref.read(localeProvider.notifier).setLocale(const Locale('pl')),
+        const Icon(Icons.translate, size: 18, color: AppTheme.textSecondary),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            'Used for menus and labels',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: AppFonts.body(fontSize: 14, color: AppTheme.textSecondary),
+          ),
         ),
       ],
     );
-  }
-}
 
-class _LangTile extends StatelessWidget {
-  final String name;
-  final bool isSelected;
-  final VoidCallback onTap;
+    if (compact) return segmented;
 
-  const _LangTile({
-    required this.name,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        width: 100,
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? AppTheme.primary.withValues(alpha: 0.12)
-              : AppTheme.surface,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isSelected ? AppTheme.primary : AppTheme.border,
-            width: isSelected ? 1.5 : 1,
-          ),
-        ),
-        child: Text(
-          name,
-          textAlign: TextAlign.center,
-          style: GoogleFonts.outfit(
-            color: isSelected ? AppTheme.primary : AppTheme.textSecondary,
-            fontSize: 14,
-            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400,
-          ),
-        ),
+    return AppPanel(
+      padding: const EdgeInsets.all(12),
+      child: Row(
+        children: [
+          const SizedBox(width: 4),
+          Expanded(child: label),
+          const SizedBox(width: 12),
+          segmented,
+        ],
       ),
     );
   }
 }
 
-// ─── Auth Button ──────────────────────────────────────────────────────────────
+// ─── Account ──────────────────────────────────────────────────────────────────
 
-class _AuthButton extends StatelessWidget {
-  final VoidCallback? onPressed;
-  final bool isLoading;
-  final IconData icon;
-  final String label;
-  final bool isPrimary;
+class _AccountPanel extends StatelessWidget {
+  final AuthNotifier auth;
+  final bool signingIn;
+  final VoidCallback onSignIn;
+  final VoidCallback onSignOut;
 
-  const _AuthButton({
-    required this.onPressed,
-    this.isLoading = false,
-    required this.icon,
-    required this.label,
-    required this.isPrimary,
+  const _AccountPanel({
+    required this.auth,
+    required this.signingIn,
+    required this.onSignIn,
+    required this.onSignOut,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-        decoration: BoxDecoration(
-          color: isPrimary
-              ? AppTheme.primary.withValues(alpha: 0.08)
-              : AppTheme.surface,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: isPrimary
-                ? AppTheme.primary.withValues(alpha: 0.35)
-                : AppTheme.border,
+    final l10n = AppLocalizations.of(context)!;
+    final compact = AppLayout.isCompact(context);
+    final user = auth.user;
+    final isGuest = auth.isGuest;
+
+    final String title;
+    final String subtitle;
+    if (isGuest || user == null) {
+      title = 'Guest';
+      subtitle = l10n.guestModeDesc;
+    } else {
+      title =
+          user.displayName?.isNotEmpty == true ? user.displayName! : (user.email ?? 'Signed in');
+      subtitle = user.displayName?.isNotEmpty == true && user.email != null
+          ? user.email!
+          : 'Synced with your Google account';
+    }
+
+    final avatar = Container(
+      width: 48,
+      height: 48,
+      clipBehavior: Clip.antiAlias,
+      alignment: Alignment.center,
+      decoration: ShapeDecoration(
+        color: AppTheme.surfaceElevated,
+        image: !isGuest && user?.photoURL != null
+            ? DecorationImage(image: NetworkImage(user!.photoURL!), fit: BoxFit.cover)
+            : null,
+        shape: AppShapes.notched(cut: 8, side: const BorderSide(color: AppTheme.border)),
+      ),
+      child: isGuest || user?.photoURL == null
+          ? (isGuest || user == null
+              ? const Icon(Icons.person_outline, size: 22, color: AppTheme.textSecondary)
+              : Text(title[0].toUpperCase(), style: AppFonts.display(fontSize: 20)))
+          : null,
+    );
+
+    final action = isGuest || user == null
+        ? AppButton(
+            label: l10n.signInWithGoogle,
+            icon: Icons.login,
+            isLoading: signingIn,
+            expand: compact,
+            onPressed: signingIn ? null : onSignIn,
+          )
+        : AppButton.secondary(
+            label: l10n.signOut,
+            icon: Icons.logout,
+            expand: compact,
+            onPressed: onSignOut,
+          );
+
+    final identity = Row(
+      children: [
+        avatar,
+        const SizedBox(width: 14),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                title.toUpperCase(),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppFonts.display(fontSize: 18, letterSpacing: 1.1),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                subtitle,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: AppFonts.body(fontSize: 13, color: AppTheme.textSecondary, height: 1.35),
+              ),
+            ],
           ),
         ),
-        child: isLoading
-            ? Center(
-                child: SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                    color:
-                        isPrimary ? AppTheme.primary : AppTheme.textSecondary,
-                    strokeWidth: 2,
-                  ),
-                ),
-              )
-            : Row(
-                children: [
-                  Icon(
-                    icon,
-                    color:
-                        isPrimary ? AppTheme.primary : AppTheme.textSecondary,
-                    size: 18,
-                  ),
-                  const SizedBox(width: 12),
-                  Text(
-                    label,
-                    style: GoogleFonts.outfit(
-                      color:
-                          isPrimary ? AppTheme.primary : AppTheme.textSecondary,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                ],
-              ),
-      ),
+      ],
+    );
+
+    return AppPanel(
+      padding: const EdgeInsets.all(16),
+      edgeColor: isGuest ? AppTheme.primary : null,
+      child: compact
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [identity, const SizedBox(height: 16), action],
+            )
+          : Row(
+              children: [
+                Expanded(child: identity),
+                const SizedBox(width: 16),
+                action,
+              ],
+            ),
+    );
+  }
+}
+
+class _Footer extends StatelessWidget {
+  const _Footer();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const DiamondMark(size: 6, color: AppTheme.borderHighlight),
+        const SizedBox(width: 10),
+        Text('DBD COMPANION', style: AppFonts.caption(fontSize: 11)),
+        const SizedBox(width: 10),
+        const DiamondMark(size: 6, color: AppTheme.borderHighlight),
+      ],
     );
   }
 }

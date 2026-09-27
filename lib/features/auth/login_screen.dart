@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../core/providers/auth_provider.dart';
 import '../../core/theme/app_theme.dart';
-import '../../core/widgets/design_system.dart';
+import '../../core/widgets/widgets.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -18,8 +17,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
   bool _loading = false;
   bool _guestLoading = false;
   late AnimationController _animController;
-  late Animation<double> _fadeAnim;
-  late Animation<Offset> _slideAnim;
 
   @override
   void initState() {
@@ -28,9 +25,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
       vsync: this,
       duration: const Duration(milliseconds: 900),
     );
-    _fadeAnim = CurvedAnimation(parent: _animController, curve: Curves.easeOut);
-    _slideAnim = Tween<Offset>(begin: const Offset(0, 0.06), end: Offset.zero)
-        .animate(CurvedAnimation(parent: _animController, curve: Curves.easeOutCubic));
     _animController.forward();
   }
 
@@ -40,21 +34,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
     super.dispose();
   }
 
+  bool get _busy => _loading || _guestLoading;
+
   Future<void> _signIn() async {
     setState(() => _loading = true);
     try {
       await ref.read(authNotifierProvider).signInWithGoogle();
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Sign in failed: $e',
-                style: const TextStyle(color: AppTheme.textPrimary)),
-            backgroundColor: AppTheme.surfaceElevated,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
-      }
+      if (mounted) showAppSnack(context, 'Sign in failed: $e', error: true);
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -65,16 +52,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
     try {
       await ref.read(authNotifierProvider).signInAsGuest();
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Guest sign in failed: $e',
-                style: const TextStyle(color: AppTheme.textPrimary)),
-            backgroundColor: AppTheme.surfaceElevated,
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
-      }
+      if (mounted) showAppSnack(context, 'Guest sign in failed: $e', error: true);
     } finally {
       if (mounted) setState(() => _guestLoading = false);
     }
@@ -82,69 +60,39 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
 
   @override
   Widget build(BuildContext context) {
+    final compact = AppLayout.isCompact(context);
+    final steps = <Widget>[
+      const _LogoMark(),
+      SizedBox(height: compact ? 26 : 32),
+      _buildTitles(compact),
+      SizedBox(height: compact ? 36 : 44),
+      _buildAuthCard(),
+      const SizedBox(height: 24),
+      _buildFooter(),
+    ];
+    const delays = [0.0, 0, 0.12, 0, 0.24, 0, 0.36];
+
     return Scaffold(
-      backgroundColor: AppTheme.background,
       body: AppBackground(
-        orbs: [
-          BackgroundOrb(
-            color: AppTheme.primary,
-            opacity: 0.28,
-            position: Alignment.topRight,
-            size: 450,
-          ),
-          BackgroundOrb(
-            color: AppTheme.primaryDim,
-            opacity: 0.2,
-            position: Alignment.bottomLeft,
-            size: 380,
-          ),
-        ],
-        child: Center(
-          child: SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 380),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 28),
-                child: FadeTransition(
-                  opacity: _fadeAnim,
-                  child: SlideTransition(
-                    position: _slideAnim,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // Logo
-                        _AnimDelay(
-                          delay: 0,
-                          controller: _animController,
-                          child: _buildLogo(),
-                        ),
-                        const SizedBox(height: 28),
-
-                        // Title + tagline
-                        _AnimDelay(
-                          delay: 0.15,
-                          controller: _animController,
-                          child: _buildTitles(),
-                        ),
-                        const SizedBox(height: 44),
-
-                        // Auth card
-                        _AnimDelay(
-                          delay: 0.3,
-                          controller: _animController,
-                          child: _buildAuthCard(),
-                        ),
-                        const SizedBox(height: 24),
-
-                        // Footer
-                        _AnimDelay(
-                          delay: 0.45,
-                          controller: _animController,
-                          child: _buildFooter(),
-                        ),
-                      ],
-                    ),
-                  ),
+        hazeX: 0,
+        child: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 32),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 400),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    for (var i = 0; i < steps.length; i++)
+                      steps[i] is SizedBox
+                          ? steps[i]
+                          : _AnimDelay(
+                              delay: delays[i].toDouble(),
+                              controller: _animController,
+                              child: steps[i],
+                            ),
+                  ],
                 ),
               ),
             ),
@@ -154,130 +102,82 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
     );
   }
 
-  Widget _buildLogo() {
-    return Container(
-      width: 80,
-      height: 80,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppTheme.primary.withValues(alpha: 0.3),
-            AppTheme.primaryDim.withValues(alpha: 0.2),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: AppTheme.primary.withValues(alpha: 0.5),
-          width: 1.5,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.primary.withValues(alpha: 0.35),
-            blurRadius: 32,
-            spreadRadius: 2,
-          ),
-        ],
-      ),
-      child: Center(
-        child: Text(
-          'D',
-          style: GoogleFonts.outfit(
-            color: AppTheme.primary,
-            fontSize: 42,
-            fontWeight: FontWeight.w800,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTitles() {
+  Widget _buildTitles(bool compact) {
     return Column(
       children: [
-        Text(
-          'DBD COMPANION',
-          style: GoogleFonts.outfit(
-            color: AppTheme.textPrimary,
-            fontSize: 26,
-            fontWeight: FontWeight.w800,
-            letterSpacing: 4.0,
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            'DBD COMPANION',
+            maxLines: 1,
+            style: AppFonts.display(
+              fontSize: compact ? 44 : 52,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 3,
+              height: 1,
+            ),
           ),
         ),
-        const SizedBox(height: 8),
-        Text(
-          'Plan your builds. Track your games.',
-          style: GoogleFonts.outfit(
-            color: AppTheme.textSecondary,
-            fontSize: 13,
-            fontWeight: FontWeight.w400,
-            letterSpacing: 0.3,
-          ),
+        const SizedBox(height: 12),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            DiamondMark(size: 5, color: AppTheme.primary),
+            const SizedBox(width: 10),
+            Flexible(
+              child: Text(
+                'Plan your builds. Track your games.',
+                textAlign: TextAlign.center,
+                style: AppFonts.body(fontSize: 15, color: AppTheme.textSecondary),
+              ),
+            ),
+            const SizedBox(width: 10),
+            DiamondMark(size: 5, color: AppTheme.primary),
+          ],
         ),
       ],
     );
   }
 
   Widget _buildAuthCard() {
-    return GlassCard(
-      borderRadius: 24,
-      padding: const EdgeInsets.all(24),
+    return AppPanel(
+      padding: const EdgeInsets.fromLTRB(20, 18, 20, 20),
+      cut: 14,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // Google Sign-In
-          _loading
-              ? const Center(
-                  child: SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  ),
-                )
-              : _AuthButton(
-                  onPressed: _signIn,
-                  icon: _GoogleIcon(),
-                  label: 'Sign in with Google',
-                  isPrimary: true,
-                ),
-          const SizedBox(height: 16),
-
-          // Divider "or"
+          Text('GET STARTED', style: AppFonts.caption(color: AppTheme.textSecondary, fontSize: 12)),
+          const SizedBox(height: 14),
+          _GoogleButton(
+            label: 'Sign in with Google',
+            isLoading: _loading,
+            onPressed: _busy ? null : _signIn,
+          ),
+          const SizedBox(height: 14),
           Row(
             children: [
-              Expanded(child: Container(height: 1, color: AppTheme.border)),
+              const Expanded(child: Divider()),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 14),
-                child: Text(
-                  'or',
-                  style: GoogleFonts.outfit(
-                    color: AppTheme.textTertiary,
-                    fontSize: 12,
-                  ),
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Text('OR', style: AppFonts.caption()),
               ),
-              Expanded(child: Container(height: 1, color: AppTheme.border)),
+              const Expanded(child: Divider()),
             ],
           ),
-          const SizedBox(height: 16),
-
-          // Guest button
-          _guestLoading
-              ? const Center(
-                  child: SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  ),
-                )
-              : _AuthButton(
-                  onPressed: _signInAsGuest,
-                  icon: const Icon(Icons.person_outline,
-                      color: AppTheme.textSecondary, size: 20),
-                  label: 'Continue as Guest',
-                  isPrimary: false,
-                ),
+          const SizedBox(height: 14),
+          AppButton.secondary(
+            label: 'Continue as guest',
+            icon: Icons.person_outline,
+            expand: true,
+            isLoading: _guestLoading,
+            onPressed: _busy ? null : _signInAsGuest,
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'Guest data is kept on this device only.',
+            textAlign: TextAlign.center,
+            style: AppFonts.body(fontSize: 12.5, color: AppTheme.textTertiary, height: 1.4),
+          ),
         ],
       ),
     );
@@ -286,11 +186,51 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
   Widget _buildFooter() {
     return Text(
       'By continuing you agree to our Terms of Service',
-      style: GoogleFonts.outfit(
-        color: AppTheme.textTertiary,
-        fontSize: 11,
-      ),
+      style: AppFonts.body(fontSize: 12, color: AppTheme.textTertiary),
       textAlign: TextAlign.center,
+    );
+  }
+}
+
+// ─── Logo mark ────────────────────────────────────────────────────────────────
+// Large version of the side-rail brand: outlined diamond around a solid core.
+
+class _LogoMark extends StatelessWidget {
+  const _LogoMark();
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 112,
+      height: 112,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          const DiamondMark(size: 76, color: AppTheme.border, filled: false),
+          DiamondMark(size: 60, color: AppTheme.primary.withValues(alpha: 0.10)),
+          _ThickDiamond(size: 60, color: AppTheme.primary),
+          DiamondMark(size: 24, color: AppTheme.primary),
+        ],
+      ),
+    );
+  }
+}
+
+/// Outlined diamond with a heavier stroke than [DiamondMark] for large sizes.
+class _ThickDiamond extends StatelessWidget {
+  final double size;
+  final Color color;
+  const _ThickDiamond({required this.size, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Transform.rotate(
+      angle: 0.7853981633974483,
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(border: Border.all(color: color, width: 2)),
+      ),
     );
   }
 }
@@ -320,7 +260,7 @@ class _AnimDelayState extends State<_AnimDelay> {
   void initState() {
     super.initState();
     final begin = widget.delay;
-    final end = (widget.delay + 0.5).clamp(0.0, 1.0);
+    final end = (widget.delay + 0.55).clamp(0.0, 1.0);
     _fade = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
         parent: widget.controller,
@@ -347,70 +287,93 @@ class _AnimDelayState extends State<_AnimDelay> {
   }
 }
 
-// ─── Auth Button ──────────────────────────────────────────────────────────────
+// ─── Google button ────────────────────────────────────────────────────────────
+// Primary-styled button (see AppButton) with the Google "G" on a white chip.
 
-class _AuthButton extends StatefulWidget {
-  final VoidCallback onPressed;
-  final Widget icon;
+class _GoogleButton extends StatefulWidget {
   final String label;
-  final bool isPrimary;
+  final bool isLoading;
+  final VoidCallback? onPressed;
 
-  const _AuthButton({
-    required this.onPressed,
-    required this.icon,
-    required this.label,
-    required this.isPrimary,
-  });
+  const _GoogleButton({required this.label, required this.isLoading, required this.onPressed});
 
   @override
-  State<_AuthButton> createState() => _AuthButtonState();
+  State<_GoogleButton> createState() => _GoogleButtonState();
 }
 
-class _AuthButtonState extends State<_AuthButton> {
+class _GoogleButtonState extends State<_GoogleButton> {
   bool _hovered = false;
 
   @override
   Widget build(BuildContext context) {
+    final enabled = widget.onPressed != null && !widget.isLoading;
+    var fill = _hovered && enabled
+        ? Color.lerp(AppTheme.primary, Colors.white, 0.08)!
+        : AppTheme.primary;
+    var fg = AppTheme.onPrimary;
+    if (!enabled && !widget.isLoading) {
+      fill = AppTheme.primaryDim;
+      fg = AppTheme.textSecondary;
+    }
+    final shape = AppShapes.notched(cut: 9);
+
     return MouseRegion(
-      cursor: SystemMouseCursors.click,
+      cursor: enabled ? SystemMouseCursors.click : SystemMouseCursors.basic,
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
-      child: GestureDetector(
-        onTap: widget.onPressed,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeOutCubic,
-          height: 52,
-          decoration: BoxDecoration(
-            color: widget.isPrimary
-                ? (_hovered
-                    ? Colors.white.withValues(alpha: 0.12)
-                    : Colors.white.withValues(alpha: 0.08))
-                : Colors.transparent,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: widget.isPrimary
-                  ? Colors.white.withValues(alpha: _hovered ? 0.25 : 0.15)
-                  : AppTheme.border,
-            ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              widget.icon,
-              const SizedBox(width: 12),
-              Text(
-                widget.label,
-                style: GoogleFonts.outfit(
-                  color: widget.isPrimary
-                      ? AppTheme.textPrimary
-                      : AppTheme.textSecondary,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: 0.3,
-                ),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 140),
+        height: 50,
+        decoration: ShapeDecoration(color: fill, shape: shape),
+        child: Material(
+          type: MaterialType.transparency,
+          shape: shape,
+          clipBehavior: Clip.antiAlias,
+          child: InkWell(
+            onTap: enabled ? widget.onPressed : null,
+            customBorder: shape,
+            splashColor: fg.withValues(alpha: 0.12),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6),
+              child: Row(
+                children: [
+                  Container(
+                    width: 38,
+                    height: 38,
+                    alignment: Alignment.center,
+                    decoration: ShapeDecoration(
+                      color: Colors.white,
+                      shape: AppShapes.notched(cut: 6),
+                    ),
+                    child: widget.isLoading
+                        ? SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: AppTheme.primary,
+                            ),
+                          )
+                        : const _GoogleIcon(),
+                  ),
+                  Expanded(
+                    child: Text(
+                      widget.label.toUpperCase(),
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppFonts.display(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: fg,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 38),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
@@ -421,6 +384,8 @@ class _AuthButtonState extends State<_AuthButton> {
 // ─── Google Icon ──────────────────────────────────────────────────────────────
 
 class _GoogleIcon extends StatelessWidget {
+  const _GoogleIcon();
+
   static const _svg = '''
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
