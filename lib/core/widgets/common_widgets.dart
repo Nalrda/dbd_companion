@@ -50,9 +50,6 @@ class PageHeader extends StatelessWidget {
     this.titleWidget,
   });
 
-  // TEMP-SHIM: legacy `title: PageHeader.text(...)` call sites.
-  static String text(String s) => s;
-
   @override
   Widget build(BuildContext context) {
     final compact = AppLayout.isCompact(context);

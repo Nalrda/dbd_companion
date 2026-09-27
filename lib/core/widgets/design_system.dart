@@ -23,11 +23,7 @@ class AppBackground extends StatelessWidget {
   /// Horizontal anchor of the accent haze (-1 left … 1 right).
   final double hazeX;
 
-  const AppBackground({super.key, required this.child, this.hazeX = 0.6, this.orbs});
-
-  // TEMP-SHIM: legacy params, removed once all screens are migrated.
-  final List<BackgroundOrb>? orbs;
-  static List<BackgroundOrb> defaultOrbs() => const [];
+  const AppBackground({super.key, required this.child, this.hazeX = 0.6});
 
   @override
   Widget build(BuildContext context) {
@@ -1010,32 +1006,3 @@ extension AppEntrance on Widget {
   }
 }
 
-// TEMP-SHIM ─ legacy glass API kept only while screens are being migrated.
-class BackgroundOrb {
-  const BackgroundOrb({Color? color, double? opacity, Alignment? position, double? size});
-}
-
-class GlassCard extends StatelessWidget {
-  final Widget child;
-  final EdgeInsetsGeometry? padding;
-  final double borderRadius;
-  final Color? borderColor;
-  const GlassCard({super.key, required this.child, this.padding, this.borderRadius = 0, this.borderColor});
-  @override
-  Widget build(BuildContext context) =>
-      AppPanel(padding: padding ?? const EdgeInsets.all(16), borderColor: borderColor, child: child);
-}
-
-class GlassAlertDialog extends StatelessWidget {
-  final String title;
-  final Widget? content;
-  final String cancelLabel;
-  final String confirmLabel;
-  final VoidCallback onCancel;
-  final VoidCallback onConfirm;
-  const GlassAlertDialog({super.key, required this.title, this.content, required this.cancelLabel,
-      required this.confirmLabel, required this.onCancel, required this.onConfirm});
-  @override
-  Widget build(BuildContext context) => AppDialog(title: title, content: content, cancelLabel: cancelLabel,
-      confirmLabel: confirmLabel, onCancel: onCancel, onConfirm: onConfirm);
-}

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:dbd_companion/l10n/generated/app_localizations.dart';
 import '../../core/models/addon.dart';
 import '../../core/models/build.dart';
 import '../../core/models/killer.dart';
@@ -10,14 +10,18 @@ import '../../core/providers/providers.dart';
 import '../../core/repositories/addon_repository.dart';
 import '../../core/repositories/item_repository.dart';
 import '../../core/theme/app_theme.dart';
-import '../../core/widgets/design_system.dart';
 import '../../core/widgets/widgets.dart';
+
+/// Width from which the editor shows the loadout and a persistent perk
+/// browser side by side.
+const double _twoColumnMin = 900;
 
 class BuildEditorScreen extends ConsumerStatefulWidget {
   final String? buildId;
   final bool isSurvivor;
   final List<String>? sharedPerkIds;
   final String? sharedName;
+
   /// When set, pre-fills all fields from an imported build (ignores other shared* params).
   final Build? sharedBuild;
 
@@ -37,6 +41,8 @@ class BuildEditorScreen extends ConsumerStatefulWidget {
 class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
   late TextEditingController _nameController;
   late TextEditingController _notesController;
+  final _tagController = TextEditingController();
+  final _perkSearchController = TextEditingController();
   late bool _isSurvivor;
   late List<String?> _perkSlots;
   final List<String> _tags = [];
@@ -89,7 +95,7 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
       (b) => b.id == widget.buildId,
       orElse: () => Build(id: '', name: '', isSurvivor: widget.isSurvivor, perkIds: []),
     );
-    if (build.id.isEmpty) return;
+    if (build.id.isEmpty || !mounted) return;
     setState(() {
       _existingBuild = build;
       _nameController.text = build.name;
@@ -103,6 +109,10 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
       for (int i = 0; i < build.perkIds.length && i < 4; i++) {
         _perkSlots[i] = build.perkIds[i];
       }
+      // Tags are now editable here, so start from the saved ones.
+      _tags
+        ..clear()
+        ..addAll(build.tags);
     });
   }
 
@@ -110,15 +120,15 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
   void dispose() {
     _nameController.dispose();
     _notesController.dispose();
+    _tagController.dispose();
+    _perkSearchController.dispose();
     super.dispose();
   }
 
   Future<void> _save() async {
     final name = _nameController.text.trim();
     if (name.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a build name')),
-      );
+      showAppSnack(context, 'Please enter a build name', error: true);
       return;
     }
     final perkIds = _perkSlots.whereType<String>().toList();
@@ -138,61 +148,345 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
       await ref.read(buildsProvider.notifier).save(updated);
     } else {
       await ref.read(buildsProvider.notifier).create(
-        name: name,
-        isSurvivor: _isSurvivor,
-        perkIds: perkIds,
-        notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
-        tags: _tags,
-        itemId: _selectedItemId,
-        addon1: _selectedAddon1Id,
-        addon2: _selectedAddon2Id,
-        offeringId: _selectedOfferingId,
-        killerId: _selectedKillerId,
-      );
+            name: name,
+            isSurvivor: _isSurvivor,
+            perkIds: perkIds,
+            notes: _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
+            tags: _tags,
+            itemId: _selectedItemId,
+            addon1: _selectedAddon1Id,
+            addon2: _selectedAddon2Id,
+            offeringId: _selectedOfferingId,
+            killerId: _selectedKillerId,
+          );
     }
     if (mounted) context.pop();
   }
 
+  bool get _twoColumn => MediaQuery.sizeOf(context).width >= _twoColumnMin;
+
+  /// Slot the perk browser fills next: the explicitly selected slot, else the
+  /// first empty one.
+  int? get _targetSlot {
+    if (_editingSlot != null) return _editingSlot;
+    final i = _perkSlots.indexOf(null);
+    return i == -1 ? null : i;
+  }
+
+  // ─── Build ─────────────────────────────────────────────────────────────────
+
   @override
   Widget build(BuildContext context) {
-    final perksAsync = _isSurvivor
-        ? ref.watch(survivorPerksProvider)
-        : ref.watch(killerPerksProvider);
+    final l10n = AppLocalizations.of(context);
+    final compact = AppLayout.isCompact(context);
+    final perksAsync =
+        _isSurvivor ? ref.watch(survivorPerksProvider) : ref.watch(killerPerksProvider);
+    final role = _isSurvivor ? (l10n?.survivor ?? 'Survivor') : (l10n?.killer ?? 'Killer');
+    final filled = _perkSlots.whereType<String>().length;
+    final isEdit = widget.buildId != null;
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        title: Text(_existingBuild == null ? 'New Build' : 'Edit Build'),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: TextButton(
-              onPressed: _save,
-              style: TextButton.styleFrom(
-                backgroundColor: AppTheme.primary,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              ),
-              child: Text('Save',
-                  style: GoogleFonts.outfit(fontWeight: FontWeight.w600, color: Colors.white)),
-            ),
-          ),
-        ],
-      ),
       body: AppBackground(
-        orbs: AppBackground.defaultOrbs(),
-        child: perksAsync.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => Center(child: Text('Error: $e')),
-          data: (perks) => _buildBody(perks),
+        child: Column(
+          children: [
+            PageHeader(
+              showBack: true,
+              title: isEdit ? 'Edit build' : 'New build',
+              subtitle: '$role build  ·  $filled/4 perks',
+              actions: [
+                if (!compact)
+                  AppButton.ghost(
+                    label: 'Cancel',
+                    compact: true,
+                    onPressed: () => context.canPop() ? context.pop() : context.go('/builds'),
+                  ),
+                AppButton(
+                  label: 'Save',
+                  icon: Icons.check,
+                  compact: true,
+                  onPressed: _save,
+                ),
+              ],
+            ),
+            Expanded(
+              child: perksAsync.when(
+                loading: () => const LoadingView(),
+                error: (e, _) => ErrorView(e),
+                data: (perks) => _buildBody(perks),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
   Widget _buildBody(List<Perk> allPerks) {
-    final filtered = allPerks.where((p) {
+    final perksById = {for (final p in allPerks) p.id: p};
+
+    if (!_twoColumn) {
+      return ContentWidth(
+        child: SingleChildScrollView(
+          padding: pagePadding(context, top: 4, bottom: 40),
+          child: _buildLoadout(perksById, twoColumn: false),
+        ),
+      );
+    }
+
+    final pad = pagePadding(context);
+    return ContentWidth(
+      child: Padding(
+        padding: EdgeInsets.only(left: pad.left, right: pad.right),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.only(top: 4, bottom: 40, right: 24),
+                child: _buildLoadout(perksById, twoColumn: true),
+              ),
+            ),
+            const VerticalDivider(width: 1),
+            SizedBox(
+              width: 400,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 24, top: 4),
+                child: _buildPerkBrowser(allPerks),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ─── Loadout column ────────────────────────────────────────────────────────
+
+  Widget _buildLoadout(Map<String, Perk> perksById, {required bool twoColumn}) {
+    const gap = SizedBox(height: 26);
+    const labelGap = SizedBox(height: 12);
+    final filled = _perkSlots.whereType<String>().length;
+
+    Widget slot(int i) {
+      final perkId = _perkSlots[i];
+      final targeted = twoColumn && _targetSlot == i;
+      return _EditorPerkSlot(
+        index: i,
+        perk: perkId != null ? perksById[perkId] : null,
+        targeted: targeted,
+        hint: twoColumn
+            ? (targeted
+                ? (perkId == null ? 'Pick a perk from the list' : 'Pick a perk to replace it')
+                : 'Click to fill this slot')
+            : 'Tap to choose a perk',
+        onTap: () => _openPerkPicker(i),
+        onRemove: perkId != null
+            ? () => setState(() {
+                  _perkSlots[i] = null;
+                  if (_editingSlot == i) _editingSlot = null;
+                })
+            : null,
+      );
+    }
+
+    final perkSlots = twoColumn
+        ? Column(
+            children: [
+              for (var row = 0; row < 2; row++) ...[
+                if (row > 0) const SizedBox(height: 10),
+                Row(
+                  children: [
+                    Expanded(child: slot(row * 2)),
+                    const SizedBox(width: 10),
+                    Expanded(child: slot(row * 2 + 1)),
+                  ],
+                ),
+              ],
+            ],
+          )
+        : Column(
+            children: [
+              for (var i = 0; i < 4; i++) ...[
+                if (i > 0) const SizedBox(height: 8),
+                slot(i),
+              ],
+            ],
+          );
+
+    final addon1 = _AddonSlot(
+      label: 'Add-on 1',
+      addonId: _selectedAddon1Id,
+      onTap: () => _openAddonPicker(slot: 1),
+      onRemove: _selectedAddon1Id != null ? () => setState(() => _selectedAddon1Id = null) : null,
+    );
+    final addon2 = _AddonSlot(
+      label: 'Add-on 2',
+      addonId: _selectedAddon2Id,
+      onTap: () => _openAddonPicker(slot: 2),
+      onRemove: _selectedAddon2Id != null ? () => setState(() => _selectedAddon2Id = null) : null,
+    );
+    final addons = twoColumn
+        ? Row(
+            children: [
+              Expanded(child: addon1),
+              const SizedBox(width: 10),
+              Expanded(child: addon2),
+            ],
+          )
+        : Column(children: [addon1, const SizedBox(height: 8), addon2]);
+
+    final hasAddonSource = _isSurvivor ? _selectedItemId != null : _selectedKillerId != null;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const SectionLabel(title: 'Name'),
+        labelGap,
+        TextField(
+          controller: _nameController,
+          textCapitalization: TextCapitalization.sentences,
+          style: AppFonts.body(fontSize: 16, fontWeight: FontWeight.w600),
+          decoration: const InputDecoration(
+            hintText: 'Build name...',
+            prefixIcon: Icon(Icons.drive_file_rename_outline, size: 18),
+          ),
+        ),
+        if (!_isSurvivor) ...[
+          gap,
+          const SectionLabel(title: 'Killer'),
+          labelGap,
+          _KillerSlot(
+            selectedKillerId: _selectedKillerId,
+            onTap: _openKillerPicker,
+            onRemove: _selectedKillerId != null
+                ? () => setState(() {
+                      _selectedKillerId = null;
+                      _selectedAddon1Id = null;
+                      _selectedAddon2Id = null;
+                    })
+                : null,
+          ),
+        ],
+        gap,
+        SectionLabel(
+          title: 'Perks',
+          count: '$filled/4',
+          trailing: twoColumn && _editingSlot != null
+              ? _TextAction(
+                  label: 'Done',
+                  onTap: () => setState(() => _editingSlot = null),
+                )
+              : null,
+        ),
+        labelGap,
+        perkSlots,
+        if (_isSurvivor) ...[
+          gap,
+          const SectionLabel(title: 'Item'),
+          labelGap,
+          ItemSlot(
+            selectedItemId: _selectedItemId,
+            onTap: _openItemPicker,
+            onRemove: _selectedItemId != null
+                ? () => setState(() {
+                      _selectedItemId = null;
+                      _selectedAddon1Id = null;
+                      _selectedAddon2Id = null;
+                    })
+                : null,
+          ),
+        ],
+        if (hasAddonSource) ...[
+          gap,
+          SectionLabel(title: _isSurvivor ? 'Item add-ons' : 'Killer add-ons'),
+          labelGap,
+          addons,
+        ],
+        gap,
+        const SectionLabel(title: 'Offering'),
+        labelGap,
+        OfferingSlot(
+          selectedOfferingId: _selectedOfferingId,
+          isSurvivor: _isSurvivor,
+          onTap: _openOfferingPicker,
+          onRemove:
+              _selectedOfferingId != null ? () => setState(() => _selectedOfferingId = null) : null,
+        ),
+        gap,
+        const SectionLabel(title: 'Notes'),
+        labelGap,
+        TextField(
+          controller: _notesController,
+          minLines: 3,
+          maxLines: 6,
+          textCapitalization: TextCapitalization.sentences,
+          style: AppFonts.body(fontSize: 14, height: 1.45),
+          decoration: const InputDecoration(
+            hintText: 'Build notes, strategy tips...',
+            alignLabelWithHint: true,
+          ),
+        ),
+        gap,
+        SectionLabel(title: 'Tags', count: _tags.isEmpty ? null : '${_tags.length}'),
+        labelGap,
+        if (_tags.isNotEmpty) ...[
+          Wrap(
+            spacing: 6,
+            runSpacing: 6,
+            children: [
+              for (final t in _tags)
+                Tooltip(
+                  message: 'Remove tag',
+                  child: AppChip(
+                    label: t,
+                    icon: Icons.close,
+                    onTap: () => setState(() => _tags.remove(t)),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 10),
+        ],
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _tagController,
+                style: AppFonts.body(fontSize: 14),
+                textInputAction: TextInputAction.done,
+                onSubmitted: _addTag,
+                decoration: const InputDecoration(
+                  hintText: 'Add a tag (e.g. solo, meta)',
+                  prefixIcon: Icon(Icons.sell_outlined, size: 18),
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            AppIconButton(
+              icon: Icons.add,
+              tooltip: 'Add tag',
+              size: 44,
+              onPressed: () => _addTag(_tagController.text),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  void _addTag(String raw) {
+    final t = raw.trim();
+    if (t.isEmpty) return;
+    setState(() {
+      if (!_tags.contains(t)) _tags.add(t);
+      _tagController.clear();
+    });
+  }
+
+  // ─── Perk browser (wide) ───────────────────────────────────────────────────
+
+  Widget _buildPerkBrowser(List<Perk> all) {
+    final filtered = all.where((p) {
       if (_searchQuery.isEmpty) return true;
       final q = _searchQuery.toLowerCase();
       return p.name.toLowerCase().contains(q) ||
@@ -200,173 +494,111 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
           p.tags.any((t) => t.toLowerCase().contains(q));
     }).toList();
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final isWide = constraints.maxWidth > 620;
-        return Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    final target = _targetSlot;
+    final String status;
+    if (target == null) {
+      status = 'All slots are full — select a slot to replace its perk';
+    } else if (_perkSlots[target] != null) {
+      status = 'Replacing perk ${target + 1}';
+    } else {
+      status = 'Adding to perk ${target + 1}';
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        SectionLabel(title: 'Perk browser', count: '${filtered.length}'),
+        const SizedBox(height: 12),
+        AppSearchField(
+          controller: _perkSearchController,
+          hint: 'Search perks, characters, tags',
+          onChanged: (v) => setState(() => _searchQuery = v),
+        ),
+        const SizedBox(height: 10),
+        Row(
           children: [
-            SizedBox(
-              width: isWide ? 360 : constraints.maxWidth,
-              child: _buildLeftPanel(allPerks),
+            DiamondMark(
+              size: 6,
+              color: target == null ? AppTheme.textTertiary : AppTheme.primary,
             ),
-            if (isWide && _editingSlot != null)
-              Expanded(child: _buildPerkPicker(filtered, allPerks)),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                status,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppFonts.body(
+                  fontSize: 13,
+                  color: target == null ? AppTheme.textTertiary : AppTheme.textSecondary,
+                ),
+              ),
+            ),
           ],
-        );
-      },
+        ),
+        const SizedBox(height: 10),
+        Expanded(
+          child: filtered.isEmpty
+              ? const EmptyState(
+                  icon: Icons.search_off,
+                  title: 'No perks found',
+                  subtitle: 'Try a different name, character or tag.',
+                )
+              // Perks in the build also sit in the slots; keep hero tags unique.
+              : HeroMode(
+                  enabled: false,
+                  child: ListView.builder(
+                    padding: const EdgeInsets.only(bottom: 24),
+                    itemCount: filtered.length,
+                    itemBuilder: (context, index) {
+                      final perk = filtered[index];
+                      final isUsed = _perkSlots.contains(perk.id);
+                      final card = PerkCard(
+                        perk: perk,
+                        compact: true,
+                        isSelected: isUsed,
+                        onTap: () => _onBrowserPerkTap(perk),
+                      );
+                      return RepaintBoundary(
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 6),
+                          child: isUsed
+                              ? Tooltip(message: 'In this build — click to remove', child: card)
+                              : card,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+        ),
+      ],
     );
   }
 
-  Widget _buildLeftPanel(List<Perk> allPerks) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          TextField(
-            controller: _nameController,
-            style: GoogleFonts.outfit(
-                color: AppTheme.textPrimary, fontSize: 16, fontWeight: FontWeight.w600),
-            decoration: const InputDecoration(
-              hintText: 'Build name...',
-              prefixIcon: Icon(Icons.drive_file_rename_outline, color: AppTheme.textDim, size: 18),
-            ),
-          ),
-
-          const SizedBox(height: 20),
-          const SectionHeader(title: 'PERKS'),
-          const SizedBox(height: 10),
-
-          ...List.generate(4, (i) {
-            final perkId = _perkSlots[i];
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: PerkSlot(
-                index: i,
-                perk: perkId != null ? allPerks.where((p) => p.id == perkId).firstOrNull : null,
-                onTap: () => _openPerkPicker(i),
-                onRemove: perkId != null ? () => setState(() => _perkSlots[i] = null) : null,
-              ),
-            );
-          }),
-
-          const SizedBox(height: 20),
-
-          if (_isSurvivor) ...[
-            const SectionHeader(title: 'ITEM'),
-            const SizedBox(height: 10),
-            ItemSlot(
-              selectedItemId: _selectedItemId,
-              onTap: _openItemPicker,
-              onRemove: _selectedItemId != null
-                  ? () => setState(() {
-                        _selectedItemId = null;
-                        _selectedAddon1Id = null;
-                        _selectedAddon2Id = null;
-                      })
-                  : null,
-            ),
-            if (_selectedItemId != null) ...[
-              const SizedBox(height: 12),
-              const SectionHeader(title: 'ITEM ADD-ONS'),
-              const SizedBox(height: 10),
-              _AddonSlot(
-                label: 'Add-on 1',
-                addonId: _selectedAddon1Id,
-                onTap: () => _openAddonPicker(slot: 1),
-                onRemove: _selectedAddon1Id != null
-                    ? () => setState(() => _selectedAddon1Id = null)
-                    : null,
-              ),
-              const SizedBox(height: 8),
-              _AddonSlot(
-                label: 'Add-on 2',
-                addonId: _selectedAddon2Id,
-                onTap: () => _openAddonPicker(slot: 2),
-                onRemove: _selectedAddon2Id != null
-                    ? () => setState(() => _selectedAddon2Id = null)
-                    : null,
-              ),
-            ],
-          ] else ...[
-            const SectionHeader(title: 'KILLER'),
-            const SizedBox(height: 10),
-            _KillerSlot(
-              selectedKillerId: _selectedKillerId,
-              onTap: _openKillerPicker,
-              onRemove: _selectedKillerId != null
-                  ? () => setState(() {
-                        _selectedKillerId = null;
-                        _selectedAddon1Id = null;
-                        _selectedAddon2Id = null;
-                      })
-                  : null,
-            ),
-            if (_selectedKillerId != null) ...[
-              const SizedBox(height: 12),
-              const SectionHeader(title: 'KILLER ADD-ONS'),
-              const SizedBox(height: 10),
-              _AddonSlot(
-                label: 'Add-on 1',
-                addonId: _selectedAddon1Id,
-                onTap: () => _openAddonPicker(slot: 1),
-                onRemove: _selectedAddon1Id != null
-                    ? () => setState(() => _selectedAddon1Id = null)
-                    : null,
-              ),
-              const SizedBox(height: 8),
-              _AddonSlot(
-                label: 'Add-on 2',
-                addonId: _selectedAddon2Id,
-                onTap: () => _openAddonPicker(slot: 2),
-                onRemove: _selectedAddon2Id != null
-                    ? () => setState(() => _selectedAddon2Id = null)
-                    : null,
-              ),
-            ],
-          ],
-
-          const SizedBox(height: 20),
-          const SectionHeader(title: 'OFFERING'),
-          const SizedBox(height: 10),
-          OfferingSlot(
-            selectedOfferingId: _selectedOfferingId,
-            isSurvivor: _isSurvivor,
-            onTap: _openOfferingPicker,
-            onRemove: _selectedOfferingId != null
-                ? () => setState(() => _selectedOfferingId = null)
-                : null,
-          ),
-
-          const SizedBox(height: 20),
-          const SectionHeader(title: 'NOTES'),
-          const SizedBox(height: 10),
-
-          TextField(
-            controller: _notesController,
-            maxLines: 3,
-            style: GoogleFonts.outfit(color: AppTheme.textPrimary, fontSize: 14),
-            decoration: const InputDecoration(
-              hintText: 'Build notes, strategy tips...',
-              alignLabelWithHint: true,
-            ),
-          ),
-        ],
-      ),
-    );
+  void _onBrowserPerkTap(Perk perk) {
+    final used = _perkSlots.indexOf(perk.id);
+    if (used != -1) {
+      setState(() {
+        _perkSlots[used] = null;
+        if (_editingSlot == used) _editingSlot = null;
+      });
+      return;
+    }
+    final target = _targetSlot;
+    if (target == null) {
+      showAppSnack(context, 'All 4 perk slots are full. Select a slot to replace its perk.');
+      return;
+    }
+    setState(() {
+      _perkSlots[target] = perk.id;
+      _editingSlot = null;
+    });
   }
 
   // ─── Pickers ──────────────────────────────────────────────────────────────
 
   void _openItemPicker() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: AppTheme.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+    showAppSheet<void>(
+      context,
       builder: (ctx) => ItemPickerSheet(
         selectedId: _selectedItemId,
         onSelect: (item) {
@@ -382,13 +614,8 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
   }
 
   void _openKillerPicker() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: AppTheme.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+    showAppSheet<void>(
+      context,
       builder: (ctx) => _KillerPickerSheet(
         selectedId: _selectedKillerId,
         onSelect: (killer) {
@@ -421,13 +648,8 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
 
     final alreadyPicked = slot == 1 ? _selectedAddon2Id : _selectedAddon1Id;
 
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: AppTheme.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+    showAppSheet<void>(
+      context,
       builder: (ctx) => _AddonPickerSheet(
         sourceKey: sourceKey!,
         sourceType: sourceType,
@@ -448,19 +670,13 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
   }
 
   void _openOfferingPicker() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: AppTheme.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+    showAppSheet<void>(
+      context,
       builder: (ctx) => OfferingPickerSheet(
         selectedId: _selectedOfferingId,
         isSurvivor: _isSurvivor,
         onSelect: (offering) {
-          setState(() =>
-              _selectedOfferingId = offering.id == 'no_offering' ? null : offering.id);
+          setState(() => _selectedOfferingId = offering.id == 'no_offering' ? null : offering.id);
           Navigator.pop(ctx);
         },
       ),
@@ -468,75 +684,141 @@ class _BuildEditorScreenState extends ConsumerState<BuildEditorScreen> {
   }
 
   void _openPerkPicker(int slot) {
-    setState(() => _editingSlot = slot);
-    final isWide = MediaQuery.of(context).size.width > 620;
-    if (!isWide) {
-      showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        backgroundColor: AppTheme.surface,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        builder: (ctx) => _PerkPickerSheet(
-          isSurvivor: _isSurvivor,
-          selectedIds: _perkSlots.whereType<String>().toList(),
-          onSelect: (perk) {
-            setState(() => _perkSlots[slot] = perk.id);
-            Navigator.pop(ctx);
-          },
-        ),
-      );
+    if (_twoColumn) {
+      // Wide: the persistent browser fills the selected slot.
+      setState(() => _editingSlot = _editingSlot == slot ? null : slot);
+      return;
     }
-  }
-
-  Widget _buildPerkPicker(List<Perk> filtered, List<Perk> all) {
-    return Container(
-      decoration: const BoxDecoration(
-        border: Border(left: BorderSide(color: AppTheme.border)),
+    setState(() => _editingSlot = slot);
+    showAppSheet<void>(
+      context,
+      builder: (ctx) => _PerkPickerSheet(
+        isSurvivor: _isSurvivor,
+        slotIndex: slot,
+        selectedIds: _perkSlots.whereType<String>().toList(),
+        onSelect: (perk) {
+          setState(() => _perkSlots[slot] = perk.id);
+          Navigator.pop(ctx);
+        },
       ),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(12, 12, 12, 6),
-            child: TextField(
-              onChanged: (v) => setState(() => _searchQuery = v),
-              style: GoogleFonts.outfit(color: AppTheme.textPrimary),
-              decoration: const InputDecoration(
-                hintText: 'Search perks...',
-                prefixIcon: Icon(Icons.search, color: AppTheme.textDim, size: 18),
+    ).whenComplete(() {
+      if (mounted) setState(() => _editingSlot = null);
+    });
+  }
+}
+
+// ─── Small text action ────────────────────────────────────────────────────────
+
+class _TextAction extends StatelessWidget {
+  final String label;
+  final VoidCallback onTap;
+
+  const _TextAction({required this.label, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      customBorder: AppShapes.notched(cut: 4),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        child: Text(
+          label.toUpperCase(),
+          style: AppFonts.caption(color: AppTheme.primary, fontSize: 12),
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Editor perk slot ─────────────────────────────────────────────────────────
+// Like [PerkSlot], but can be highlighted as the browser's target slot.
+
+class _EditorPerkSlot extends StatelessWidget {
+  final int index;
+  final Perk? perk;
+  final bool targeted;
+  final String hint;
+  final VoidCallback onTap;
+  final VoidCallback? onRemove;
+
+  const _EditorPerkSlot({
+    required this.index,
+    required this.perk,
+    required this.targeted,
+    required this.hint,
+    required this.onTap,
+    this.onRemove,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final p = perk;
+    final label = AppLocalizations.of(context)?.perkNumber(index + 1) ?? 'Perk ${index + 1}';
+    final captionColor = targeted ? AppTheme.primary : AppTheme.textTertiary;
+
+    return SizedBox(
+      height: 80,
+      child: AppPanel(
+        onTap: onTap,
+        selected: targeted,
+        cut: 8,
+        color: p == null && !targeted ? AppTheme.background.withValues(alpha: 0.4) : null,
+        padding: EdgeInsets.fromLTRB(p == null ? 14 : 8, 6, 4, 6),
+        child: Row(
+          children: [
+            if (p != null)
+              PerkIcon(perk: p, size: 64, showCategoryGlow: targeted)
+            else
+              SizedBox(
+                width: 48,
+                height: 48,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CustomPaint(
+                      size: const Size.square(48),
+                      painter: DiamondFramePainter(
+                        fill: Colors.transparent,
+                        stroke: targeted
+                            ? AppTheme.primary.withValues(alpha: 0.7)
+                            : AppTheme.borderHighlight,
+                      ),
+                    ),
+                    Icon(Icons.add, size: 18, color: captionColor),
+                  ],
+                ),
+              ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(label.toUpperCase(),
+                      style: AppFonts.caption(color: captionColor, fontSize: 11)),
+                  const SizedBox(height: 2),
+                  Text(
+                    p?.name ?? hint,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: p != null
+                        ? AppFonts.body(fontSize: 15, fontWeight: FontWeight.w600)
+                        : AppFonts.body(fontSize: 13, color: AppTheme.textSecondary),
+                  ),
+                  if (p != null)
+                    Text(
+                      p.character,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppFonts.body(fontSize: 12.5, color: AppTheme.textTertiary),
+                    ),
+                ],
               ),
             ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              itemCount: filtered.length,
-              itemBuilder: (context, index) {
-                final perk = filtered[index];
-                final isUsed = _perkSlots.contains(perk.id);
-                return Opacity(
-                  opacity: isUsed ? 0.4 : 1,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: PerkCard(
-                      perk: perk,
-                      compact: true,
-                      onTap: isUsed
-                          ? null
-                          : () {
-                              setState(() {
-                                _perkSlots[_editingSlot!] = perk.id;
-                                _editingSlot = null;
-                              });
-                            },
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
+            if (onRemove != null) SlotRemoveButton(onPressed: onRemove!),
+          ],
+        ),
       ),
     );
   }
@@ -587,65 +869,44 @@ class _AddonSlotState extends State<_AddonSlot> {
 
   @override
   Widget build(BuildContext context) {
-    final rarityColor = _addon != null
-        ? AppTheme.rarityColor(_addon!.rarity)
-        : AppTheme.border;
+    final addon = _addon;
+    final rarityColor = addon != null ? AppTheme.rarityColor(addon.rarity) : AppTheme.border;
 
-    return GestureDetector(
+    return BaseSlot(
+      isEmpty: addon == null,
+      height: 60,
+      filledBorderColor: rarityColor.withValues(alpha: 0.45),
+      emptyIcon: Icons.extension_outlined,
+      emptyLabel: widget.label,
       onTap: widget.onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
-        height: 52,
-        padding: const EdgeInsets.symmetric(horizontal: 14),
-        decoration: BoxDecoration(
-          color: AppTheme.surfaceElevated,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: _addon != null ? rarityColor.withValues(alpha: 0.5) : AppTheme.border,
-          ),
-        ),
-        child: Row(
-          children: [
-            Icon(Icons.extension_outlined,
-                size: 18,
-                color: _addon != null ? rarityColor : AppTheme.textDim),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                _addon?.name ?? widget.label,
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                  color: _addon != null ? AppTheme.textPrimary : AppTheme.textDim,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            if (_addon != null) ...[
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(
-                  color: rarityColor.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(
-                  _addon!.rarity.replaceAll('_', ' '),
-                  style: TextStyle(fontSize: 10, color: rarityColor, fontWeight: FontWeight.w600),
-                ),
-              ),
-              if (widget.onRemove != null)
-                GestureDetector(
-                  onTap: widget.onRemove,
-                  child: const Padding(
-                    padding: EdgeInsets.only(left: 6),
-                    child: Icon(Icons.close, size: 14, color: AppTheme.textDim),
+      contentPadding: const EdgeInsets.fromLTRB(10, 6, 4, 6),
+      filledContent: addon == null
+          ? const SizedBox()
+          : Row(
+              children: [
+                SquareGlyph(icon: Icons.extension_outlined, color: rarityColor, size: 38),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        addon.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppFonts.body(fontSize: 14, fontWeight: FontWeight.w600),
+                      ),
+                      Text(
+                        addon.rarity.replaceAll('_', ' ').toUpperCase(),
+                        style: AppFonts.caption(color: rarityColor, fontSize: 11),
+                      ),
+                    ],
                   ),
                 ),
-            ] else
-              const Icon(Icons.add, size: 16, color: AppTheme.textDim),
-          ],
-        ),
-      ),
+                if (widget.onRemove != null) SlotRemoveButton(onPressed: widget.onRemove!),
+              ],
+            ),
     );
   }
 }
@@ -671,8 +932,7 @@ class _KillerSlot extends ConsumerWidget {
       error: (_, __) => _buildSlot(null),
       data: (killers) {
         final killer = selectedKillerId != null
-            ? killers.firstWhere((k) => k.id == selectedKillerId,
-                orElse: () => killers.first)
+            ? killers.firstWhere((k) => k.id == selectedKillerId, orElse: () => killers.first)
             : null;
         return _buildSlot(killer);
       },
@@ -684,24 +944,20 @@ class _KillerSlot extends ConsumerWidget {
       isEmpty: killer == null,
       height: 64,
       filledBorderColor: AppTheme.primary.withValues(alpha: 0.4),
-      emptyIcon: Icons.sports_kabaddi,
+      emptyIcon: Icons.local_fire_department_outlined,
       emptyLabel: 'Choose Killer',
       onTap: onTap,
+      contentPadding: const EdgeInsets.fromLTRB(10, 6, 4, 6),
       filledContent: killer == null
           ? const SizedBox()
           : Row(
               children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: AppTheme.primaryDim.withValues(alpha: 0.3),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: AppTheme.primary.withValues(alpha: 0.4)),
-                  ),
-                  child: Icon(Icons.sports_kabaddi, size: 20, color: AppTheme.primary),
+                SquareGlyph(
+                  icon: Icons.local_fire_department_outlined,
+                  color: AppTheme.primary,
+                  size: 42,
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -709,31 +965,63 @@ class _KillerSlot extends ConsumerWidget {
                     children: [
                       Text(
                         killer.name,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: AppTheme.textPrimary,
-                        ),
+                        maxLines: 1,
                         overflow: TextOverflow.ellipsis,
+                        style: AppFonts.body(fontSize: 15, fontWeight: FontWeight.w600),
                       ),
                       Text(
-                        killer.power,
-                        style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary),
+                        killer.power.toUpperCase(),
+                        maxLines: 1,
                         overflow: TextOverflow.ellipsis,
+                        style: AppFonts.caption(color: AppTheme.textSecondary, fontSize: 11),
                       ),
                     ],
                   ),
                 ),
-                if (onRemove != null)
-                  GestureDetector(
-                    onTap: onRemove,
-                    child: const Padding(
-                      padding: EdgeInsets.all(4),
-                      child: Icon(Icons.close, size: 14, color: AppTheme.textDim),
-                    ),
-                  ),
+                if (onRemove != null) SlotRemoveButton(onPressed: onRemove!),
               ],
             ),
+    );
+  }
+}
+
+// ─── Shared sheet scaffold ────────────────────────────────────────────────────
+
+class _SearchSheet extends StatelessWidget {
+  final String title;
+  final String? subtitle;
+  final String hint;
+  final ValueChanged<String> onSearch;
+  final Widget list;
+
+  const _SearchSheet({
+    required this.title,
+    this.subtitle,
+    required this.hint,
+    required this.onSearch,
+    required this.list,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: sheetHeight(context),
+      child: Column(
+        children: [
+          SheetHeader(title: title, subtitle: subtitle),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: AppSearchField(
+              hint: hint,
+              autofocus: !AppLayout.isCompact(context),
+              onChanged: onSearch,
+            ),
+          ),
+          const SizedBox(height: 10),
+          const Divider(),
+          Expanded(child: list),
+        ],
+      ),
     );
   }
 }
@@ -757,128 +1045,50 @@ class _KillerPickerSheetState extends ConsumerState<_KillerPickerSheet> {
   Widget build(BuildContext context) {
     final killersAsync = ref.watch(killersProvider);
 
-    return DraggableScrollableSheet(
-      expand: false,
-      initialChildSize: 0.85,
-      maxChildSize: 0.95,
-      builder: (ctx, controller) => Column(
-        children: [
-          const SizedBox(height: 8),
-          Center(
-            child: Container(
-              width: 40, height: 4,
-              decoration: BoxDecoration(
-                  color: AppTheme.border, borderRadius: BorderRadius.circular(2)),
-            ),
-          ),
-          const SizedBox(height: 16),
-          const Padding(
-            padding: EdgeInsets.only(left: 16, right: 16, bottom: 10),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Choose Killer',
-                style: TextStyle(
-                  fontSize: 15, fontWeight: FontWeight.w600, color: AppTheme.textPrimary,
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: TextField(
-              onChanged: (v) => setState(() => _search = v),
-              autofocus: true,
-              style: const TextStyle(color: AppTheme.textPrimary),
-              decoration: const InputDecoration(
-                hintText: 'Search killers...',
-                prefixIcon: Icon(Icons.search, color: AppTheme.textDim, size: 18),
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Expanded(
-            child: killersAsync.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Center(child: Text('$e')),
-              data: (killers) {
-                final filtered = _search.isEmpty
-                    ? killers
-                    : killers.where((k) =>
-                        k.name.toLowerCase().contains(_search.toLowerCase()) ||
-                        k.power.toLowerCase().contains(_search.toLowerCase())).toList();
+    return _SearchSheet(
+      title: 'Choose Killer',
+      hint: 'Search killers...',
+      onSearch: (v) => setState(() => _search = v),
+      list: killersAsync.when(
+        loading: () => const LoadingView(),
+        error: (e, _) => ErrorView(e),
+        data: (killers) {
+          final q = _search.toLowerCase();
+          final filtered = _search.isEmpty
+              ? killers
+              : killers
+                  .where(
+                      (k) => k.name.toLowerCase().contains(q) || k.power.toLowerCase().contains(q))
+                  .toList();
 
-                return ListView.builder(
-                  controller: controller,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: filtered.length,
-                  itemBuilder: (ctx, i) {
-                    final killer = filtered[i];
-                    final isSelected = killer.id == widget.selectedId;
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: GestureDetector(
-                        onTap: () => widget.onSelect(killer),
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 150),
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            color: isSelected
-                                ? AppTheme.primaryDim.withValues(alpha: 0.3)
-                                : AppTheme.surfaceElevated,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: isSelected ? AppTheme.primary : AppTheme.border,
-                              width: isSelected ? 1.5 : 1,
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 36,
-                                height: 36,
-                                decoration: BoxDecoration(
-                                  color: AppTheme.primaryDim.withValues(alpha: 0.2),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Icon(Icons.sports_kabaddi,
-                                    size: 18, color: AppTheme.primary),
-                              ),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      killer.name,
-                                      style: const TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w600,
-                                        color: AppTheme.textPrimary,
-                                      ),
-                                    ),
-                                    Text(
-                                      killer.power,
-                                      style: const TextStyle(
-                                          fontSize: 11, color: AppTheme.textSecondary),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              if (isSelected)
-                                Icon(Icons.check_circle,
-                                    size: 18, color: AppTheme.primary),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
-        ],
+          if (filtered.isEmpty) {
+            return const EmptyState(
+              icon: Icons.search_off,
+              title: 'No killers found',
+              subtitle: 'Try a different name or power.',
+            );
+          }
+
+          return ListView.builder(
+            padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
+            itemCount: filtered.length,
+            itemBuilder: (ctx, i) {
+              final killer = filtered[i];
+              return PickerRow(
+                leading: SquareGlyph(
+                  icon: Icons.local_fire_department_outlined,
+                  color: AppTheme.primary,
+                  size: 38,
+                ),
+                title: killer.name,
+                subtitle: killer.power,
+                subtitleColor: AppTheme.textSecondary,
+                selected: killer.id == widget.selectedId,
+                onTap: () => widget.onSelect(killer),
+              );
+            },
+          );
+        },
       ),
     );
   }
@@ -923,157 +1133,73 @@ class _AddonPickerSheetState extends State<_AddonPickerSheet> {
     } else {
       result = await AddonRepository.instance.getItemAddons(widget.sourceKey);
     }
-    if (mounted) setState(() { _addons = result; _loading = false; });
+    if (!mounted) return;
+    setState(() {
+      _addons = result;
+      _loading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return DraggableScrollableSheet(
-      expand: false,
-      initialChildSize: 0.85,
-      maxChildSize: 0.95,
-      builder: (ctx, controller) => Column(
-        children: [
-          const SizedBox(height: 8),
-          Center(
-            child: Container(
-              width: 40, height: 4,
-              decoration: BoxDecoration(
-                  color: AppTheme.border, borderRadius: BorderRadius.circular(2)),
-            ),
-          ),
-          const SizedBox(height: 16),
-          const Padding(
-            padding: EdgeInsets.only(left: 16, right: 16, bottom: 10),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Choose Add-on',
-                style: TextStyle(
-                  fontSize: 15, fontWeight: FontWeight.w600, color: AppTheme.textPrimary,
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: TextField(
-              onChanged: (v) => setState(() => _search = v),
-              autofocus: true,
-              style: const TextStyle(color: AppTheme.textPrimary),
-              decoration: const InputDecoration(
-                hintText: 'Search add-ons...',
-                prefixIcon: Icon(Icons.search, color: AppTheme.textDim, size: 18),
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Expanded(
-            child: _loading
-                ? const Center(child: CircularProgressIndicator())
-                : Builder(builder: (_) {
-                    final filtered = _addons.where((a) {
-                      if (a.id == widget.excludeId) return false;
-                      if (_search.isEmpty) return true;
-                      return a.name.toLowerCase().contains(_search.toLowerCase());
-                    }).toList();
+    final Widget list;
+    if (_loading) {
+      list = const LoadingView();
+    } else {
+      final filtered = _addons.where((a) {
+        if (a.id == widget.excludeId) return false;
+        if (_search.isEmpty) return true;
+        return a.name.toLowerCase().contains(_search.toLowerCase());
+      }).toList();
 
-                    if (filtered.isEmpty) {
-                      return const Center(
-                        child: Text('No add-ons found',
-                            style: TextStyle(color: AppTheme.textSecondary)),
-                      );
-                    }
+      list = filtered.isEmpty
+          ? const EmptyState(
+              icon: Icons.search_off,
+              title: 'No add-ons found',
+              subtitle: 'Try a different search.',
+            )
+          : ListView.builder(
+              padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
+              itemCount: filtered.length,
+              itemBuilder: (ctx, i) {
+                final addon = filtered[i];
+                final rarityColor = AppTheme.rarityColor(addon.rarity);
+                return PickerRow(
+                  leading: SquareGlyph(
+                    icon: Icons.extension_outlined,
+                    color: rarityColor,
+                    size: 38,
+                  ),
+                  title: addon.name,
+                  subtitle: addon.rarity.replaceAll('_', ' '),
+                  subtitleColor: rarityColor,
+                  selected: addon.id == widget.selectedId,
+                  onTap: () => widget.onSelect(addon),
+                );
+              },
+            );
+    }
 
-                    return ListView.builder(
-                      controller: controller,
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      itemCount: filtered.length,
-                      itemBuilder: (ctx, i) {
-                        final addon = filtered[i];
-                        final isSelected = addon.id == widget.selectedId;
-                        final rarityColor = AppTheme.rarityColor(addon.rarity);
-
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
-                          child: GestureDetector(
-                            onTap: () => widget.onSelect(addon),
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 150),
-                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                              decoration: BoxDecoration(
-                                color: isSelected
-                                    ? AppTheme.primaryDim.withValues(alpha: 0.3)
-                                    : AppTheme.surfaceElevated,
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: isSelected ? AppTheme.primary : AppTheme.border,
-                                  width: isSelected ? 1.5 : 1,
-                                ),
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.extension_outlined,
-                                      size: 18, color: rarityColor),
-                                  const SizedBox(width: 10),
-                                  Expanded(
-                                    child: Text(
-                                      addon.name,
-                                      style: const TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w500,
-                                        color: AppTheme.textPrimary,
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 3),
-                                    decoration: BoxDecoration(
-                                      color: rarityColor.withValues(alpha: 0.15),
-                                      borderRadius: BorderRadius.circular(6),
-                                      border: Border.all(
-                                          color: rarityColor.withValues(alpha: 0.5)),
-                                    ),
-                                    child: Text(
-                                      addon.rarity.replaceAll('_', ' '),
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        color: rarityColor,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                  if (isSelected)
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 8),
-                                      child: Icon(Icons.check_circle,
-                                          size: 16, color: AppTheme.primary),
-                                    ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  }),
-          ),
-        ],
-      ),
+    return _SearchSheet(
+      title: 'Choose Add-on',
+      hint: 'Search add-ons...',
+      onSearch: (v) => setState(() => _search = v),
+      list: list,
     );
   }
 }
 
-// ─── Mobile perk picker sheet ─────────────────────────────────────────────────
+// ─── Perk picker sheet (phones) ───────────────────────────────────────────────
 
 class _PerkPickerSheet extends ConsumerStatefulWidget {
   final bool isSurvivor;
+  final int slotIndex;
   final List<String> selectedIds;
   final ValueChanged<Perk> onSelect;
 
   const _PerkPickerSheet({
     required this.isSurvivor,
+    required this.slotIndex,
     required this.selectedIds,
     required this.onSelect,
   });
@@ -1087,74 +1213,55 @@ class _PerkPickerSheetState extends ConsumerState<_PerkPickerSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final perksAsync = widget.isSurvivor
-        ? ref.watch(survivorPerksProvider)
-        : ref.watch(killerPerksProvider);
+    final perksAsync =
+        widget.isSurvivor ? ref.watch(survivorPerksProvider) : ref.watch(killerPerksProvider);
 
-    return DraggableScrollableSheet(
-      expand: false,
-      initialChildSize: 0.85,
-      maxChildSize: 0.95,
-      builder: (ctx, controller) => Column(
-        children: [
-          const SizedBox(height: 8),
-          Container(
-            width: 40, height: 4,
-            decoration: BoxDecoration(
-                color: AppTheme.border, borderRadius: BorderRadius.circular(2)),
-          ),
-          const SizedBox(height: 16),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: TextField(
-              onChanged: (v) => setState(() => _search = v),
-              autofocus: true,
-              style: GoogleFonts.outfit(color: AppTheme.textPrimary),
-              decoration: const InputDecoration(
-                hintText: 'Search perks...',
-                prefixIcon: Icon(Icons.search, color: AppTheme.textDim, size: 18),
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Expanded(
-            child: perksAsync.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (e, _) => Center(child: Text('$e')),
-              data: (perks) {
-                final filtered = perks.where((p) {
-                  if (_search.isEmpty) return true;
-                  final q = _search.toLowerCase();
-                  return p.name.toLowerCase().contains(q) ||
-                      p.character.toLowerCase().contains(q) ||
-                      p.tags.any((t) => t.toLowerCase().contains(q));
-                }).toList();
-                return ListView.builder(
-                  controller: controller,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: filtered.length,
-                  itemBuilder: (ctx, i) {
-                    final perk = filtered[i];
-                    final isUsed = widget.selectedIds.contains(perk.id);
-                    final card = Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: PerkCard(
-                        perk: perk,
-                        compact: true,
-                        onTap: isUsed ? null : () => widget.onSelect(perk),
-                      ),
-                    );
-                    return RepaintBoundary(
-                      child: isUsed
-                          ? Opacity(opacity: 0.4, child: card)
-                          : card,
-                    );
-                  },
-                );
-              },
-            ),
-          ),
-        ],
+    return _SearchSheet(
+      title: 'Choose Perk',
+      subtitle: 'Slot ${widget.slotIndex + 1} of 4',
+      hint: 'Search perks...',
+      onSearch: (v) => setState(() => _search = v),
+      list: perksAsync.when(
+        loading: () => const LoadingView(),
+        error: (e, _) => ErrorView(e),
+        data: (perks) {
+          final filtered = perks.where((p) {
+            if (_search.isEmpty) return true;
+            final q = _search.toLowerCase();
+            return p.name.toLowerCase().contains(q) ||
+                p.character.toLowerCase().contains(q) ||
+                p.tags.any((t) => t.toLowerCase().contains(q));
+          }).toList();
+
+          if (filtered.isEmpty) {
+            return const EmptyState(
+              icon: Icons.search_off,
+              title: 'No perks found',
+              subtitle: 'Try a different name, character or tag.',
+            );
+          }
+
+          return ListView.builder(
+            padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
+            itemCount: filtered.length,
+            itemBuilder: (ctx, i) {
+              final perk = filtered[i];
+              final isUsed = widget.selectedIds.contains(perk.id);
+              final card = Padding(
+                padding: const EdgeInsets.only(bottom: 6),
+                child: PerkCard(
+                  perk: perk,
+                  compact: true,
+                  isSelected: isUsed,
+                  onTap: isUsed ? null : () => widget.onSelect(perk),
+                ),
+              );
+              return RepaintBoundary(
+                child: isUsed ? Opacity(opacity: 0.5, child: card) : card,
+              );
+            },
+          );
+        },
       ),
     );
   }
