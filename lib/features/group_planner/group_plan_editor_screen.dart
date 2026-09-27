@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:go_router/go_router.dart';
 import '../../core/models/addon.dart';
 import '../../core/models/group_plan.dart';
 import '../../core/models/perk.dart';
@@ -13,8 +12,15 @@ import '../../core/repositories/item_repository.dart';
 import '../../core/repositories/perk_repository.dart';
 import '../../core/services/build_share_service.dart';
 import '../../core/theme/app_theme.dart';
-import '../../core/widgets/design_system.dart';
 import '../../core/widgets/widgets.dart';
+
+/// Identity colors for the four squad members (used as small markers only).
+const List<Color> squadColors = [
+  Color(0xFF4FC3F7), // blue
+  Color(0xFF81C784), // green
+  Color(0xFFFFB74D), // orange
+  Color(0xFFBA68C8), // purple
+];
 
 class GroupPlanEditorScreen extends ConsumerStatefulWidget {
   final String planId;
@@ -37,12 +43,10 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
   final List<List<String?>> _survivorAddonIds = List.generate(4, (_) => List.filled(2, null));
   bool _loading = true;
 
-  static const List<Color> _survivorColors = [
-    Color(0xFF4FC3F7), // blue
-    Color(0xFF81C784), // green
-    Color(0xFFFFB74D), // orange
-    Color(0xFFBA68C8), // purple
-  ];
+  // Phone layout: which survivor is shown.
+  int _current = 0;
+  bool _switching = false;
+  final _pages = PageController();
 
   static const List<String> _survivorLabels = [
     'Survivor 1', 'Survivor 2', 'Survivor 3', 'Survivor 4'
@@ -52,6 +56,12 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
   void initState() {
     super.initState();
     _loadData();
+  }
+
+  @override
+  void dispose() {
+    _pages.dispose();
+    super.dispose();
   }
 
   Future<void> _loadData() async {
@@ -101,21 +111,12 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
     }
     await GroupPlanRepository.instance.save(_plan!);
     ref.invalidate(groupPlansProvider);
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Group plan saved!')),
-      );
-    }
+    if (mounted) showAppSnack(context, 'Group plan saved');
   }
 
   void _pickItem(int survivorIndex) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: AppTheme.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+    showAppSheet(
+      context,
       builder: (ctx) => ItemPickerSheet(
         selectedId: _survivorItemIds[survivorIndex],
         onSelect: (item) {
@@ -140,13 +141,8 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
         ? _survivorAddonIds[survivorIndex][1]
         : _survivorAddonIds[survivorIndex][0];
 
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: AppTheme.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+    showAppSheet(
+      context,
       builder: (ctx) => _AddonPickerSheet(
         itemCategory: item.category,
         excludeId: excludeId,
@@ -160,13 +156,8 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
   }
 
   void _pickOffering(int survivorIndex) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: AppTheme.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+    showAppSheet(
+      context,
       builder: (ctx) => OfferingPickerSheet(
         selectedId: _survivorOfferingIds[survivorIndex],
         isSurvivor: true,
@@ -180,23 +171,18 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
   }
 
   void _pickPerk(int survivorIndex, int slotIndex) {
-    final usedIds = _resolvedPerks
-        .expand((slots) => slots)
-        .whereType<Perk>()
-        .map((p) => p.id)
-        .toSet();
+    // Perks already taken anywhere in the squad, and by whom.
+    final usedBy = <String, int>{
+      for (var si = 0; si < 4; si++)
+        for (final p in _resolvedPerks[si].whereType<Perk>()) p.id: si,
+    };
 
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: AppTheme.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+    showAppSheet(
+      context,
       builder: (ctx) => _PerkPickerSheet(
         perks: _allPerks,
-        usedIds: usedIds,
-        survivorColor: _survivorColors[survivorIndex],
+        usedBy: usedBy,
+        survivorIndex: survivorIndex,
         survivorLabel: _survivorLabels[survivorIndex],
         onSelect: (perk) {
           setState(() => _resolvedPerks[survivorIndex][slotIndex] = perk);
@@ -206,113 +192,51 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    if (_loading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    }
-
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        title: Text(_plan?.name ?? 'Group Plan'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.ios_share_outlined),
-            tooltip: 'Share plan',
-            onPressed: _plan != null ? () => _showShareSheet(context) : null,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: TextButton(
-              onPressed: _save,
-              style: TextButton.styleFrom(
-                backgroundColor: AppTheme.primary,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              ),
-              child: Text('Save',
-                  style: GoogleFonts.outfit(fontWeight: FontWeight.w600, color: Colors.white)),
-            ),
-          ),
-        ],
-      ),
-      body: AppBackground(
-        orbs: AppBackground.defaultOrbs(),
-        child: _buildBody(),
-      ),
-    );
-  }
-
   void _showShareSheet(BuildContext context) {
     final code = BuildShareService.encodeGroupPlan(_plan!);
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: AppTheme.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (ctx) => Padding(
-        padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
+    showAppSheet(
+      context,
+      builder: (ctx) => SafeArea(
+        top: false,
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: AppTheme.border,
-                  borderRadius: BorderRadius.circular(2),
+            const SheetHeader(
+              title: 'Share group plan',
+              subtitle: 'Copy the code below and send it to your squad.',
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 4, 20, 0),
+              child: AppPanel(
+                cut: 8,
+                color: AppTheme.background.withValues(alpha: 0.6),
+                padding: const EdgeInsets.all(14),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxHeight: 160),
+                  child: SingleChildScrollView(
+                    child: SelectableText(
+                      code,
+                      style: AppFonts.body(
+                        fontSize: 12,
+                        color: AppTheme.textSecondary,
+                        height: 1.5,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
-            const SizedBox(height: 20),
-            Text(
-              'Share Group Plan',
-              style: GoogleFonts.outfit(
-                color: AppTheme.textPrimary,
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 6),
-            Text(
-              'Copy the code below and send it to your squad.',
-              style: GoogleFonts.outfit(color: AppTheme.textSecondary, fontSize: 13),
-            ),
-            const SizedBox(height: 16),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: AppTheme.surfaceElevated,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: AppTheme.border),
-              ),
-              child: SelectableText(
-                code,
-                style: const TextStyle(
-                  color: AppTheme.textSecondary,
-                  fontSize: 11,
-                  fontFamily: 'monospace',
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              child: DbdButton(
-                label: 'Copy Code',
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
+              child: AppButton(
+                label: 'Copy code',
                 icon: Icons.copy,
+                expand: true,
                 onPressed: () {
                   Clipboard.setData(ClipboardData(text: code));
                   Navigator.pop(ctx);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Group plan code copied to clipboard')),
-                  );
+                  showAppSnack(context, 'Group plan code copied to clipboard');
                 },
               ),
             ),
@@ -322,115 +246,239 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
     );
   }
 
-  Widget _buildBody() {
-    final width = MediaQuery.of(context).size.width;
-    final isWide = width > 700;
+  void _goToSurvivor(int i) {
+    setState(() => _current = i);
+    if (!_pages.hasClients) return;
+    _switching = true;
+    _pages
+        .animateToPage(i, duration: const Duration(milliseconds: 240), curve: Curves.easeOutCubic)
+        .whenComplete(() => _switching = false);
+  }
 
-    if (isWide) {
-      return Align(
-        alignment: Alignment.topCenter,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1100),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: List.generate(4, (si) => Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(right: si < 3 ? 12 : 0),
-                  child: _SurvivorColumn(
-                    survivorIndex: si,
-                    color: _survivorColors[si],
-                    label: _survivorLabels[si],
-                    perkSlots: _resolvedPerks[si],
-                    itemId: _survivorItemIds[si],
-                    offeringId: _survivorOfferingIds[si],
-                    addon1Id: _survivorAddonIds[si][0],
-                    addon2Id: _survivorAddonIds[si][1],
-                    onSlotTap: (slotIndex) => _pickPerk(si, slotIndex),
-                    onSlotRemove: (slotIndex) => setState(
-                      () => _resolvedPerks[si][slotIndex] = null,
-                    ),
-                    onItemTap: () => _pickItem(si),
-                    onItemRemove: _survivorItemIds[si] != null
-                        ? () => setState(() {
-                              _survivorItemIds[si] = null;
-                              _survivorAddonIds[si][0] = null;
-                              _survivorAddonIds[si][1] = null;
-                            })
-                        : null,
-                    onOfferingTap: () => _pickOffering(si),
-                    onOfferingRemove: _survivorOfferingIds[si] != null
-                        ? () => setState(() => _survivorOfferingIds[si] = null)
-                        : null,
-                    onAddon1Tap: () => _pickAddon(si, 0),
-                    onAddon1Remove: _survivorAddonIds[si][0] != null
-                        ? () => setState(() => _survivorAddonIds[si][0] = null)
-                        : null,
-                    onAddon2Tap: () => _pickAddon(si, 1),
-                    onAddon2Remove: _survivorAddonIds[si][1] != null
-                        ? () => setState(() => _survivorAddonIds[si][1] = null)
-                        : null,
-                  ),
-                ),
-              )),
-            ),
-          ),
-        ),
-      );
+  // ─── Build ──────────────────────────────────────────────────────────────────
+
+  @override
+  Widget build(BuildContext context) {
+    if (_loading) {
+      return const Scaffold(body: AppBackground(child: LoadingView()));
     }
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: List.generate(4, (si) => Padding(
-          padding: const EdgeInsets.only(bottom: 20),
-          child: _SurvivorColumn(
-            survivorIndex: si,
-            color: _survivorColors[si],
-            label: _survivorLabels[si],
-            perkSlots: _resolvedPerks[si],
-            itemId: _survivorItemIds[si],
-            offeringId: _survivorOfferingIds[si],
-            addon1Id: _survivorAddonIds[si][0],
-            addon2Id: _survivorAddonIds[si][1],
-            onSlotTap: (slotIndex) => _pickPerk(si, slotIndex),
-            onSlotRemove: (slotIndex) => setState(
-              () => _resolvedPerks[si][slotIndex] = null,
+    final compact = AppLayout.isCompact(context);
+    final filled = _resolvedPerks.expand((s) => s).whereType<Perk>().length;
+    final items = _survivorItemIds.whereType<String>().length;
+    final offerings = _survivorOfferingIds.whereType<String>().length;
+
+    return Scaffold(
+      body: AppBackground(
+        child: Column(
+          children: [
+            PageHeader(
+              showBack: true,
+              onBack: () => context.canPop() ? context.pop() : context.go('/group'),
+              title: _plan?.name ?? 'Group Plan',
+              subtitle: compact
+                  ? '$filled/16 perks  ·  $items/4 items'
+                  : '$filled/16 perks  ·  $items/4 items  ·  $offerings/4 offerings',
+              actions: [
+                AppIconButton(
+                  icon: Icons.ios_share_outlined,
+                  tooltip: 'Share plan',
+                  onPressed: _plan != null ? () => _showShareSheet(context) : null,
+                ),
+                AppButton(
+                  label: 'Save',
+                  icon: compact ? null : Icons.check,
+                  compact: true,
+                  onPressed: _save,
+                ),
+              ],
+              bottom: compact ? _squadSwitcher() : null,
             ),
-            onItemTap: () => _pickItem(si),
-            onItemRemove: _survivorItemIds[si] != null
-                ? () => setState(() {
-                      _survivorItemIds[si] = null;
-                      _survivorAddonIds[si][0] = null;
-                      _survivorAddonIds[si][1] = null;
-                    })
-                : null,
-            onOfferingTap: () => _pickOffering(si),
-            onOfferingRemove: _survivorOfferingIds[si] != null
-                ? () => setState(() => _survivorOfferingIds[si] = null)
-                : null,
-            onAddon1Tap: () => _pickAddon(si, 0),
-            onAddon1Remove: _survivorAddonIds[si][0] != null
-                ? () => setState(() => _survivorAddonIds[si][0] = null)
-                : null,
-            onAddon2Tap: () => _pickAddon(si, 1),
-            onAddon2Remove: _survivorAddonIds[si][1] != null
-                ? () => setState(() => _survivorAddonIds[si][1] = null)
-                : null,
+            Expanded(child: compact ? _phoneBody() : _wideBody()),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Phone: four tabs that double as a squad overview (marker + perk diamonds).
+  Widget _squadSwitcher() {
+    return HeroMode(
+      enabled: false,
+      child: Row(
+        children: [
+          for (var i = 0; i < 4; i++) ...[
+            if (i > 0) const SizedBox(width: 6),
+            Expanded(
+              child: _SquadTab(
+                index: i,
+                perks: _resolvedPerks[i],
+                selected: i == _current,
+                onTap: () => _goToSurvivor(i),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _phoneBody() {
+    return PageView.builder(
+      controller: _pages,
+      itemCount: 4,
+      onPageChanged: (i) {
+        if (!_switching) setState(() => _current = i);
+      },
+      itemBuilder: (context, si) => SingleChildScrollView(
+        padding: pagePadding(context, top: 2, bottom: 32),
+        child: _survivorPanel(si),
+      ),
+    );
+  }
+
+  Widget _wideBody() {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final pad = pagePadding(context, top: 4, bottom: 32);
+        final inner = constraints.maxWidth.clamp(0, AppLayout.contentMax) - pad.horizontal;
+        final fourUp = inner >= 940;
+        const gap = 12.0;
+
+        Widget row(List<int> indices) => IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  for (final si in indices) ...[
+                    if (si != indices.first) const SizedBox(width: gap),
+                    Expanded(child: _survivorPanel(si, dense: fourUp).entrance(si, step: 50)),
+                  ],
+                ],
+              ),
+            );
+
+        return ContentWidth(
+          child: SingleChildScrollView(
+            padding: pad,
+            child: fourUp
+                ? row(const [0, 1, 2, 3])
+                : Column(
+                    children: [
+                      row(const [0, 1]),
+                      const SizedBox(height: gap),
+                      row(const [2, 3]),
+                    ],
+                  ),
           ),
-        )),
+        );
+      },
+    );
+  }
+
+  Widget _survivorPanel(int si, {bool dense = false}) {
+    return _SurvivorPanel(
+      survivorIndex: si,
+      color: squadColors[si],
+      label: _survivorLabels[si],
+      dense: dense,
+      perkSlots: _resolvedPerks[si],
+      itemId: _survivorItemIds[si],
+      offeringId: _survivorOfferingIds[si],
+      addon1Id: _survivorAddonIds[si][0],
+      addon2Id: _survivorAddonIds[si][1],
+      onSlotTap: (slotIndex) => _pickPerk(si, slotIndex),
+      onSlotRemove: (slotIndex) => setState(
+        () => _resolvedPerks[si][slotIndex] = null,
+      ),
+      onItemTap: () => _pickItem(si),
+      onItemRemove: _survivorItemIds[si] != null
+          ? () => setState(() {
+                _survivorItemIds[si] = null;
+                _survivorAddonIds[si][0] = null;
+                _survivorAddonIds[si][1] = null;
+              })
+          : null,
+      onOfferingTap: () => _pickOffering(si),
+      onOfferingRemove: _survivorOfferingIds[si] != null
+          ? () => setState(() => _survivorOfferingIds[si] = null)
+          : null,
+      onAddon1Tap: () => _pickAddon(si, 0),
+      onAddon1Remove: _survivorAddonIds[si][0] != null
+          ? () => setState(() => _survivorAddonIds[si][0] = null)
+          : null,
+      onAddon2Tap: () => _pickAddon(si, 1),
+      onAddon2Remove: _survivorAddonIds[si][1] != null
+          ? () => setState(() => _survivorAddonIds[si][1] = null)
+          : null,
+    );
+  }
+}
+
+// ─── Squad tab (phone switcher) ───────────────────────────────────────────────
+
+class _SquadTab extends StatelessWidget {
+  final int index;
+  final List<Perk?> perks;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const _SquadTab({
+    required this.index,
+    required this.perks,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      selected: selected,
+      label: 'Survivor ${index + 1}',
+      child: AppPanel(
+        onTap: onTap,
+        selected: selected,
+        cut: 7,
+        padding: const EdgeInsets.fromLTRB(8, 8, 8, 9),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                DiamondMark(size: 6, color: squadColors[index]),
+                const SizedBox(width: 6),
+                Text(
+                  'S${index + 1}',
+                  style: AppFonts.display(
+                    fontSize: 15,
+                    letterSpacing: 1.2,
+                    color: selected ? AppTheme.textPrimary : AppTheme.textSecondary,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 6),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: PerkDiamondRow(perks: perks, size: 15, spacing: 1),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-// ─── Survivor Column ──────────────────────────────────────────────────────────
+// ─── Survivor panel ───────────────────────────────────────────────────────────
 
-class _SurvivorColumn extends StatelessWidget {
+class _SurvivorPanel extends StatelessWidget {
   final int survivorIndex;
   final Color color;
   final String label;
+
+  /// Narrow column (four-up desktop layout): smaller perk icons, tighter padding.
+  final bool dense;
   final List<Perk?> perkSlots;
   final String? itemId;
   final String? offeringId;
@@ -447,10 +495,11 @@ class _SurvivorColumn extends StatelessWidget {
   final VoidCallback onAddon2Tap;
   final VoidCallback? onAddon2Remove;
 
-  const _SurvivorColumn({
+  const _SurvivorPanel({
     required this.survivorIndex,
     required this.color,
     required this.label,
+    this.dense = false,
     required this.perkSlots,
     required this.itemId,
     required this.offeringId,
@@ -471,170 +520,90 @@ class _SurvivorColumn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final filledCount = perkSlots.whereType<Perk>().length;
+    final hasItem = itemId != null;
+    const cut = 10.0;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: AppTheme.surface,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: color.withValues(alpha: 0.3)),
-      ),
-      child: Column(
+    return AppPanel(
+      cut: cut,
+      padding: EdgeInsets.zero,
+      child: Stack(
         children: [
-          // Header
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.08),
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(13)),
-              border: Border(bottom: BorderSide(color: color.withValues(alpha: 0.2))),
-            ),
-            child: Row(
+          Padding(
+            padding: EdgeInsets.fromLTRB(dense ? 12 : 14, 16, dense ? 12 : 14, 14),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
-                  width: 28,
-                  height: 28,
-                  decoration: BoxDecoration(
-                    color: color.withValues(alpha: 0.15),
-                    shape: BoxShape.circle,
-                    border: Border.all(color: color.withValues(alpha: 0.5)),
-                  ),
-                  child: Center(
-                    child: Text(
-                      '${survivorIndex + 1}',
-                      style: GoogleFonts.outfit(
-                        color: color,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 13,
+                // Header
+                Row(
+                  children: [
+                    DiamondMark(size: 8, color: color),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        label.toUpperCase(),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppFonts.display(fontSize: 18, letterSpacing: 1.3),
                       ),
                     ),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    label,
-                    style: GoogleFonts.outfit(
-                      color: color,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
+                    Text(
+                      '$filledCount/4',
+                      style: AppFonts.display(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 1,
+                        color: filledCount == 4 ? AppTheme.textPrimary : AppTheme.textTertiary,
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-                Text(
-                  '$filledCount/4',
-                  style: GoogleFonts.outfit(
-                    color: filledCount == 4 ? color : AppTheme.textSecondary,
-                    fontSize: 12,
-                    fontWeight: filledCount == 4 ? FontWeight.w700 : FontWeight.normal,
-                  ),
-                ),
-              ],
-            ),
-          ),
+                const SizedBox(height: 14),
 
-          // Perk slots
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              children: List.generate(4, (slotIndex) {
-                final perk = perkSlots[slotIndex];
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: _CompactPerkSlot(
-                    perk: perk,
+                // Perks
+                const _FieldLabel('Perks'),
+                for (var slotIndex = 0; slotIndex < 4; slotIndex++) ...[
+                  if (slotIndex > 0) const SizedBox(height: 6),
+                  _SquadPerkSlot(
+                    perk: perkSlots[slotIndex],
                     slotIndex: slotIndex,
-                    accentColor: color,
+                    dense: dense,
                     onTap: () => onSlotTap(slotIndex),
-                    onRemove: perk != null ? () => onSlotRemove(slotIndex) : null,
+                    onRemove: perkSlots[slotIndex] != null ? () => onSlotRemove(slotIndex) : null,
                   ),
-                );
-              }),
-            ),
-          ),
+                ],
+                const SizedBox(height: 16),
 
-          // Item slot
-          Padding(
-            padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 6),
-                  child: Text(
-                    'ITEM',
-                    style: GoogleFonts.outfit(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
-                      color: color.withValues(alpha: 0.7),
-                      letterSpacing: 0.8,
-                    ),
-                  ),
-                ),
+                // Item
+                const _FieldLabel('Item'),
                 ItemSlot(
                   selectedItemId: itemId,
                   onTap: onItemTap,
                   onRemove: onItemRemove,
                 ),
-              ],
-            ),
-          ),
+                const SizedBox(height: 16),
 
-          // Add-on slots (visible when item selected)
-          if (itemId != null)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(10, 0, 10, 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 6),
-                    child: Text(
-                      'ADD-ONS',
-                      style: GoogleFonts.outfit(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w600,
-                        color: color.withValues(alpha: 0.7),
-                        letterSpacing: 0.8,
-                      ),
-                    ),
-                  ),
-                  _CompactAddonSlot(
-                    addonId: addon1Id,
-                    label: 'Add-on 1',
-                    accentColor: color,
-                    onTap: onAddon1Tap,
-                    onRemove: onAddon1Remove,
-                  ),
-                  const SizedBox(height: 6),
-                  _CompactAddonSlot(
-                    addonId: addon2Id,
-                    label: 'Add-on 2',
-                    accentColor: color,
-                    onTap: onAddon2Tap,
-                    onRemove: onAddon2Remove,
-                  ),
-                ],
-              ),
-            ),
-
-          // Offering slot
-          Padding(
-            padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 6),
-                  child: Text(
-                    'OFFERING',
-                    style: GoogleFonts.outfit(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
-                      color: color.withValues(alpha: 0.7),
-                      letterSpacing: 0.8,
-                    ),
-                  ),
+                // Add-ons (need an item first)
+                _FieldLabel('Add-ons', hint: hasItem ? null : 'Pick an item first'),
+                _AddonSlot(
+                  addonId: addon1Id,
+                  label: 'Add-on 1',
+                  enabled: hasItem,
+                  onTap: onAddon1Tap,
+                  onRemove: onAddon1Remove,
                 ),
+                const SizedBox(height: 6),
+                _AddonSlot(
+                  addonId: addon2Id,
+                  label: 'Add-on 2',
+                  enabled: hasItem,
+                  onTap: onAddon2Tap,
+                  onRemove: onAddon2Remove,
+                ),
+                const SizedBox(height: 16),
+
+                // Offering
+                const _FieldLabel('Offering'),
                 OfferingSlot(
                   selectedOfferingId: offeringId,
                   isSurvivor: true,
@@ -644,220 +613,139 @@ class _SurvivorColumn extends StatelessWidget {
               ],
             ),
           ),
+          // Thin identity edge along the top.
+          Positioned(
+            top: 0,
+            left: cut + 2,
+            right: 0,
+            height: 2,
+            child: ColoredBox(color: color.withValues(alpha: 0.65)),
+          ),
         ],
       ),
-    ).animate().fadeIn(delay: (survivorIndex * 60).ms).slideY(begin: 0.05, end: 0);
+    );
   }
 }
 
-// ─── Compact Perk Slot ────────────────────────────────────────────────────────
+class _FieldLabel extends StatelessWidget {
+  final String text;
+  final String? hint;
+  const _FieldLabel(this.text, {this.hint});
 
-class _CompactPerkSlot extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 7),
+      child: Row(
+        children: [
+          Text(text.toUpperCase(), style: AppFonts.caption()),
+          if (hint != null) ...[
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                hint!,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.right,
+                style: AppFonts.body(fontSize: 11.5, color: AppTheme.textTertiary),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Perk slot (squad variant) ────────────────────────────────────────────────
+
+class _SquadPerkSlot extends StatelessWidget {
   final Perk? perk;
   final int slotIndex;
-  final Color accentColor;
+  final bool dense;
   final VoidCallback onTap;
   final VoidCallback? onRemove;
 
-  const _CompactPerkSlot({
+  const _SquadPerkSlot({
     required this.perk,
     required this.slotIndex,
-    required this.accentColor,
+    required this.dense,
     required this.onTap,
     this.onRemove,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    final p = perk;
+    return BaseSlot(
+      isEmpty: p == null,
+      height: dense ? 58 : 64,
+      filledBorderColor: AppTheme.border,
+      emptyIcon: Icons.add,
+      emptyLabel: 'Perk ${slotIndex + 1}',
+      contentPadding: const EdgeInsets.fromLTRB(6, 4, 0, 4),
       onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 180),
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: perk != null ? AppTheme.surfaceElevated : AppTheme.background,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: perk != null ? accentColor.withValues(alpha: 0.3) : AppTheme.border,
-          ),
-        ),
-        child: perk == null
-            ? Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.add, size: 14, color: AppTheme.textDim),
-                  const SizedBox(width: 4),
-                  Text(
-                    'Perk ${slotIndex + 1}',
-                    style: GoogleFonts.outfit(fontSize: 12, color: AppTheme.textDim),
-                  ),
-                ],
-              )
-            : Row(
-                children: [
-                  PerkIcon(perk: perk!, size: 36),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          perk!.name,
-                          style: GoogleFonts.outfit(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: AppTheme.textPrimary,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                          perk!.character,
-                          style: GoogleFonts.outfit(fontSize: 10, color: AppTheme.textSecondary),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                  ),
-                  if (onRemove != null)
-                    GestureDetector(
-                      onTap: onRemove,
-                      child: const Icon(Icons.close, size: 14, color: AppTheme.textDim),
-                    ),
-                ],
-              ),
-      ),
-    );
-  }
-}
-
-// ─── Perk Picker Sheet ────────────────────────────────────────────────────────
-
-class _PerkPickerSheet extends StatefulWidget {
-  final List<Perk> perks;
-  final Set<String> usedIds;
-  final Color survivorColor;
-  final String survivorLabel;
-  final ValueChanged<Perk> onSelect;
-
-  const _PerkPickerSheet({
-    required this.perks,
-    required this.usedIds,
-    required this.survivorColor,
-    required this.survivorLabel,
-    required this.onSelect,
-  });
-
-  @override
-  State<_PerkPickerSheet> createState() => _PerkPickerSheetState();
-}
-
-class _PerkPickerSheetState extends State<_PerkPickerSheet> {
-  String _search = '';
-
-  @override
-  Widget build(BuildContext context) {
-    final filtered = widget.perks.where((p) {
-      if (_search.isEmpty) return true;
-      return p.name.toLowerCase().contains(_search.toLowerCase()) ||
-          p.character.toLowerCase().contains(_search.toLowerCase());
-    }).toList();
-
-    return DraggableScrollableSheet(
-      expand: false,
-      initialChildSize: 0.85,
-      maxChildSize: 0.95,
-      builder: (ctx, controller) => Column(
-        children: [
-          const SizedBox(height: 8),
-          Container(
-            width: 40, height: 4,
-            decoration: BoxDecoration(color: AppTheme.border, borderRadius: BorderRadius.circular(2)),
-          ),
-          const SizedBox(height: 12),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
+      animate: true,
+      filledContent: p == null
+          ? const SizedBox()
+          : Row(
               children: [
-                Container(
-                  width: 8, height: 8,
-                  decoration: BoxDecoration(color: widget.survivorColor, shape: BoxShape.circle),
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  'Pick perk for ${widget.survivorLabel}',
-                  style: GoogleFonts.outfit(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: AppTheme.textPrimary,
+                PerkIcon(perk: p, size: dense ? 46 : 54),
+                SizedBox(width: dense ? 8 : 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        p.name,
+                        maxLines: dense ? 2 : 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppFonts.body(
+                          fontSize: dense ? 13.5 : 15,
+                          fontWeight: FontWeight.w600,
+                          height: 1.15,
+                        ),
+                      ),
+                      const SizedBox(height: 1),
+                      Text(
+                        p.character,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppFonts.body(fontSize: 12, color: AppTheme.textTertiary),
+                      ),
+                    ],
                   ),
                 ),
+                if (onRemove != null) SlotRemoveButton(onPressed: onRemove!),
               ],
             ),
-          ),
-          const SizedBox(height: 12),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: TextField(
-              onChanged: (v) => setState(() => _search = v),
-              autofocus: true,
-              style: GoogleFonts.outfit(color: AppTheme.textPrimary),
-              decoration: const InputDecoration(
-                hintText: 'Search perks...',
-                prefixIcon: Icon(Icons.search, color: AppTheme.textDim, size: 18),
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Expanded(
-            child: ListView.builder(
-              controller: controller,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              itemCount: filtered.length,
-              itemBuilder: (ctx, i) {
-                final perk = filtered[i];
-                final isUsed = widget.usedIds.contains(perk.id);
-                return Opacity(
-                  opacity: isUsed ? 0.35 : 1,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: PerkCard(
-                      perk: perk,
-                      compact: true,
-                      onTap: isUsed ? null : () => widget.onSelect(perk),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
 
-// ─── Compact Addon Slot ───────────────────────────────────────────────────────
+// ─── Add-on slot ──────────────────────────────────────────────────────────────
 
-class _CompactAddonSlot extends StatefulWidget {
+class _AddonSlot extends StatefulWidget {
   final String? addonId;
   final String label;
-  final Color accentColor;
+  final bool enabled;
   final VoidCallback onTap;
   final VoidCallback? onRemove;
 
-  const _CompactAddonSlot({
+  const _AddonSlot({
     required this.addonId,
     required this.label,
-    required this.accentColor,
+    required this.enabled,
     required this.onTap,
     this.onRemove,
   });
 
   @override
-  State<_CompactAddonSlot> createState() => _CompactAddonSlotState();
+  State<_AddonSlot> createState() => _AddonSlotState();
 }
 
-class _CompactAddonSlotState extends State<_CompactAddonSlot> {
+class _AddonSlotState extends State<_AddonSlot> {
   Addon? _addon;
 
   @override
@@ -867,7 +755,7 @@ class _CompactAddonSlotState extends State<_CompactAddonSlot> {
   }
 
   @override
-  void didUpdateWidget(_CompactAddonSlot old) {
+  void didUpdateWidget(_AddonSlot old) {
     super.didUpdateWidget(old);
     if (old.addonId != widget.addonId) _load();
   }
@@ -883,52 +771,150 @@ class _CompactAddonSlotState extends State<_CompactAddonSlot> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-        decoration: BoxDecoration(
-          color: _addon != null ? AppTheme.surfaceElevated : AppTheme.background,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: _addon != null
-                ? widget.accentColor.withValues(alpha: 0.3)
-                : AppTheme.border,
-          ),
-        ),
-        child: Row(
-          children: [
-            Icon(Icons.extension_outlined,
-                size: 14,
-                color: _addon != null ? widget.accentColor : AppTheme.textDim),
-            const SizedBox(width: 6),
-            Expanded(
-              child: Text(
-                _addon?.name ?? widget.label,
-                style: GoogleFonts.outfit(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w500,
-                  color: _addon != null ? AppTheme.textPrimary : AppTheme.textDim,
-                ),
-                overflow: TextOverflow.ellipsis,
+    final addon = _addon;
+    final rarityColor = addon != null ? AppTheme.rarityColor(addon.rarity) : AppTheme.textTertiary;
+    return AnimatedOpacity(
+      duration: const Duration(milliseconds: 180),
+      opacity: widget.enabled ? 1 : 0.45,
+      child: BaseSlot(
+        isEmpty: addon == null,
+        height: 50,
+        filledBorderColor: AppTheme.border,
+        emptyIcon: Icons.extension_outlined,
+        emptyLabel: widget.label,
+        contentPadding: const EdgeInsets.fromLTRB(8, 4, 0, 4),
+        onTap: widget.enabled ? widget.onTap : null,
+        filledContent: addon == null
+            ? const SizedBox()
+            : Row(
+                children: [
+                  SquareGlyph(icon: Icons.extension_outlined, color: rarityColor, size: 32),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          addon.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppFonts.body(fontSize: 13.5, fontWeight: FontWeight.w600),
+                        ),
+                        Text(
+                          addon.rarity.replaceAll('_', ' ').toUpperCase(),
+                          maxLines: 1,
+                          style: AppFonts.caption(color: rarityColor, fontSize: 10.5),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (widget.onRemove != null) SlotRemoveButton(onPressed: widget.onRemove!),
+                ],
               ),
-            ),
-            if (_addon != null && widget.onRemove != null)
-              GestureDetector(
-                onTap: widget.onRemove,
-                child: const Icon(Icons.close, size: 12, color: AppTheme.textDim),
-              )
-            else
-              const Icon(Icons.add, size: 13, color: AppTheme.textDim),
-          ],
-        ),
       ),
     );
   }
 }
 
-// ─── Addon Picker Sheet ───────────────────────────────────────────────────────
+// ─── Perk picker sheet ────────────────────────────────────────────────────────
+
+class _PerkPickerSheet extends StatefulWidget {
+  final List<Perk> perks;
+
+  /// Perk id → index of the survivor that already runs it.
+  final Map<String, int> usedBy;
+  final int survivorIndex;
+  final String survivorLabel;
+  final ValueChanged<Perk> onSelect;
+
+  const _PerkPickerSheet({
+    required this.perks,
+    required this.usedBy,
+    required this.survivorIndex,
+    required this.survivorLabel,
+    required this.onSelect,
+  });
+
+  @override
+  State<_PerkPickerSheet> createState() => _PerkPickerSheetState();
+}
+
+class _PerkPickerSheetState extends State<_PerkPickerSheet> {
+  String _search = '';
+
+  @override
+  Widget build(BuildContext context) {
+    final q = _search.toLowerCase();
+    final filtered = widget.perks.where((p) {
+      if (_search.isEmpty) return true;
+      return p.name.toLowerCase().contains(q) || p.character.toLowerCase().contains(q);
+    }).toList();
+
+    return SizedBox(
+      height: sheetHeight(context),
+      child: Column(
+        children: [
+          SheetHeader(
+            title: 'Pick perk',
+            subtitle: 'For ${widget.survivorLabel}',
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: AppSearchField(
+              hint: 'Search perks...',
+              autofocus: true,
+              onChanged: (v) => setState(() => _search = v),
+            ),
+          ),
+          const SizedBox(height: 10),
+          const Divider(),
+          Expanded(
+            child: filtered.isEmpty
+                ? Center(
+                    child: Text('No perks found', style: AppFonts.body(color: AppTheme.textTertiary)),
+                  )
+                : ListView.builder(
+                    padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
+                    itemCount: filtered.length,
+                    itemBuilder: (ctx, i) {
+                      final perk = filtered[i];
+                      final owner = widget.usedBy[perk.id];
+                      final isUsed = owner != null;
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 6),
+                        child: Stack(
+                          children: [
+                            Opacity(
+                              opacity: isUsed ? 0.4 : 1,
+                              child: PerkCard(
+                                perk: perk,
+                                compact: true,
+                                onTap: isUsed ? null : () => widget.onSelect(perk),
+                              ),
+                            ),
+                            if (isUsed)
+                              Positioned(
+                                right: 14,
+                                top: 0,
+                                bottom: 0,
+                                child: Center(
+                                  child: AppTag('In use · S${owner + 1}', color: squadColors[owner]),
+                                ),
+                              ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Add-on picker sheet ──────────────────────────────────────────────────────
 
 class _AddonPickerSheet extends StatefulWidget {
   final String itemCategory;
@@ -962,48 +948,24 @@ class _AddonPickerSheetState extends State<_AddonPickerSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return DraggableScrollableSheet(
-      expand: false,
-      initialChildSize: 0.75,
-      maxChildSize: 0.95,
-      builder: (ctx, controller) => Column(
+    return SizedBox(
+      height: sheetHeight(context, fraction: 0.75),
+      child: Column(
         children: [
-          const SizedBox(height: 8),
-          Center(
-            child: Container(
-              width: 40, height: 4,
-              decoration: BoxDecoration(
-                  color: AppTheme.border, borderRadius: BorderRadius.circular(2)),
-            ),
-          ),
-          const SizedBox(height: 12),
-          const Padding(
-            padding: EdgeInsets.only(left: 16, right: 16, bottom: 10),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text('Choose Add-on',
-                  style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: AppTheme.textPrimary)),
-            ),
-          ),
+          SheetHeader(title: 'Choose add-on', subtitle: itemCategoryLabel(widget.itemCategory)),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: TextField(
-              onChanged: (v) => setState(() => _search = v),
+            child: AppSearchField(
+              hint: 'Search add-ons...',
               autofocus: true,
-              style: const TextStyle(color: AppTheme.textPrimary),
-              decoration: const InputDecoration(
-                hintText: 'Search add-ons...',
-                prefixIcon: Icon(Icons.search, color: AppTheme.textDim, size: 18),
-              ),
+              onChanged: (v) => setState(() => _search = v),
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 10),
+          const Divider(),
           Expanded(
             child: _loading
-                ? const Center(child: CircularProgressIndicator())
+                ? const LoadingView()
                 : Builder(builder: (_) {
                     final filtered = _addons.where((a) {
                       if (a.id == widget.excludeId) return false;
@@ -1012,79 +974,31 @@ class _AddonPickerSheetState extends State<_AddonPickerSheet> {
                     }).toList();
 
                     if (filtered.isEmpty) {
-                      return const Center(
-                        child: Text('No add-ons available',
-                            style: TextStyle(color: AppTheme.textSecondary)),
+                      return Center(
+                        child: Text(
+                          'No add-ons available',
+                          style: AppFonts.body(color: AppTheme.textTertiary),
+                        ),
                       );
                     }
 
                     return ListView.builder(
-                      controller: controller,
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
                       itemCount: filtered.length,
                       itemBuilder: (ctx, i) {
                         final addon = filtered[i];
-                        final isSelected = addon.id == widget.selectedId;
                         final rarityColor = AppTheme.rarityColor(addon.rarity);
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
-                          child: GestureDetector(
-                            onTap: () => widget.onSelect(addon),
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 150),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 14, vertical: 12),
-                              decoration: BoxDecoration(
-                                color: isSelected
-                                    ? AppTheme.primaryDim.withValues(alpha: 0.3)
-                                    : AppTheme.surfaceElevated,
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: isSelected
-                                      ? AppTheme.primary
-                                      : AppTheme.border,
-                                  width: isSelected ? 1.5 : 1,
-                                ),
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(Icons.extension_outlined,
-                                      size: 16, color: rarityColor),
-                                  const SizedBox(width: 10),
-                                  Expanded(
-                                    child: Text(addon.name,
-                                        style: const TextStyle(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w500,
-                                            color: AppTheme.textPrimary)),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 7, vertical: 3),
-                                    decoration: BoxDecoration(
-                                      color: rarityColor.withValues(alpha: 0.15),
-                                      borderRadius: BorderRadius.circular(5),
-                                      border: Border.all(
-                                          color: rarityColor.withValues(alpha: 0.5)),
-                                    ),
-                                    child: Text(
-                                      addon.rarity.replaceAll('_', ' '),
-                                      style: TextStyle(
-                                          fontSize: 10,
-                                          color: rarityColor,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                  ),
-                                  if (isSelected)
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 8),
-                                      child: Icon(Icons.check_circle,
-                                          size: 16, color: AppTheme.primary),
-                                    ),
-                                ],
-                              ),
-                            ),
+                        return PickerRow(
+                          leading: SquareGlyph(
+                            icon: Icons.extension_outlined,
+                            color: rarityColor,
+                            size: 38,
                           ),
+                          title: addon.name,
+                          subtitle: addon.rarity.replaceAll('_', ' '),
+                          subtitleColor: rarityColor,
+                          selected: addon.id == widget.selectedId,
+                          onTap: () => widget.onSelect(addon),
                         );
                       },
                     );

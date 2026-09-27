@@ -1,118 +1,74 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:dbd_companion/l10n/generated/app_localizations.dart';
 import '../../core/models/group_plan.dart';
+import '../../core/models/perk.dart';
 import '../../core/providers/providers.dart';
 import '../../core/services/build_share_service.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
-import '../../core/widgets/design_system.dart';
+import 'group_plan_editor_screen.dart' show squadColors;
 
 class GroupPlannerScreen extends ConsumerWidget {
   const GroupPlannerScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final compact = AppLayout.isCompact(context);
     final plansAsync = ref.watch(groupPlansProvider);
+    final perksById = {
+      for (final p in ref.watch(allPerksProvider).valueOrNull ?? const <Perk>[]) p.id: p,
+    };
+    final count = plansAsync.valueOrNull?.length;
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
-      floatingActionButton: _GlowFAB(
-        onPressed: () => _createPlan(context, ref),
-      ),
+      floatingActionButton: compact
+          ? AppFab(label: l10n.createGroupPlan, onPressed: () => _createPlan(context, ref))
+          : null,
       body: AppBackground(
-        orbs: [
-          BackgroundOrb(
-            color: AppTheme.primary,
-            opacity: 0.16,
-            position: Alignment.bottomRight,
-            size: 380,
-          ),
-        ],
         child: Column(
           children: [
             PageHeader(
-              title: PageHeader.text(
-                  AppLocalizations.of(context)!.groupPlannerTitle),
+              title: l10n.groupPlannerTitle,
+              subtitle: count != null
+                  ? '$count squad ${count == 1 ? 'plan' : 'plans'}'
+                  : null,
               actions: [
-                IconButton(
-                  icon: const Icon(Icons.download_outlined),
-                  color: AppTheme.textSecondary,
+                AppIconButton(
+                  icon: Icons.download_outlined,
                   tooltip: 'Import group plan',
                   onPressed: () => _showImportDialog(context, ref),
                 ),
+                if (!compact)
+                  AppButton(
+                    label: l10n.createGroupPlan,
+                    icon: Icons.add,
+                    compact: true,
+                    onPressed: () => _createPlan(context, ref),
+                  ),
               ],
             ),
             Expanded(
               child: plansAsync.when(
-                loading: () =>
-                    const Center(child: CircularProgressIndicator()),
-                error: (e, _) => Center(child: Text('$e')),
+                loading: () => const LoadingView(),
+                error: (e, _) => ErrorView(e),
                 data: (plans) {
                   if (plans.isEmpty) {
                     return EmptyState(
                       icon: Icons.groups_outlined,
-                      title: AppLocalizations.of(context)!.noGroupPlansYet,
-                      subtitle:
-                          AppLocalizations.of(context)!.planBuildsForSquad,
-                      action: DbdButton(
-                        label:
-                            AppLocalizations.of(context)!.createGroupPlan,
+                      title: l10n.noGroupPlansYet,
+                      subtitle: l10n.planBuildsForSquad,
+                      action: AppButton(
+                        label: l10n.createGroupPlan,
                         icon: Icons.add,
                         onPressed: () => _createPlan(context, ref),
                       ),
                     );
                   }
-
-                  return LayoutBuilder(
-                    builder: (context, constraints) {
-                      final isWide = constraints.maxWidth > 700;
-                      if (isWide) {
-                        return GridView.builder(
-                          padding: const EdgeInsets.all(16),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10,
-                            mainAxisExtent: 100,
-                          ),
-                          itemCount: plans.length,
-                          itemBuilder: (ctx, i) => _GroupPlanCard(
-                            plan: plans[i],
-                            onTap: () =>
-                                context.push('/group/${plans[i].id}'),
-                            onDelete: () => ref
-                                .read(groupPlansProvider.notifier)
-                                .delete(plans[i].id),
-                          )
-                              .animate()
-                              .fadeIn(delay: (i * 30).ms)
-                              .slideY(begin: 0.05, end: 0),
-                        );
-                      }
-                      return ListView.separated(
-                        padding: const EdgeInsets.all(16),
-                        itemCount: plans.length,
-                        separatorBuilder: (_, __) =>
-                            const SizedBox(height: 10),
-                        itemBuilder: (ctx, i) => _GroupPlanCard(
-                          plan: plans[i],
-                          onTap: () =>
-                              context.push('/group/${plans[i].id}'),
-                          onDelete: () => ref
-                              .read(groupPlansProvider.notifier)
-                              .delete(plans[i].id),
-                        )
-                            .animate()
-                            .fadeIn(delay: (i * 40).ms)
-                            .slideY(begin: 0.05, end: 0),
-                      );
-                    },
-                  );
+                  return _list(context, ref, plans, perksById);
                 },
               ),
             ),
@@ -122,246 +78,243 @@ class GroupPlannerScreen extends ConsumerWidget {
     );
   }
 
-  void _showImportDialog(BuildContext context, WidgetRef ref) {
-    final controller = TextEditingController();
-    showDialog(
-      context: context,
-      builder: (ctx) => GlassAlertDialog(
-        title: 'Import Group Plan',
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Paste a group plan code shared by a squad member.',
-              style: GoogleFonts.outfit(
-                  color: AppTheme.textSecondary, fontSize: 13),
+  Widget _list(
+    BuildContext context,
+    WidgetRef ref,
+    List<GroupPlan> plans,
+    Map<String, Perk> perksById,
+  ) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final pad = pagePadding(context, top: 4, bottom: 96);
+        Widget itemAt(int i) {
+          final plan = plans[i];
+          return _GroupPlanCard(
+            plan: plan,
+            squad: List.generate(
+              4,
+              (si) => plan.getPerkIdsForSurvivor(si).map((id) => perksById[id]).toList(),
             ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: controller,
-              style: GoogleFonts.outfit(
-                  color: AppTheme.textPrimary, fontSize: 13),
-              maxLines: 3,
-              decoration: const InputDecoration(hintText: 'DBDG:...'),
-            ),
-          ],
-        ),
-        cancelLabel: 'Cancel',
-        confirmLabel: 'Import',
-        onCancel: () => Navigator.pop(ctx),
-        onConfirm: () async {
-          final imported =
-              BuildShareService.decodeGroupPlan(controller.text);
-          if (imported == null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Invalid group plan code')),
-            );
-            return;
-          }
-          Navigator.pop(ctx);
-          final plan = await ref
-              .read(groupPlansProvider.notifier)
-              .importPlan(imported);
-          if (context.mounted) context.push('/group/${plan.id}');
-        },
-      ),
+            onTap: () => context.push('/group/${plan.id}'),
+            onShare: () => _copyCode(context, plan),
+            onDelete: () => _confirmDelete(context, ref, plan),
+          ).entrance(i);
+        }
+
+        final wide = constraints.maxWidth > 760;
+        return ContentWidth(
+          child: wide
+              ? GridView.builder(
+                  padding: pad,
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 540,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 10,
+                    mainAxisExtent: 152,
+                  ),
+                  itemCount: plans.length,
+                  itemBuilder: (_, i) => itemAt(i),
+                )
+              : ListView.separated(
+                  padding: pad,
+                  itemCount: plans.length,
+                  separatorBuilder: (_, __) => const SizedBox(height: 8),
+                  itemBuilder: (_, i) => itemAt(i),
+                ),
+        );
+      },
     );
   }
 
-  void _createPlan(BuildContext context, WidgetRef ref) {
-    final controller = TextEditingController();
-    showDialog(
-      context: context,
-      builder: (ctx) => GlassAlertDialog(
-        title: 'New Group Plan',
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          style: GoogleFonts.outfit(color: AppTheme.textPrimary),
-          decoration: const InputDecoration(
-              hintText: 'e.g. Ranked SWF, Fun build...'),
-        ),
-        cancelLabel: 'Cancel',
-        confirmLabel: 'Create',
-        onCancel: () => Navigator.pop(ctx),
-        onConfirm: () async {
-          final name = controller.text.trim();
-          if (name.isEmpty) return;
-          final plan = await ref
-              .read(groupPlansProvider.notifier)
-              .create(name: name);
-          if (ctx.mounted) {
-            Navigator.pop(ctx);
-            context.push('/group/${plan.id}');
-          }
-        },
-      ),
+  Future<void> _showImportDialog(BuildContext context, WidgetRef ref) async {
+    final code = await showAppTextPrompt(
+      context,
+      title: 'Import group plan',
+      message: 'Paste a group plan code shared by a squad member.',
+      hint: 'DBDG:...',
+      confirmLabel: 'Import',
+      maxLines: 3,
     );
+    if (code == null || !context.mounted) return;
+    final imported = BuildShareService.decodeGroupPlan(code);
+    if (imported == null) {
+      showAppSnack(context, 'Invalid group plan code', error: true);
+      return;
+    }
+    final plan = await ref.read(groupPlansProvider.notifier).importPlan(imported);
+    if (context.mounted) context.push('/group/${plan.id}');
+  }
+
+  Future<void> _createPlan(BuildContext context, WidgetRef ref) async {
+    final name = await showAppTextPrompt(
+      context,
+      title: 'New group plan',
+      hint: 'e.g. Ranked SWF, Fun build...',
+      confirmLabel: 'Create',
+    );
+    if (name == null || !context.mounted) return;
+    final plan = await ref.read(groupPlansProvider.notifier).create(name: name);
+    if (context.mounted) context.push('/group/${plan.id}');
+  }
+
+  void _copyCode(BuildContext context, GroupPlan plan) {
+    Clipboard.setData(ClipboardData(text: BuildShareService.encodeGroupPlan(plan)));
+    showAppSnack(context, 'Group plan code copied to clipboard');
+  }
+
+  Future<void> _confirmDelete(BuildContext context, WidgetRef ref, GroupPlan plan) async {
+    final ok = await showAppConfirm(
+      context,
+      title: 'Delete group plan?',
+      message: '"${plan.name}" will be removed permanently.',
+      confirmLabel: 'Delete',
+      destructive: true,
+    );
+    if (ok) ref.read(groupPlansProvider.notifier).delete(plan.id);
   }
 }
 
-// ─── Group Plan Card ──────────────────────────────────────────────────────────
+// ─── Group plan card ──────────────────────────────────────────────────────────
 
-class _GroupPlanCard extends StatefulWidget {
+class _GroupPlanCard extends StatelessWidget {
   final GroupPlan plan;
+
+  /// Resolved perks per survivor (unknown ids resolve to null).
+  final List<List<Perk?>> squad;
   final VoidCallback onTap;
+  final VoidCallback onShare;
   final VoidCallback onDelete;
 
   const _GroupPlanCard({
     required this.plan,
+    required this.squad,
     required this.onTap,
+    required this.onShare,
     required this.onDelete,
   });
 
   @override
-  State<_GroupPlanCard> createState() => _GroupPlanCardState();
-}
-
-class _GroupPlanCardState extends State<_GroupPlanCard> {
-  bool _hovered = false;
-
-  @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => _hovered = true),
-      onExit: (_) => setState(() => _hovered = false),
-      child: GestureDetector(
-        onTap: widget.onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeOutCubic,
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            color: _hovered ? AppTheme.surfaceElevated : AppTheme.surface,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: _hovered ? AppTheme.borderHighlight : AppTheme.border,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.12),
-                blurRadius: 12,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Row(
+    final filled = squad.fold<int>(0, (sum, s) => sum + s.length.clamp(0, 4));
+    final meta = '$filled/16 perks  ·  ${_ago(plan.updatedAt)}';
+
+    Widget survivor(int i) => _SquadMember(index: i, perks: squad[i]);
+
+    return AppPanel(
+      onTap: onTap,
+      padding: const EdgeInsets.fromLTRB(16, 12, 4, 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
             children: [
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      AppTheme.primary.withValues(alpha: 0.2),
-                      AppTheme.primaryDim.withValues(alpha: 0.15),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                      color: AppTheme.primary.withValues(alpha: 0.3)),
-                ),
-                child:
-                    Icon(Icons.groups, color: AppTheme.primary, size: 22),
-              ),
-              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      widget.plan.name,
-                      style: GoogleFonts.outfit(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: AppTheme.textPrimary,
-                      ),
+                      plan.name.toUpperCase(),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
+                      style: AppFonts.display(fontSize: 18, letterSpacing: 1),
                     ),
-                    const SizedBox(height: 4),
-                    Row(
-                      children: List.generate(4, (i) {
-                        final count =
-                            widget.plan.getPerkIdsForSurvivor(i).length;
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 8),
-                          child: Row(
-                            children: [
-                              const Icon(Icons.person,
-                                  size: 11,
-                                  color: AppTheme.textTertiary),
-                              const SizedBox(width: 2),
-                              Text(
-                                '$count/4',
-                                style: GoogleFonts.outfit(
-                                  fontSize: 11,
-                                  color: count == 4
-                                      ? AppTheme.primary
-                                      : AppTheme.textSecondary,
-                                  fontWeight: count == 4
-                                      ? FontWeight.w600
-                                      : FontWeight.normal,
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }),
+                    const SizedBox(height: 2),
+                    Text(
+                      meta,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppFonts.body(fontSize: 12.5, color: AppTheme.textTertiary),
                     ),
                   ],
                 ),
               ),
               PopupMenuButton<String>(
-                color: AppTheme.backgroundSecondary,
-                icon: const Icon(Icons.more_vert,
-                    color: AppTheme.textTertiary, size: 20),
+                tooltip: 'More',
+                icon: const Icon(Icons.more_horiz, size: 20, color: AppTheme.textTertiary),
                 onSelected: (v) {
-                  if (v == 'delete') widget.onDelete();
+                  if (v == 'open') onTap();
+                  if (v == 'share') onShare();
+                  if (v == 'delete') onDelete();
                 },
                 itemBuilder: (_) => [
+                  const PopupMenuItem(value: 'open', child: Text('Open')),
+                  const PopupMenuItem(value: 'share', child: Text('Copy share code')),
                   PopupMenuItem(
                     value: 'delete',
-                    child: Text('Delete',
-                        style: GoogleFonts.outfit(color: AppTheme.primary)),
+                    child: Text('Delete', style: AppFonts.body(color: AppTheme.danger)),
                   ),
                 ],
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-// ─── Glowing FAB ─────────────────────────────────────────────────────────────
-
-class _GlowFAB extends StatelessWidget {
-  final VoidCallback onPressed;
-  const _GlowFAB({required this.onPressed});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.primary.withValues(alpha: 0.45),
-            blurRadius: 24,
-            spreadRadius: 2,
+          const SizedBox(height: 12),
+          // The same perk may appear in several cards — keep hero tags out of it.
+          HeroMode(
+            enabled: false,
+            child: Padding(
+              padding: const EdgeInsets.only(right: 12),
+              child: Column(
+                children: [
+                  Row(children: [
+                    Expanded(child: survivor(0)),
+                    const SizedBox(width: 14),
+                    Expanded(child: survivor(1)),
+                  ]),
+                  const SizedBox(height: 8),
+                  Row(children: [
+                    Expanded(child: survivor(2)),
+                    const SizedBox(width: 14),
+                    Expanded(child: survivor(3)),
+                  ]),
+                ],
+              ),
+            ),
           ),
         ],
       ),
-      child: FloatingActionButton(
-        onPressed: onPressed,
-        backgroundColor: AppTheme.primary,
-        child: const Icon(Icons.add, color: Colors.white),
-      ),
+    );
+  }
+
+  static String _ago(DateTime t) {
+    final d = DateTime.now().difference(t);
+    if (d.inMinutes < 1) return 'just now';
+    if (d.inHours < 1) return '${d.inMinutes}m ago';
+    if (d.inDays < 1) return '${d.inHours}h ago';
+    if (d.inDays < 30) return '${d.inDays}d ago';
+    return '${t.day.toString().padLeft(2, '0')}.${t.month.toString().padLeft(2, '0')}.${t.year}';
+  }
+}
+
+/// One survivor in the card preview: colored marker, "S1" and four diamonds.
+class _SquadMember extends StatelessWidget {
+  final int index;
+  final List<Perk?> perks;
+
+  const _SquadMember({required this.index, required this.perks});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        DiamondMark(size: 6, color: squadColors[index]),
+        const SizedBox(width: 7),
+        SizedBox(
+          width: 18,
+          child: Text(
+            'S${index + 1}',
+            style: AppFonts.caption(fontSize: 12, color: AppTheme.textSecondary),
+          ),
+        ),
+        const SizedBox(width: 6),
+        Flexible(
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: PerkDiamondRow(perks: perks, size: 28),
+          ),
+        ),
+      ],
     );
   }
 }
