@@ -303,23 +303,20 @@ class _GroupPlanEditorScreenState extends ConsumerState<GroupPlanEditorScreen> {
 
   /// Phone: four tabs that double as a squad overview (marker + perk diamonds).
   Widget _squadSwitcher() {
-    return HeroMode(
-      enabled: false,
-      child: Row(
-        children: [
-          for (var i = 0; i < 4; i++) ...[
-            if (i > 0) const SizedBox(width: 6),
-            Expanded(
-              child: _SquadTab(
-                index: i,
-                perks: _resolvedPerks[i],
-                selected: i == _current,
-                onTap: () => _goToSurvivor(i),
-              ),
+    return Row(
+      children: [
+        for (var i = 0; i < 4; i++) ...[
+          if (i > 0) const SizedBox(width: 6),
+          Expanded(
+            child: _SquadTab(
+              index: i,
+              perks: _resolvedPerks[i],
+              selected: i == _current,
+              onTap: () => _goToSurvivor(i),
             ),
-          ],
+          ),
         ],
-      ),
+      ],
     );
   }
 
