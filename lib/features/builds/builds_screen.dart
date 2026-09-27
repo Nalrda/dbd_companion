@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:dbd_companion/l10n/generated/app_localizations.dart';
 import '../../core/models/build.dart';
+import '../../core/models/killer.dart';
+import '../../core/models/perk.dart';
 import '../../core/providers/providers.dart';
 import '../../core/services/build_share_service.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/widgets/widgets.dart';
-import '../../core/widgets/design_system.dart';
 
 class BuildsScreen extends ConsumerStatefulWidget {
   const BuildsScreen({super.key});
@@ -20,25 +19,9 @@ class BuildsScreen extends ConsumerStatefulWidget {
 
 class _BuildsScreenState extends ConsumerState<BuildsScreen> {
   bool _showSurvivor = true;
-  bool _slidingToKiller = false;
   bool _showFavoritesOnly = false;
   String _search = '';
-  bool _searchVisible = false;
   final _searchController = TextEditingController();
-
-  Widget _slideTransition(Widget child, Animation<double> animation) {
-    final isNew = child.key == ValueKey(_showSurvivor);
-    final dir = _slidingToKiller ? 1.0 : -1.0;
-    final beginOffset = Offset(isNew ? dir : -dir, 0);
-    return ClipRect(
-      child: SlideTransition(
-        position: Tween<Offset>(begin: beginOffset, end: Offset.zero).animate(
-          CurvedAnimation(parent: animation, curve: Curves.easeOutCubic),
-        ),
-        child: FadeTransition(opacity: animation, child: child),
-      ),
-    );
-  }
 
   @override
   void dispose() {
@@ -46,100 +29,92 @@ class _BuildsScreenState extends ConsumerState<BuildsScreen> {
     super.dispose();
   }
 
+  void _create() => context.push('/builds/create?survivor=$_showSurvivor');
+
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final compact = AppLayout.isCompact(context);
     final buildsAsync = ref.watch(buildsProvider);
+    final perksById = {
+      for (final p in ref.watch(allPerksProvider).valueOrNull ?? const <Perk>[]) p.id: p,
+    };
+    final killerNames = {
+      for (final k in ref.watch(killersProvider).valueOrNull ?? const <Killer>[]) k.id: k.name,
+    };
+
+    final all = buildsAsync.valueOrNull ?? const <Build>[];
+    final roleCount = all.where((b) => b.isSurvivor == _showSurvivor).length;
+
+    final filters = compact
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              RoleToggle(
+                expand: true,
+                isSurvivor: _showSurvivor,
+                onChanged: (v) => setState(() => _showSurvivor = v),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Expanded(child: _searchField()),
+                  const SizedBox(width: 8),
+                  _favoritesToggle(),
+                ],
+              ),
+            ],
+          )
+        : Row(
+            children: [
+              RoleToggle(
+                isSurvivor: _showSurvivor,
+                onChanged: (v) => setState(() => _showSurvivor = v),
+              ),
+              const SizedBox(width: 12),
+              Expanded(child: _searchField()),
+              const SizedBox(width: 8),
+              _favoritesToggle(),
+            ],
+          );
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
-      floatingActionButton: _GlowFAB(
-        onPressed: () =>
-            context.push('/builds/create?survivor=$_showSurvivor'),
-      ),
+      floatingActionButton:
+          compact ? AppFab(label: l10n.createBuild, onPressed: _create) : null,
       body: AppBackground(
-        orbs: [
-          BackgroundOrb(
-            color: AppTheme.primary,
-            opacity: 0.18,
-            position: Alignment.topRight,
-            size: 380,
-          ),
-        ],
         child: Column(
           children: [
             PageHeader(
-              title: _searchVisible
-                  ? TextField(
-                      controller: _searchController,
-                      autofocus: true,
-                      style: GoogleFonts.outfit(color: AppTheme.textPrimary),
-                      decoration: InputDecoration(
-                        hintText: 'Search builds...',
-                        border: InputBorder.none,
-                        hintStyle:
-                            GoogleFonts.outfit(color: AppTheme.textTertiary),
-                      ),
-                      onChanged: (v) => setState(() => _search = v),
-                    )
-                  : PageHeader.text(
-                      AppLocalizations.of(context)!.myBuilds),
+              title: l10n.myBuilds,
+              subtitle: buildsAsync.hasValue
+                  ? '$roleCount ${_showSurvivor ? l10n.survivor : l10n.killer} '
+                      '${roleCount == 1 ? 'build' : 'builds'}'
+                  : null,
               actions: [
-                IconButton(
-                  icon: const Icon(Icons.download_outlined),
-                  color: AppTheme.textSecondary,
+                AppIconButton(
+                  icon: Icons.download_outlined,
                   tooltip: 'Import build',
                   onPressed: _showImportDialog,
                 ),
-                IconButton(
-                  icon: Icon(
-                    _searchVisible ? Icons.close : Icons.search,
-                    color: _searchVisible
-                        ? AppTheme.primary
-                        : AppTheme.textSecondary,
+                if (!compact)
+                  AppButton(
+                    label: l10n.createBuild,
+                    icon: Icons.add,
+                    compact: true,
+                    onPressed: _create,
                   ),
-                  onPressed: () => setState(() {
-                    _searchVisible = !_searchVisible;
-                    if (!_searchVisible) {
-                      _search = '';
-                      _searchController.clear();
-                    }
-                  }),
-                ),
-                IconButton(
-                  icon: Icon(
-                    _showFavoritesOnly ? Icons.star : Icons.star_outline,
-                    color: _showFavoritesOnly
-                        ? AppTheme.primary
-                        : AppTheme.textSecondary,
-                  ),
-                  tooltip: 'Favorites only',
-                  onPressed: () =>
-                      setState(() => _showFavoritesOnly = !_showFavoritesOnly),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 4),
-                  child: RoleToggle(
-                    isSurvivor: _showSurvivor,
-                    onChanged: (v) => setState(() {
-                      _slidingToKiller = !v;
-                      _showSurvivor = v;
-                    }),
-                  ),
-                ),
               ],
+              bottom: filters,
             ),
             Expanded(
               child: buildsAsync.when(
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (e, _) => Center(child: Text('Error: $e')),
+                loading: () => const LoadingView(),
+                error: (e, _) => ErrorView(e),
                 data: (builds) {
-                  var filtered =
-                      builds.where((b) => b.isSurvivor == _showSurvivor).toList();
-
+                  var filtered = builds.where((b) => b.isSurvivor == _showSurvivor).toList();
                   if (_showFavoritesOnly) {
                     filtered = filtered.where((b) => b.isFavorite).toList();
                   }
-
                   if (_search.isNotEmpty) {
                     final q = _search.toLowerCase();
                     filtered = filtered
@@ -148,7 +123,6 @@ class _BuildsScreenState extends ConsumerState<BuildsScreen> {
                             b.tags.any((t) => t.toLowerCase().contains(q)))
                         .toList();
                   }
-
                   filtered.sort((a, b) {
                     if (a.isFavorite && !b.isFavorite) return -1;
                     if (!a.isFavorite && b.isFavorite) return 1;
@@ -156,92 +130,12 @@ class _BuildsScreenState extends ConsumerState<BuildsScreen> {
                   });
 
                   return AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
-                    transitionBuilder: _slideTransition,
+                    duration: const Duration(milliseconds: 220),
                     child: KeyedSubtree(
-                      key: ValueKey(_showSurvivor),
+                      key: ValueKey('$_showSurvivor-$_showFavoritesOnly-${filtered.isEmpty}'),
                       child: filtered.isEmpty
-                          ? EmptyState(
-                              icon: _showFavoritesOnly
-                                  ? Icons.star_outline
-                                  : _search.isNotEmpty
-                                      ? Icons.search_off
-                                      : Icons.build_outlined,
-                              title: _showFavoritesOnly
-                                  ? 'No favorites yet'
-                                  : _search.isNotEmpty
-                                      ? 'No results'
-                                      : AppLocalizations.of(context)!.noBuildsYet,
-                              subtitle: _showFavoritesOnly
-                                  ? 'Star a build to add it here'
-                                  : _search.isNotEmpty
-                                      ? 'Try a different search'
-                                      : _showSurvivor
-                                          ? AppLocalizations.of(context)!
-                                              .createFirstSurvivorBuild
-                                          : AppLocalizations.of(context)!
-                                              .createFirstKillerBuild,
-                              action: (_showFavoritesOnly || _search.isNotEmpty)
-                                  ? null
-                                  : DbdButton(
-                                      label: AppLocalizations.of(context)!.createBuild,
-                                      icon: Icons.add,
-                                      onPressed: () => context.push(
-                                          '/builds/create?survivor=$_showSurvivor'),
-                                    ),
-                            )
-                          : LayoutBuilder(
-                              builder: (context, constraints) {
-                                final isWide = constraints.maxWidth > 700;
-                                if (isWide) {
-                                  return GridView.builder(
-                                    padding: const EdgeInsets.all(16),
-                                    gridDelegate:
-                                        const SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2,
-                                      crossAxisSpacing: 10,
-                                      mainAxisSpacing: 10,
-                                      mainAxisExtent: 110,
-                                    ),
-                                    itemCount: filtered.length,
-                                    itemBuilder: (context, index) {
-                                      return _BuildListItem(
-                                        item: filtered[index],
-                                        onTap: () => context
-                                            .push('/builds/${filtered[index].id}'),
-                                        onDelete: () => _confirmDelete(filtered[index]),
-                                        onToggleFavorite: () => ref
-                                            .read(buildsProvider.notifier)
-                                            .toggleFavorite(filtered[index].id),
-                                      )
-                                          .animate()
-                                          .fadeIn(delay: (index * 30).ms)
-                                          .slideY(begin: 0.05, end: 0);
-                                    },
-                                  );
-                                }
-                                return ListView.separated(
-                                  padding: const EdgeInsets.all(16),
-                                  itemCount: filtered.length,
-                                  separatorBuilder: (_, __) =>
-                                      const SizedBox(height: 10),
-                                  itemBuilder: (context, index) {
-                                    return _BuildListItem(
-                                      item: filtered[index],
-                                      onTap: () => context
-                                          .push('/builds/${filtered[index].id}'),
-                                      onDelete: () => _confirmDelete(filtered[index]),
-                                      onToggleFavorite: () => ref
-                                          .read(buildsProvider.notifier)
-                                          .toggleFavorite(filtered[index].id),
-                                    )
-                                        .animate()
-                                        .fadeIn(delay: (index * 40).ms)
-                                        .slideY(begin: 0.05, end: 0);
-                                  },
-                                );
-                              },
-                            ),
+                          ? _empty(l10n)
+                          : _list(filtered, perksById, killerNames),
                     ),
                   );
                 },
@@ -253,267 +147,229 @@ class _BuildsScreenState extends ConsumerState<BuildsScreen> {
     );
   }
 
-  void _showImportDialog() {
-    final controller = TextEditingController();
-    showDialog(
-      context: context,
-      builder: (ctx) => GlassAlertDialog(
-        title: 'Import Build',
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Paste a build code shared by another player.',
-              style: GoogleFonts.outfit(
-                  color: AppTheme.textSecondary, fontSize: 13),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: controller,
-              style: GoogleFonts.outfit(
-                  color: AppTheme.textPrimary, fontSize: 13),
-              maxLines: 3,
-              decoration: const InputDecoration(hintText: 'DBD:...'),
-            ),
-          ],
-        ),
-        cancelLabel: 'Cancel',
-        confirmLabel: 'Import',
-        onCancel: () => Navigator.pop(ctx),
-        onConfirm: () {
-          final imported = BuildShareService.decode(controller.text);
-          if (imported == null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Invalid build code')),
-            );
-            return;
-          }
-          Navigator.pop(ctx);
-          context.push('/builds/create', extra: imported);
-        },
-      ),
+  Widget _searchField() => AppSearchField(
+        controller: _searchController,
+        hint: 'Search builds or tags',
+        onChanged: (v) => setState(() => _search = v),
+      );
+
+  Widget _favoritesToggle() => AppIconButton(
+        icon: _showFavoritesOnly ? Icons.star : Icons.star_outline,
+        tooltip: 'Favorites only',
+        active: _showFavoritesOnly,
+        size: 42,
+        onPressed: () => setState(() => _showFavoritesOnly = !_showFavoritesOnly),
+      );
+
+  Widget _empty(AppLocalizations l10n) {
+    if (_showFavoritesOnly) {
+      return const EmptyState(
+        icon: Icons.star_outline,
+        title: 'No favorites yet',
+        subtitle: 'Star a build to pin it here.',
+      );
+    }
+    if (_search.isNotEmpty) {
+      return EmptyState(
+        icon: Icons.search_off,
+        title: l10n.noResults,
+        subtitle: 'Try a different name or tag.',
+      );
+    }
+    return EmptyState(
+      icon: Icons.handyman_outlined,
+      title: l10n.noBuildsYet,
+      subtitle: _showSurvivor ? l10n.createFirstSurvivorBuild : l10n.createFirstKillerBuild,
+      action: AppButton(label: l10n.createBuild, icon: Icons.add, onPressed: _create),
     );
   }
 
-  void _confirmDelete(Build build) {
-    showDialog(
-      context: context,
-      builder: (ctx) => GlassAlertDialog(
-        title: 'Delete build?',
-        content: Text(
-          'Are you sure you want to delete "${build.name}"?',
-          style: GoogleFonts.outfit(color: AppTheme.textSecondary),
-        ),
-        cancelLabel: 'Cancel',
-        confirmLabel: 'Delete',
-        onCancel: () => Navigator.pop(ctx),
-        onConfirm: () {
-          Navigator.pop(ctx);
-          ref.read(buildsProvider.notifier).delete(build.id);
-        },
-      ),
+  Widget _list(List<Build> builds, Map<String, Perk> perksById, Map<String, String> killerNames) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final pad = pagePadding(context, top: 4, bottom: 96);
+        Widget itemAt(int i) {
+          final b = builds[i];
+          return _BuildCard(
+            item: b,
+            perks: b.perkIds.map((id) => perksById[id]).toList(),
+            killerName: b.killerId != null ? killerNames[b.killerId] : null,
+            onTap: () => context.push('/builds/${b.id}'),
+            onEdit: () => context.push('/builds/${b.id}/edit'),
+            onDelete: () => _confirmDelete(b),
+            onToggleFavorite: () => ref.read(buildsProvider.notifier).toggleFavorite(b.id),
+          ).entrance(i);
+        }
+
+        final wide = constraints.maxWidth > 760;
+        return ContentWidth(
+          child: wide
+              ? GridView.builder(
+                  padding: pad,
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 540,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 10,
+                    mainAxisExtent: 124,
+                  ),
+                  itemCount: builds.length,
+                  itemBuilder: (_, i) => itemAt(i),
+                )
+              : ListView.separated(
+                  padding: pad,
+                  itemCount: builds.length,
+                  separatorBuilder: (_, __) => const SizedBox(height: 8),
+                  itemBuilder: (_, i) => itemAt(i),
+                ),
+        );
+      },
     );
+  }
+
+  Future<void> _showImportDialog() async {
+    final code = await showAppTextPrompt(
+      context,
+      title: 'Import build',
+      message: 'Paste a build code shared by another player.',
+      hint: 'DBD:...',
+      confirmLabel: 'Import',
+      maxLines: 3,
+    );
+    if (code == null || !mounted) return;
+    final imported = BuildShareService.decode(code);
+    if (imported == null) {
+      showAppSnack(context, 'Invalid build code', error: true);
+      return;
+    }
+    context.push('/builds/create', extra: imported);
+  }
+
+  Future<void> _confirmDelete(Build build) async {
+    final ok = await showAppConfirm(
+      context,
+      title: 'Delete build?',
+      message: '"${build.name}" will be removed permanently.',
+      confirmLabel: 'Delete',
+      destructive: true,
+    );
+    if (ok) ref.read(buildsProvider.notifier).delete(build.id);
   }
 }
 
-// ─── Build List Item ──────────────────────────────────────────────────────────
+// ─── Build card ───────────────────────────────────────────────────────────────
 
-class _BuildListItem extends StatefulWidget {
+class _BuildCard extends StatelessWidget {
   final Build item;
+  final List<Perk?> perks;
+  final String? killerName;
   final VoidCallback onTap;
+  final VoidCallback onEdit;
   final VoidCallback onDelete;
   final VoidCallback onToggleFavorite;
 
-  const _BuildListItem({
+  const _BuildCard({
     required this.item,
+    required this.perks,
+    required this.killerName,
     required this.onTap,
+    required this.onEdit,
     required this.onDelete,
     required this.onToggleFavorite,
   });
 
   @override
-  State<_BuildListItem> createState() => _BuildListItemState();
-}
-
-class _BuildListItemState extends State<_BuildListItem> {
-  bool _hovered = false;
-
-  @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => _hovered = true),
-      onExit: (_) => setState(() => _hovered = false),
-      child: GestureDetector(
-        onTap: widget.onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeOutCubic,
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            color: _hovered
-                ? AppTheme.surfaceElevated
-                : AppTheme.surface,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: widget.item.isFavorite
-                  ? AppTheme.primary.withValues(alpha: 0.4)
-                  : _hovered
-                      ? AppTheme.borderHighlight
-                      : AppTheme.border,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.15),
-                blurRadius: 12,
-                offset: const Offset(0, 2),
-              ),
-              if (widget.item.isFavorite)
-                BoxShadow(
-                  color: AppTheme.primary.withValues(alpha: 0.12),
-                  blurRadius: 16,
-                  offset: const Offset(0, 2),
+    final meta = <String>[
+      if (killerName != null) killerName!,
+      '${item.perkIds.length}/4 perks',
+      _ago(item.updatedAt),
+    ].join('  ·  ');
+
+    return AppPanel(
+      onTap: onTap,
+      edgeColor: item.isFavorite ? AppTheme.primary : null,
+      padding: const EdgeInsets.fromLTRB(16, 12, 4, 12),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  item.name.toUpperCase(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppFonts.display(fontSize: 18, letterSpacing: 1),
                 ),
-            ],
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 42,
-                height: 42,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      AppTheme.primary.withValues(alpha: 0.2),
-                      AppTheme.primaryDim.withValues(alpha: 0.15),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                      color: AppTheme.primary.withValues(alpha: 0.3)),
+                const SizedBox(height: 2),
+                Text(
+                  meta,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppFonts.body(fontSize: 12.5, color: AppTheme.textTertiary),
                 ),
-                child: Icon(
-                  widget.item.isSurvivor
-                      ? Icons.person
-                      : Icons.sports_kabaddi,
-                  color: AppTheme.primary,
-                  size: 20,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                const SizedBox(height: 8),
+                Row(
                   children: [
-                    Text(
-                      widget.item.name,
-                      style: GoogleFonts.outfit(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: AppTheme.textPrimary,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 3),
-                    Text(
-                      '${widget.item.perkIds.length}/4 perks',
-                      style: GoogleFonts.outfit(
-                        fontSize: 12,
-                        color: AppTheme.textSecondary,
-                      ),
-                    ),
-                    if (widget.item.tags.isNotEmpty) ...[
-                      const SizedBox(height: 4),
-                      Wrap(
-                        spacing: 4,
-                        runSpacing: 2,
-                        children: widget.item.tags
-                            .take(3)
-                            .map((t) => Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 6, vertical: 1),
-                                  decoration: BoxDecoration(
-                                    color: AppTheme.surface,
-                                    borderRadius: BorderRadius.circular(4),
-                                    border: Border.all(color: AppTheme.border),
-                                  ),
-                                  child: Text(
-                                    t,
-                                    style: GoogleFonts.outfit(
-                                        fontSize: 10,
-                                        color: AppTheme.textSecondary),
-                                  ),
-                                ))
-                            .toList(),
+                    PerkDiamondRow(perks: perks, size: 36),
+                    if (item.tags.isNotEmpty) ...[
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Wrap(
+                          spacing: 4,
+                          runSpacing: 4,
+                          clipBehavior: Clip.hardEdge,
+                          children: item.tags.take(3).map((t) => AppTag(t)).toList(),
+                        ),
                       ),
                     ],
                   ],
                 ),
-              ),
-              GestureDetector(
-                onTap: widget.onToggleFavorite,
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Icon(
-                    widget.item.isFavorite ? Icons.star : Icons.star_outline,
-                    color: widget.item.isFavorite
-                        ? AppTheme.primary
-                        : AppTheme.textTertiary,
-                    size: 20,
-                  ),
+              ],
+            ),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                tooltip: item.isFavorite ? 'Unfavorite' : 'Favorite',
+                visualDensity: VisualDensity.compact,
+                onPressed: onToggleFavorite,
+                icon: Icon(
+                  item.isFavorite ? Icons.star : Icons.star_outline,
+                  size: 20,
+                  color: item.isFavorite ? AppTheme.primary : AppTheme.textTertiary,
                 ),
               ),
               PopupMenuButton<String>(
-                color: AppTheme.backgroundSecondary,
-                icon: const Icon(Icons.more_vert,
-                    color: AppTheme.textTertiary, size: 20),
+                tooltip: 'More',
+                icon: const Icon(Icons.more_horiz, size: 20, color: AppTheme.textTertiary),
                 onSelected: (v) {
-                  if (v == 'delete') widget.onDelete();
+                  if (v == 'edit') onEdit();
+                  if (v == 'delete') onDelete();
                 },
                 itemBuilder: (_) => [
+                  const PopupMenuItem(value: 'edit', child: Text('Edit')),
                   PopupMenuItem(
                     value: 'delete',
-                    child: Text('Delete',
-                        style: GoogleFonts.outfit(
-                            color: AppTheme.primary)),
+                    child: Text('Delete', style: AppFonts.body(color: AppTheme.danger)),
                   ),
                 ],
               ),
             ],
           ),
-        ),
+        ],
       ),
     );
   }
-}
 
-// ─── Glowing FAB ─────────────────────────────────────────────────────────────
-
-class _GlowFAB extends StatelessWidget {
-  final VoidCallback onPressed;
-  const _GlowFAB({required this.onPressed});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.primary.withValues(alpha: 0.45),
-            blurRadius: 24,
-            spreadRadius: 2,
-          ),
-        ],
-      ),
-      child: FloatingActionButton(
-        onPressed: onPressed,
-        backgroundColor: AppTheme.primary,
-        child: const Icon(Icons.add, color: Colors.white),
-      ),
-    );
+  static String _ago(DateTime t) {
+    final d = DateTime.now().difference(t);
+    if (d.inMinutes < 1) return 'just now';
+    if (d.inHours < 1) return '${d.inMinutes}m ago';
+    if (d.inDays < 1) return '${d.inHours}h ago';
+    if (d.inDays < 30) return '${d.inDays}d ago';
+    return '${t.day.toString().padLeft(2, '0')}.${t.month.toString().padLeft(2, '0')}.${t.year}';
   }
 }

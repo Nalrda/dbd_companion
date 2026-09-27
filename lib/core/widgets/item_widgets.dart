@@ -39,19 +39,18 @@ class ItemSlot extends ConsumerWidget {
   Widget _buildSlot(Item? item) {
     return BaseSlot(
       isEmpty: item == null,
-      height: 64,
-      filledBorderColor: item != null
-          ? itemCategoryColor(item.category).withValues(alpha: 0.5)
-          : AppTheme.border,
+      height: 60,
+      filledBorderColor: AppTheme.border,
       emptyIcon: Icons.backpack_outlined,
       emptyLabel: 'Choose Item',
       onTap: onTap,
+      contentPadding: const EdgeInsets.fromLTRB(10, 6, 4, 6),
       filledContent: item == null
           ? const SizedBox()
           : Row(
               children: [
                 ItemIcon(item: item, size: 40),
-                const SizedBox(width: 10),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,28 +58,18 @@ class ItemSlot extends ConsumerWidget {
                     children: [
                       Text(
                         item.name,
-                        style: const TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                          color: AppTheme.textPrimary,
-                        ),
+                        maxLines: 1,
                         overflow: TextOverflow.ellipsis,
+                        style: AppFonts.body(fontSize: 14, fontWeight: FontWeight.w600),
                       ),
                       Text(
-                        itemCategoryLabel(item.category),
-                        style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary),
+                        itemCategoryLabel(item.category).toUpperCase(),
+                        style: AppFonts.caption(color: itemCategoryColor(item.category), fontSize: 11),
                       ),
                     ],
                   ),
                 ),
-                if (onRemove != null)
-                  GestureDetector(
-                    onTap: onRemove,
-                    child: const Padding(
-                      padding: EdgeInsets.all(4),
-                      child: Icon(Icons.close, size: 14, color: AppTheme.textDim),
-                    ),
-                  ),
+                if (onRemove != null) SlotRemoveButton(onPressed: onRemove!),
               ],
             ),
     );
@@ -129,8 +118,8 @@ class _ItemPickerSheetState extends ConsumerState<ItemPickerSheet> {
       selectedCategory: _filter,
       onCategoryChanged: (v) => setState(() => _filter = v),
       listBuilder: (controller) => itemsAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('$e')),
+        loading: () => const LoadingView(),
+        error: (e, _) => ErrorView(e),
         data: (items) {
           final filtered = items.where((i) {
             final matchSearch = _search.isEmpty ||
@@ -139,63 +128,24 @@ class _ItemPickerSheetState extends ConsumerState<ItemPickerSheet> {
             return matchSearch && matchCat;
           }).toList();
 
+          if (filtered.isEmpty) {
+            return Center(
+              child: Text('No items found', style: AppFonts.body(color: AppTheme.textTertiary)),
+            );
+          }
           return ListView.builder(
             controller: controller,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
             itemCount: filtered.length,
             itemBuilder: (ctx, i) {
               final item = filtered[i];
-              final isSelected = item.id == widget.selectedId;
-              final rarityColor = AppTheme.rarityColor(item.rarity);
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: GestureDetector(
-                  onTap: () => widget.onSelect(item),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 150),
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: isSelected
-                          ? AppTheme.primaryDim.withValues(alpha: 0.3)
-                          : AppTheme.surfaceElevated,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: isSelected ? AppTheme.primary : AppTheme.border,
-                        width: isSelected ? 1.5 : 1,
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        ItemIcon(item: item, size: 40),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                item.name,
-                                style: const TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                  color: AppTheme.textPrimary,
-                                ),
-                              ),
-                              Text(
-                                item.rarity.replaceAll('_', ' ').toUpperCase(),
-                                style: TextStyle(fontSize: 10, color: rarityColor),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          width: 6,
-                          height: 6,
-                          decoration: BoxDecoration(color: rarityColor, shape: BoxShape.circle),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+              return PickerRow(
+                leading: ItemIcon(item: item, size: 38),
+                title: item.name,
+                subtitle: item.rarity.replaceAll('_', ' '),
+                subtitleColor: AppTheme.rarityColor(item.rarity),
+                selected: item.id == widget.selectedId,
+                onTap: () => widget.onSelect(item),
               );
             },
           );

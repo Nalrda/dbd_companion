@@ -1,66 +1,137 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:go_router/go_router.dart';
 import 'package:dbd_companion/l10n/generated/app_localizations.dart';
 import '../models/item.dart';
 import '../theme/app_theme.dart';
+import 'design_system.dart';
+
+// ─── Shell scope ──────────────────────────────────────────────────────────────
+// Lets pages know they are rendered inside the tab shell, so the compact
+// header can offer the settings shortcut the bottom bar has no room for.
+
+class ShellScope extends InheritedWidget {
+  final bool compact;
+
+  const ShellScope({super.key, required this.compact, required super.child});
+
+  static ShellScope? maybeOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<ShellScope>();
+
+  @override
+  bool updateShouldNotify(ShellScope old) => old.compact != compact;
+}
 
 // ─── Page Header ──────────────────────────────────────────────────────────────
-// Inline page header for tab screens (replaces Flutter AppBar).
+// Large condensed title with an optional subtitle, back button, actions and a
+// `bottom` row for filters (role switch, search…).
 
 class PageHeader extends StatelessWidget {
-  final Widget title;
+  final String title;
+  final String? subtitle;
   final List<Widget> actions;
+  final Widget? bottom;
+
+  /// Shows a back button. Defaults to popping the current route.
+  final bool showBack;
+  final VoidCallback? onBack;
+
+  /// Replaces the title text (e.g. an inline name field).
+  final Widget? titleWidget;
 
   const PageHeader({
     super.key,
     required this.title,
+    this.subtitle,
     this.actions = const [],
+    this.bottom,
+    this.showBack = false,
+    this.onBack,
+    this.titleWidget,
   });
+
+  // TEMP-SHIM: legacy `title: PageHeader.text(...)` call sites.
+  static String text(String s) => s;
 
   @override
   Widget build(BuildContext context) {
-    return RepaintBoundary(
-      child: ClipRect(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Container(
-            height: 56,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            decoration: BoxDecoration(
-              color: AppTheme.background.withValues(alpha: 0.7),
-              border: const Border(
-                bottom: BorderSide(color: AppTheme.border),
-              ),
-            ),
-            child: Row(
+    final compact = AppLayout.isCompact(context);
+    final shell = ShellScope.maybeOf(context);
+    final pad = pagePadding(context);
+    final topPad = shell == null ? MediaQuery.paddingOf(context).top : 0.0;
+
+    final trailing = <Widget>[
+      ...actions,
+      if (shell != null && shell.compact)
+        AppIconButton(
+          icon: Icons.settings_outlined,
+          tooltip: AppLocalizations.of(context)?.settings ?? 'Settings',
+          onPressed: () => context.push('/settings'),
+        ),
+    ];
+
+    return ContentWidth(
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(pad.left, topPad + (compact ? 14 : 26), pad.right, 14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Expanded(child: title),
-                ...actions,
+                if (showBack) ...[
+                  AppIconButton(
+                    icon: Icons.arrow_back,
+                    tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+                    onPressed: onBack ??
+                        () => context.canPop() ? context.pop() : context.go('/builds'),
+                  ),
+                  const SizedBox(width: 14),
+                ],
+                Expanded(
+                  child: titleWidget ??
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            title.toUpperCase(),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppFonts.display(
+                              fontSize: compact ? 26 : 32,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 1.6,
+                              height: 1.05,
+                            ),
+                          ),
+                          if (subtitle != null) ...[
+                            const SizedBox(height: 3),
+                            Text(
+                              subtitle!,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppFonts.body(fontSize: 13, color: AppTheme.textTertiary),
+                            ),
+                          ],
+                        ],
+                      ),
+                ),
+                for (final a in trailing) ...[const SizedBox(width: 8), a],
               ],
             ),
-          ),
+            if (bottom != null) ...[const SizedBox(height: 16), bottom!],
+          ],
         ),
       ),
     );
   }
-
-  static Widget text(String label) => Text(
-        label,
-        style: GoogleFonts.outfit(
-          fontSize: 18,
-          fontWeight: FontWeight.w700,
-          color: AppTheme.textPrimary,
-          letterSpacing: 0.5,
-        ),
-      );
 }
 
 // ─── Base Slot ────────────────────────────────────────────────────────────────
 // Shared slot container used by PerkSlot, ItemSlot and OfferingSlot.
-// Handles the empty/filled visual state (border, background, empty label).
-// The caller provides [filledContent] — the full Row shown when non-empty.
+// Empty: outlined diamond with "+" and a label. Filled: caller's content.
 
 class BaseSlot extends StatelessWidget {
   final bool isEmpty;
@@ -83,61 +154,71 @@ class BaseSlot extends StatelessWidget {
     required this.emptyLabel,
     required this.filledContent,
     this.emptyIconSize = 16,
-    this.contentPadding = const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+    this.contentPadding = const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
     this.onTap,
     this.animate = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    Widget slot = GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        height: height,
-        decoration: BoxDecoration(
-          color: isEmpty ? AppTheme.surface : AppTheme.surfaceElevated,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(
-            color: isEmpty ? AppTheme.border : filledBorderColor,
-            width: 1,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.12),
-              blurRadius: 10,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
+    Widget slot = SizedBox(
+      height: height,
+      child: AppPanel(
+        onTap: onTap,
+        padding: isEmpty ? const EdgeInsets.symmetric(horizontal: 14) : contentPadding,
+        cut: 8,
+        color: isEmpty ? AppTheme.background.withValues(alpha: 0.4) : null,
+        borderColor: isEmpty ? AppTheme.border : filledBorderColor,
         child: isEmpty
-            ? Center(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(emptyIcon, color: AppTheme.textTertiary, size: emptyIconSize),
-                    const SizedBox(width: 6),
-                    Text(
-                      emptyLabel,
-                      style: GoogleFonts.outfit(
-                        fontSize: 12,
-                        color: AppTheme.textTertiary,
-                        letterSpacing: 0.3,
-                      ),
+            ? Row(
+                children: [
+                  SizedBox(
+                    width: 28,
+                    height: 28,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        const DiamondMark(size: 18, color: AppTheme.borderHighlight, filled: false),
+                        Icon(emptyIcon, size: 12, color: AppTheme.textTertiary),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      emptyLabel.toUpperCase(),
+                      style: AppFonts.caption(fontSize: 13),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  if (onTap != null)
+                    const Icon(Icons.add, size: 18, color: AppTheme.textTertiary),
+                ],
               )
-            : Padding(
-                padding: contentPadding,
-                child: filledContent,
-              ),
+            : filledContent,
       ),
     );
     if (animate) {
-      return slot.animate().fadeIn(duration: 200.ms).slideY(begin: 0.05, end: 0);
+      slot = slot.animate().fadeIn(duration: 200.ms);
     }
     return slot;
+  }
+}
+
+/// Small "×" used to clear a filled slot.
+class SlotRemoveButton extends StatelessWidget {
+  final VoidCallback onPressed;
+  const SlotRemoveButton({super.key, required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: onPressed,
+      tooltip: MaterialLocalizations.of(context).deleteButtonTooltip,
+      visualDensity: VisualDensity.compact,
+      icon: const Icon(Icons.close, size: 16, color: AppTheme.textTertiary),
+    );
   }
 }
 
@@ -150,44 +231,13 @@ class SectionHeader extends StatelessWidget {
   const SectionHeader({super.key, required this.title, this.trailing});
 
   @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          width: 2.5,
-          height: 16,
-          decoration: BoxDecoration(
-            color: AppTheme.primary,
-            borderRadius: BorderRadius.circular(2),
-            boxShadow: [
-              BoxShadow(
-                color: AppTheme.primary.withValues(alpha: 0.5),
-                blurRadius: 6,
-              ),
-            ],
-          ),
-          margin: const EdgeInsets.only(right: 8),
-        ),
-        Text(
-          title.toUpperCase(),
-          style: GoogleFonts.outfit(
-            fontSize: 11,
-            fontWeight: FontWeight.w700,
-            color: AppTheme.textSecondary,
-            letterSpacing: 2.0,
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(child: Container(height: 1, color: AppTheme.border)),
-        if (trailing != null) ...[const SizedBox(width: 8), trailing!],
-      ],
-    );
-  }
+  Widget build(BuildContext context) => SectionLabel(title: title, trailing: trailing);
 }
 
 // ─── DbdButton ────────────────────────────────────────────────────────────────
+// Kept for existing call sites; renders the design-system [AppButton].
 
-class DbdButton extends StatefulWidget {
+class DbdButton extends StatelessWidget {
   final String label;
   final IconData? icon;
   final VoidCallback? onPressed;
@@ -204,102 +254,13 @@ class DbdButton extends StatefulWidget {
   });
 
   @override
-  State<DbdButton> createState() => _DbdButtonState();
-}
-
-class _DbdButtonState extends State<DbdButton> {
-  bool _pressed = false;
-  bool _hovered = false;
-
-  @override
   Widget build(BuildContext context) {
-    final isEnabled = widget.onPressed != null && !widget.isLoading;
-    return MouseRegion(
-      cursor: isEnabled ? SystemMouseCursors.click : SystemMouseCursors.basic,
-      onEnter: isEnabled ? (_) => setState(() => _hovered = true) : null,
-      onExit: (_) => setState(() => _hovered = false),
-      child: GestureDetector(
-      onTapDown: isEnabled ? (_) => setState(() => _pressed = true) : null,
-      onTapUp: isEnabled
-          ? (_) {
-              setState(() => _pressed = false);
-              widget.onPressed!();
-            }
-          : null,
-      onTapCancel: () => setState(() => _pressed = false),
-      child: AnimatedScale(
-        scale: _pressed ? 0.97 : (_hovered ? 1.01 : 1.0),
-        duration: const Duration(milliseconds: 150),
-        curve: Curves.easeOutCubic,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          curve: Curves.easeOutCubic,
-          height: 52,
-          decoration: BoxDecoration(
-            gradient: widget.outlined
-                ? null
-                : isEnabled
-                    ? AppTheme.primaryGradient
-                    : null,
-            color: widget.outlined
-                ? AppTheme.surface
-                : isEnabled
-                    ? null
-                    : AppTheme.primaryDim,
-            border: widget.outlined
-                ? Border.all(color: AppTheme.primary.withValues(alpha: _hovered ? 0.6 : 0.4))
-                : null,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: !widget.outlined && isEnabled
-                ? [
-                    BoxShadow(
-                      color: AppTheme.primary.withValues(
-                          alpha: _pressed ? 0.25 : _hovered ? 0.5 : 0.35),
-                      blurRadius: _pressed ? 8 : _hovered ? 28 : 18,
-                      spreadRadius: 0,
-                      offset: const Offset(0, 4),
-                    )
-                  ]
-                : null,
-          ),
-          child: Center(
-            child: widget.isLoading
-                ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                        strokeWidth: 2, color: Colors.white),
-                  )
-                : Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (widget.icon != null) ...[
-                        Icon(
-                          widget.icon,
-                          size: 18,
-                          color: widget.outlined
-                              ? AppTheme.primary
-                              : Colors.white,
-                        ),
-                        const SizedBox(width: 8),
-                      ],
-                      Text(
-                        widget.label,
-                        style: GoogleFonts.outfit(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.5,
-                          color: widget.outlined
-                              ? AppTheme.primary
-                              : Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-          ),
-        ),
-      ),
-      ),
+    return AppButton(
+      label: label,
+      icon: icon,
+      onPressed: onPressed,
+      isLoading: isLoading,
+      variant: outlined ? AppButtonVariant.secondary : AppButtonVariant.primary,
     );
   }
 }
@@ -309,74 +270,26 @@ class _DbdButtonState extends State<DbdButton> {
 class RoleToggle extends StatelessWidget {
   final bool isSurvivor;
   final ValueChanged<bool> onChanged;
+  final bool expand;
 
-  const RoleToggle({super.key, required this.isSurvivor, required this.onChanged});
+  const RoleToggle({
+    super.key,
+    required this.isSurvivor,
+    required this.onChanged,
+    this.expand = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    return Container(
-      height: 44,
-      decoration: BoxDecoration(
-        color: AppTheme.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppTheme.border),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _Tab(label: l10n?.survivor ?? 'Survivor', isActive: isSurvivor, onTap: () => onChanged(true)),
-          _Tab(label: l10n?.killer ?? 'Killer', isActive: !isSurvivor, onTap: () => onChanged(false)),
-        ],
-      ),
-    );
-  }
-}
-
-class _Tab extends StatelessWidget {
-  final String label;
-  final bool isActive;
-  final VoidCallback onTap;
-
-  const _Tab({required this.label, required this.isActive, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeOutCubic,
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-        decoration: BoxDecoration(
-          gradient: isActive
-              ? LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [AppTheme.primary, AppTheme.primaryDim],
-                )
-              : null,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: isActive
-              ? [
-                  BoxShadow(
-                    color: AppTheme.primary.withValues(alpha: 0.35),
-                    blurRadius: 10,
-                    offset: const Offset(0, 2),
-                  )
-                ]
-              : null,
-        ),
-        child: Text(
-          label,
-          style: GoogleFonts.outfit(
-            fontSize: 13,
-            fontWeight: FontWeight.w600,
-            color: isActive ? Colors.white : AppTheme.textSecondary,
-            letterSpacing: 0.3,
-          ),
-        ),
-      ),
+    return AppSegmented<bool>(
+      expand: expand,
+      value: isSurvivor,
+      onChanged: onChanged,
+      segments: [
+        AppSegment(value: true, label: l10n?.survivor ?? 'Survivor', icon: Icons.directions_run),
+        AppSegment(value: false, label: l10n?.killer ?? 'Killer', icon: Icons.local_fire_department_outlined),
+      ],
     );
   }
 }
@@ -400,58 +313,76 @@ class EmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(40),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 72,
-              height: 72,
-              decoration: BoxDecoration(
-                color: AppTheme.surface,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: AppTheme.border),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(32),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 360),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                width: 84,
+                height: 84,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    const DiamondMark(size: 58, color: AppTheme.border, filled: false),
+                    DiamondMark(size: 44, color: AppTheme.primary.withValues(alpha: 0.08)),
+                    Icon(icon, size: 26, color: AppTheme.textSecondary),
+                  ],
+                ),
               ),
-              child: Icon(icon, size: 32, color: AppTheme.textTertiary),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              title,
-              style: GoogleFonts.outfit(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: AppTheme.textPrimary,
+              const SizedBox(height: 18),
+              Text(
+                title.toUpperCase(),
+                style: AppFonts.display(fontSize: 22, letterSpacing: 1.4),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              subtitle,
-              style: GoogleFonts.outfit(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: AppTheme.textSecondary,
+              const SizedBox(height: 8),
+              Text(
+                subtitle,
+                style: AppFonts.body(fontSize: 14, color: AppTheme.textSecondary, height: 1.45),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
-            ),
-            if (action != null) ...[const SizedBox(height: 28), action!],
-          ],
+              if (action != null) ...[const SizedBox(height: 24), action!],
+            ],
+          ),
         ),
-      ),
+      ).animate().fadeIn(duration: 300.ms),
     );
   }
+}
+
+/// Centered loader / error used while async data resolves.
+class LoadingView extends StatelessWidget {
+  const LoadingView({super.key});
+
+  @override
+  Widget build(BuildContext context) =>
+      const Center(child: SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2)));
+}
+
+class ErrorView extends StatelessWidget {
+  final Object error;
+  const ErrorView(this.error, {super.key});
+
+  @override
+  Widget build(BuildContext context) => EmptyState(
+        icon: Icons.error_outline,
+        title: 'Something went wrong',
+        subtitle: '$error',
+      );
 }
 
 // ─── Item helpers (shared between Build & GroupPlan editors) ──────────────────
 
 Color itemCategoryColor(String cat) {
   switch (cat) {
-    case 'medkit':     return const Color(0xFF4CAF50);
-    case 'flashlight': return const Color(0xFFFFEB3B);
-    case 'toolbox':    return const Color(0xFF2196F3);
-    case 'key':        return const Color(0xFF9C27B0);
-    case 'map':        return const Color(0xFFFF9800);
+    case 'medkit':     return const Color(0xFF6BBF73);
+    case 'flashlight': return const Color(0xFFF2D65C);
+    case 'toolbox':    return const Color(0xFF5DA9E9);
+    case 'key':        return const Color(0xFFB07CD8);
+    case 'map':        return const Color(0xFFF0A04B);
     default:           return AppTheme.textDim;
   }
 }
@@ -460,7 +391,7 @@ IconData itemCategoryIcon(String cat) {
   switch (cat) {
     case 'medkit':     return Icons.medical_services_outlined;
     case 'flashlight': return Icons.flashlight_on_outlined;
-    case 'toolbox':    return Icons.build_outlined;
+    case 'toolbox':    return Icons.handyman_outlined;
     case 'key':        return Icons.key_outlined;
     case 'map':        return Icons.map_outlined;
     default:           return Icons.inventory_2_outlined;
@@ -486,18 +417,31 @@ class ItemIcon extends StatelessWidget {
   const ItemIcon({super.key, required this.item, this.size = 48});
 
   @override
+  Widget build(BuildContext context) =>
+      SquareGlyph(icon: itemCategoryIcon(item.category), color: itemCategoryColor(item.category), size: size);
+}
+
+/// Notched square holding a tinted glyph — used for items and offerings.
+class SquareGlyph extends StatelessWidget {
+  final IconData icon;
+  final Color color;
+  final double size;
+
+  const SquareGlyph({super.key, required this.icon, required this.color, this.size = 40});
+
+  @override
   Widget build(BuildContext context) {
-    final color = itemCategoryColor(item.category);
     return Container(
-      width: size, height: size,
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(size * 0.2),
-        border: Border.all(color: color.withValues(alpha: 0.5), width: 1.5),
+      width: size,
+      height: size,
+      decoration: ShapeDecoration(
+        color: color.withValues(alpha: 0.10),
+        shape: AppShapes.notched(
+          cut: size * 0.18,
+          side: BorderSide(color: color.withValues(alpha: 0.45)),
+        ),
       ),
-      child: Center(
-        child: Icon(itemCategoryIcon(item.category), color: color, size: size * 0.5),
-      ),
+      child: Icon(icon, color: color, size: size * 0.5),
     );
   }
 }
